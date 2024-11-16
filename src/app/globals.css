@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background-primary: white;
+  --background-secondary: #f9fafb;
+  --text-primary: black;
+  --border-color: #e5e7eb;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-primary: #1a1a1a;
+    --background-secondary: #2d2d2d;
+    --text-primary: white;
+    --border-color: #404040;
+  }
+}
+
+body {
+  background-color: var(--background-secondary);
+  color: var(--text-primary);
+}
+
+/* Add these styles for the Quill editor */
+@media (prefers-color-scheme: dark) {
+  .ql-editor {
+    color: var(--text-primary);
+  }
+  
+  .ql-snow .ql-stroke {
+    stroke: var(--text-primary);
+  }
+  
+  .ql-snow .ql-fill {
+    fill: var(--text-primary);
+  }
+  
+  .ql-toolbar.ql-snow {
+    border-color: var(--border-color);
+  }
+  
+  .ql-container.ql-snow {
+    border-color: var(--border-color);
+  }
+}
+
+/* Add these specific styles for ReactQuill in dark mode */
+@media (prefers-color-scheme: dark) {
+  .ql-toolbar {
+    background-color: var(--background-primary) !important;
+    border-color: var(--border-color) !important;
+  }
+
+  .ql-container {
+    background-color: var(--background-primary) !important;
+    border-color: var(--border-color) !important;
+  }
+
+  .ql-editor {
+    color: var(--text-primary) !important;
+    background-color: var(--background-primary) !important;
+  }
+
+  .ql-editor.ql-blank::before {
+    color: var(--text-primary) !important;
+    opacity: 0.6;
+  }
+
+  .ql-snow .ql-stroke {
+    stroke: var(--text-primary) !important;
+  }
+
+  .ql-snow .ql-fill {
+    fill: var(--text-primary) !important;
+  }
+
+  .ql-snow .ql-picker {
+    color: var(--text-primary) !important;
+  }
+
+  .ql-snow .ql-picker-options {
+    background-color: var(--background-primary) !important;
+    border-color: var(--border-color) !important;
+  }
+}
