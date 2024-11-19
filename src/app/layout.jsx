@@ -1,21 +1,16 @@
-import { Inter } from 'next/font/google';
-import './globals.css';
 import { AuthProvider } from './providers';
-import { Toaster } from 'react-hot-toast';
-
-const inter = Inter({ subsets: ['latin'] });
+import './globals.css';
 
 export const metadata = {
   title: 'Blog Admin',
-  description: 'Blog administration dashboard',
+  description: 'Blog Admin Dashboard',
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <AuthProvider>{children}</AuthProvider>
-        <Toaster position="top-right" />
       </body>
     </html>
   );
