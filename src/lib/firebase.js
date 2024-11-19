@@ -2,12 +2,12 @@ import { initializeApp, getApps } from "firebase/app";
 import { getStorage, ref, listAll } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD5X_cWq-EJNeJg0DtlolPQG122yI58DHo",
-  authDomain: "socialhardware-f7a2c.firebaseapp.com",
-  projectId: "socialhardware-f7a2c",
-  storageBucket: "socialhardware-f7a2c.firebasestorage.app",
-  messagingSenderId: "626175850201",
-  appId: "1:626175850201:web:456d9cf0f6d444669bb0c8",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
 let app;
