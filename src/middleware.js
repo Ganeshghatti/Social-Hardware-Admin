@@ -27,5 +27,11 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ['/admin/:path*', '/auth/:path*']
+  matcher: [
+    '/admin/:path*',
+    '/auth/:path*',
+    
+    // Exclude public API routes
+    '/((?!api/public|_next/static|_next/image|favicon.ico).*)',
+  ]
 };
