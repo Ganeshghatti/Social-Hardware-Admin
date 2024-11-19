@@ -3,12 +3,14 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import Loader from '@/components/Loader';
+import { useRouter } from 'next/navigation';
 
 export default function Dashboard() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { data: session } = useSession();
+  const router = useRouter();
 
   const truncateText = (text, maxLength = 100) => {
     if (!text) return '';
@@ -61,6 +63,10 @@ export default function Dashboard() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEdit = (id) => {
+    router.push(`/admin/dashboard/blogs/${id}`);
   };
 
   return (
@@ -118,13 +124,13 @@ export default function Dashboard() {
                       {new Date(blog.createdAt).toLocaleDateString()}
                     </td>
                     <td className="px-4 md:px-6 py-4">
-                      <div className="flex flex-col items-center sm:flex-row gap-2 sm:gap-4">
-                        <Link 
-                          href={`/admin/dashboard/blogs/${blog._id}`}
-                          className="text-orange-500 hover:underline"
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleEdit(blog._id)}
+                          className="text-blue-500 hover:text-blue-700"
                         >
                           Edit
-                        </Link>
+                        </button>
                         <button
                           onClick={() => handleDelete(blog._id)}
                           className="text-red-500 hover:underline"

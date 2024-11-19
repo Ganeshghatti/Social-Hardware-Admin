@@ -14,10 +14,12 @@ export default function EditBlog({ params }) {
     description: '',
     content: '',
     coverImage: null,
+    thumbnailImage: null,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [coverPreview, setCoverPreview] = useState(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -29,7 +31,9 @@ export default function EditBlog({ params }) {
       const response = await fetch(`/api/blogs/${params.id}`);
       const data = await response.json();
       setFormData(data);
-      setImagePreview(data.coverImage);
+      console.log(data)
+      setCoverPreview(data.coverImage);
+      setThumbnailPreview(data.thumbnailImage);
     } catch (error) {
       console.error('Error fetching blog:', error);
       setError('Failed to fetch blog');
@@ -47,8 +51,12 @@ export default function EditBlog({ params }) {
       formDataToSend.append('title', formData.title);
       formDataToSend.append('description', formData.description);
       formDataToSend.append('content', formData.content);
+      
       if (formData.coverImage instanceof File) {
         formDataToSend.append('coverImage', formData.coverImage);
+      }
+      if (formData.thumbnailImage instanceof File) {
+        formDataToSend.append('thumbnailImage', formData.thumbnailImage);
       }
 
       const response = await fetch(`/api/blogs/${params.id}`, {
@@ -56,11 +64,11 @@ export default function EditBlog({ params }) {
         body: formDataToSend,
       });
 
-      if (response.ok) {
-        router.push('/admin/dashboard');
-      } else {
+      if (!response.ok) {
         throw new Error('Failed to update blog');
       }
+
+      router.push('/admin/dashboard');
     } catch (error) {
       console.error('Error updating blog:', error);
       setError('Failed to update blog');
@@ -74,11 +82,23 @@ export default function EditBlog({ params }) {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e, type) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData({ ...formData, coverImage: file });
-      setImagePreview(URL.createObjectURL(file));
+      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      if (!validTypes.includes(file.type)) {
+        setError('Invalid file type. Only images are allowed');
+        e.target.value = '';
+        return;
+      }
+
+      setFormData(prev => ({ ...prev, [type]: file }));
+      if (type === 'coverImage') {
+        setCoverPreview(URL.createObjectURL(file));
+      } else {
+        setThumbnailPreview(URL.createObjectURL(file));
+      }
+      setError('');
     }
   };
 
@@ -154,16 +174,16 @@ export default function EditBlog({ params }) {
               <input
                 type="file"
                 accept="image/*"
-                onChange={handleFileChange}
+                onChange={(e) => handleFileChange(e, 'coverImage')}
                 className="w-full text-sm md:text-base"
               />
               <p className="mt-1 text-xs md:text-sm opacity-70">
                 Supported formats: JPG, PNG, GIF, WebP
               </p>
-              {imagePreview && (
+              {coverPreview && (
                 <div className="mt-2">
                   <Image 
-                    src={imagePreview}
+                    src={coverPreview}
                     alt="Preview"
                     width={200}
                     height={200}
@@ -172,7 +192,29 @@ export default function EditBlog({ params }) {
                 </div>
               )}
             </div>
-
+            <div>
+              <label className="block text-sm font-medium mb-2">Thumbnail Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileChange(e, 'thumbnailImage')}
+                className="w-full text-sm md:text-base"
+              />
+              <p className="mt-1 text-xs md:text-sm opacity-70">
+                Supported formats: JPG, PNG, GIF, WebP
+              </p>
+              {thumbnailPreview && (
+                <div className="mt-2">
+                  <Image 
+                    src={thumbnailPreview}
+                    alt="Preview"
+                    width={200}
+                    height={200}
+                    className="object-cover rounded"
+                  />
+                </div>
+              )}
+            </div>
             <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
               <button
                 type="button"

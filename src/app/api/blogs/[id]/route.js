@@ -7,28 +7,28 @@ import { uploadFile } from '@/lib/uploadFile';
 import fs from 'fs/promises';
 import path from 'path';
 
-async function deleteImage(imagePath) {
-  if (!imagePath) return;
-  
+async function deleteImages(blog) {
   try {
-    // Remove leading slash if present and join with public directory
-    const fullPath = path.join(process.cwd(), 'public', imagePath.replace(/^\//, ''));
-    
-    // Delete the file
-    await fs.unlink(fullPath);
-    
-    // Get the directory path
-    const dirPath = path.dirname(fullPath);
-    
-    // Read directory contents
-    const files = await fs.readdir(dirPath);
-    
-    // If directory is empty, delete it
-    if (files.length === 0) {
-      await fs.rmdir(dirPath);
+    if (blog.coverImage) {
+      const coverPath = path.join(process.cwd(), 'public', blog.coverImage.replace(/^\//, ''));
+      await fs.unlink(coverPath);
+    }
+    if (blog.thumbnailImage) {
+      const thumbnailPath = path.join(process.cwd(), 'public', blog.thumbnailImage.replace(/^\//, ''));
+      await fs.unlink(thumbnailPath);
+    }
+
+    // Delete the parent folder if it exists
+    if (blog.coverImage) {
+      const folderPath = path.join(
+        process.cwd(),
+        'public',
+        path.dirname(blog.coverImage.replace(/^\//, ''))
+      );
+      await fs.rm(folderPath, { recursive: true, force: true });
     }
   } catch (error) {
-    console.error('Error deleting image:', error);
+    console.error('Error deleting images:', error);
   }
 }
 
@@ -41,7 +41,7 @@ export async function GET(request, { params }) {
     if (!blog) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
-
+    console.log(blog)
     return NextResponse.json(blog);
   } catch (error) {
     return NextResponse.json(
@@ -54,47 +54,56 @@ export async function GET(request, { params }) {
 // PUT update blog
 export async function PUT(request, { params }) {
   try {
-    // Check authentication
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     await dbConnect();
-    const formData = await request.formData();
-    const oldBlog = await Blog.findById(params.id);
-    
-    if (!oldBlog) {
+    const blog = await Blog.findById(params.id);
+    if (!blog) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
 
-    const updateData = {
+    const formData = await request.formData();
+    const updates = {
       title: formData.get('title'),
       description: formData.get('description'),
       content: formData.get('content'),
+      updatedAt: new Date(),
     };
 
-    // Handle new cover image if provided
     const newCoverImage = formData.get('coverImage');
-    if (newCoverImage && newCoverImage.size > 0) {
-      // Delete old image first
-      await deleteImage(oldBlog.coverImage);
-      
-      // Upload new image
-      const coverImagePath = await uploadFile(newCoverImage, formData.get('title'));
-      updateData.coverImage = coverImagePath;
+    const newThumbnailImage = formData.get('thumbnailImage');
+
+    if (newCoverImage || newThumbnailImage) {
+      // Delete old images first
+      await deleteImages(blog);
+
+      // Upload new images
+      const imagePaths = await uploadFile(
+        {
+          coverImage: newCoverImage || null,
+          thumbnailImage: newThumbnailImage || null,
+        },
+        updates.title
+      );
+
+      if (imagePaths.coverImage) updates.coverImage = imagePaths.coverImage;
+      if (imagePaths.thumbnailImage) updates.thumbnailImage = imagePaths.thumbnailImage;
     }
 
-    const blog = await Blog.findByIdAndUpdate(
+    const updatedBlog = await Blog.findByIdAndUpdate(
       params.id,
-      updateData,
-      { new: true, runValidators: true }
+      updates,
+      { new: true }
     );
 
-    return NextResponse.json(blog);
+    return NextResponse.json(updatedBlog);
   } catch (error) {
+    console.error('Error updating blog:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal Server Error' }, 
+      { error: error.message || 'Failed to update blog' },
       { status: 500 }
     );
   }
@@ -110,20 +119,20 @@ export async function DELETE(request, { params }) {
 
     await dbConnect();
     const blog = await Blog.findById(params.id);
-
     if (!blog) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
 
-    // Delete cover image
-    await deleteImage(blog.coverImage);
+    // Delete images first
+    await deleteImages(blog);
 
-    // Delete blog
-    await blog.deleteOne();
+    // Then delete the blog
+    await Blog.findByIdAndDelete(params.id);
     return NextResponse.json({ message: 'Blog deleted successfully' });
   } catch (error) {
+    console.error('Error deleting blog:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal Server Error' }, 
+      { error: error.message || 'Failed to delete blog' },
       { status: 500 }
     );
   }

@@ -28,31 +28,41 @@ export async function POST(request) {
     }
 
     await dbConnect();
-
     const formData = await request.formData();
-    
-    console.log('Title from formData:', formData.get('title'));
 
+    // Get all form fields
+    const title = formData.get('title');
+    const description = formData.get('description');
+    const content = formData.get('content');
     const coverImage = formData.get('coverImage');
-    if (!coverImage) {
-      throw new Error('Cover image is required');
+    const thumbnailImage = formData.get('thumbnailImage');
+
+    // Validate required fields
+    if (!title || !description || !content || !coverImage || !thumbnailImage) {
+      throw new Error('All fields including both images are required');
     }
 
-    const coverImagePath = await uploadFile(coverImage, formData.get('title'));
-
+    // Upload images
+    const imagePaths = await uploadFile(
+      { coverImage, thumbnailImage },
+      title
+    );
+    console.log("imagePaths",imagePaths)
+    // Create blog post
+    console.log("thumbnailImage",imagePaths.thumbnailImage)
     const blog = await Blog.create({
-      title: formData.get('title'),
-      description: formData.get('description'),
-      content: formData.get('content'),
-      coverImage: coverImagePath,
+      title,
+      description,
+      content,
+      coverImage: imagePaths.coverImage,
+      thumbnailImage: imagePaths.thumbnailImage,
     });
-
+    console.log("blog",blog)
     return NextResponse.json(blog);
-
   } catch (error) {
-    console.error('Error in POST /api/blogs:', error);
+    console.error('Error creating blog:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal Server Error' }, 
+      { error: error.message || 'Failed to create blog' },
       { status: 500 }
     );
   }

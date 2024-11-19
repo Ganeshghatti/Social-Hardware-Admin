@@ -14,15 +14,18 @@ export default function NewBlog() {
     description: "",
     content: "",
     coverImage: null,
+    thumbnailImage: null,
   });
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreview, setImagePreview] = useState({
+    coverImage: null,
+    thumbnailImage: null,
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e, type) => {
     const file = e.target.files[0];
     if (file) {
-      // Only validate file type
       const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
       if (!validTypes.includes(file.type)) {
         setError("Invalid file type. Only images are allowed");
@@ -30,8 +33,11 @@ export default function NewBlog() {
         return;
       }
 
-      setFormData({ ...formData, coverImage: file });
-      setImagePreview(URL.createObjectURL(file));
+      setFormData(prev => ({ ...prev, [type]: file }));
+      setImagePreview(prev => ({
+        ...prev,
+        [type]: URL.createObjectURL(file)
+      }));
       setError("");
     }
   };
@@ -43,15 +49,15 @@ export default function NewBlog() {
 
     try {
       const formDataToSend = new FormData();
-
-      // Log the title being sent
-      console.log("Sending title:", formData.title);
-
       formDataToSend.append("title", formData.title);
       formDataToSend.append("description", formData.description);
       formDataToSend.append("content", formData.content);
+      
       if (formData.coverImage) {
         formDataToSend.append("coverImage", formData.coverImage);
+      }
+      if (formData.thumbnailImage) {
+        formDataToSend.append("thumbnailImage", formData.thumbnailImage);
       }
 
       const response = await fetch("/api/blogs", {
@@ -67,7 +73,6 @@ export default function NewBlog() {
       router.push("/admin/dashboard");
     } catch (error) {
       setError(error.message);
-      console.error("Error creating blog:", error);
     } finally {
       setLoading(false);
     }
@@ -149,31 +154,50 @@ export default function NewBlog() {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Cover Image
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="w-full"
-                required
-              />
-              <p className="mt-1 text-sm">
-                Supported formats: JPG, PNG, GIF, WebP
-              </p>
-              {imagePreview && (
-                <div className="mt-2">
-                  <Image
-                    src={imagePreview}
-                    alt="Preview"
-                    width={200}
-                    height={200}
-                    className="object-cover rounded"
-                  />
-                </div>
-              )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Cover Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileChange(e, 'coverImage')}
+                  className="w-full text-sm md:text-base"
+                  required
+                />
+                {imagePreview.coverImage && (
+                  <div className="mt-2">
+                    <Image 
+                      src={imagePreview.coverImage}
+                      alt="Cover Preview"
+                      width={200}
+                      height={200}
+                      className="object-cover rounded"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Thumbnail Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileChange(e, 'thumbnailImage')}
+                  className="w-full text-sm md:text-base"
+                  required
+                />
+                {imagePreview.thumbnailImage && (
+                  <div className="mt-2">
+                    <Image 
+                      src={imagePreview.thumbnailImage}
+                      alt="Thumbnail Preview"
+                      width={200}
+                      height={200}
+                      className="object-cover rounded"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
