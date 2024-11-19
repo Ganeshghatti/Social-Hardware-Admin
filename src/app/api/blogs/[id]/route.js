@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/mongodb';
 import Blog from '@/models/Blog';
 import { uploadFile } from '@/lib/uploadFile';
@@ -11,8 +11,22 @@ async function deleteImage(imagePath) {
   if (!imagePath) return;
   
   try {
+    // Remove leading slash if present and join with public directory
     const fullPath = path.join(process.cwd(), 'public', imagePath.replace(/^\//, ''));
+    
+    // Delete the file
     await fs.unlink(fullPath);
+    
+    // Get the directory path
+    const dirPath = path.dirname(fullPath);
+    
+    // Read directory contents
+    const files = await fs.readdir(dirPath);
+    
+    // If directory is empty, delete it
+    if (files.length === 0) {
+      await fs.rmdir(dirPath);
+    }
   } catch (error) {
     console.error('Error deleting image:', error);
   }
