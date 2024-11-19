@@ -6,39 +6,77 @@ export async function uploadFile(files, title) {
     console.log('Starting upload process');
     console.log('Files received:', files);
     
+    if (!storage) {
+      throw new Error('Firebase Storage not initialized');
+    }
+
     const formattedTitle = title
       .toLowerCase()
       .replace(/[^a-z0-9\s-]/g, '')
       .replace(/\s+/g, '-');
     
     const timestamp = Date.now();
-    const folderName = `${formattedTitle}_${timestamp}`;
+    const folderName = `blogs/${formattedTitle}_${timestamp}`;
     const imagePaths = {};
 
     // Upload cover image if provided
     if (files.coverImage) {
-      const coverExt = files.coverImage.name.split('.').pop();
-      const coverPath = `blogs/${folderName}/cover.${coverExt}`;
-      const coverRef = ref(storage, coverPath);
-      const coverBuffer = await files.coverImage.arrayBuffer();
-      await uploadBytes(coverRef, coverBuffer, {
-        contentType: files.coverImage.type
-      });
-      imagePaths.coverImage = await getDownloadURL(coverRef);
-      console.log('Cover image uploaded:', imagePaths.coverImage);
+      try {
+        console.log('Uploading cover image...');
+        const coverExt = files.coverImage.name.split('.').pop();
+        const coverPath = `${folderName}/cover.${coverExt}`;
+        const coverRef = ref(storage, coverPath);
+        
+        console.log('Cover path:', coverPath);
+        const coverBuffer = await files.coverImage.arrayBuffer();
+        
+        const coverSnapshot = await uploadBytes(coverRef, coverBuffer, {
+          contentType: files.coverImage.type,
+          customMetadata: {
+            originalName: files.coverImage.name
+          }
+        });
+        
+        imagePaths.coverImage = await getDownloadURL(coverSnapshot.ref);
+        console.log('Cover image uploaded successfully:', imagePaths.coverImage);
+      } catch (error) {
+        console.error('Error uploading cover image:', {
+          code: error.code,
+          message: error.message,
+          serverResponse: error.customData?.serverResponse
+        });
+        throw error;
+      }
     }
 
     // Upload thumbnail image if provided
     if (files.thumbnailImage) {
-      const thumbnailExt = files.thumbnailImage.name.split('.').pop();
-      const thumbnailPath = `blogs/${folderName}/thumbnail.${thumbnailExt}`;
-      const thumbnailRef = ref(storage, thumbnailPath);
-      const thumbnailBuffer = await files.thumbnailImage.arrayBuffer();
-      await uploadBytes(thumbnailRef, thumbnailBuffer, {
-        contentType: files.thumbnailImage.type
-      });
-      imagePaths.thumbnailImage = await getDownloadURL(thumbnailRef);
-      console.log('Thumbnail image uploaded:', imagePaths.thumbnailImage);
+      try {
+        console.log('Uploading thumbnail image...');
+        const thumbnailExt = files.thumbnailImage.name.split('.').pop();
+        const thumbnailPath = `${folderName}/thumbnail.${thumbnailExt}`;
+        const thumbnailRef = ref(storage, thumbnailPath);
+        
+        console.log('Thumbnail path:', thumbnailPath);
+        const thumbnailBuffer = await files.thumbnailImage.arrayBuffer();
+        
+        const thumbnailSnapshot = await uploadBytes(thumbnailRef, thumbnailBuffer, {
+          contentType: files.thumbnailImage.type,
+          customMetadata: {
+            originalName: files.thumbnailImage.name
+          }
+        });
+        
+        imagePaths.thumbnailImage = await getDownloadURL(thumbnailSnapshot.ref);
+        console.log('Thumbnail image uploaded successfully:', imagePaths.thumbnailImage);
+      } catch (error) {
+        console.error('Error uploading thumbnail image:', {
+          code: error.code,
+          message: error.message,
+          serverResponse: error.customData?.serverResponse
+        });
+        throw error;
+      }
     }
 
     return imagePaths;
