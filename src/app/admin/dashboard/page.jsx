@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import Loader from '@/components/Loader';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function Dashboard() {
   const [blogs, setBlogs] = useState([]);
@@ -94,60 +95,62 @@ export default function Dashboard() {
           <table className="min-w-full">
             <thead>
               <tr style={{ backgroundColor: 'var(--background-secondary)' }}>
-                <th className="px-4 md:px-6 py-3 text-left text-xs font-medium uppercase">Cover</th>
+                <th className="px-4 md:px-6 py-3 text-left text-xs font-medium uppercase">Thumbnail</th>
                 <th className="px-4 md:px-6 py-3 text-left text-xs font-medium uppercase">Title</th>
                 <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium uppercase">Description</th>
-                <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium uppercase">Created At</th>
+                <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium uppercase">Created</th>
+                <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium uppercase">Last Update</th>
                 <th className="px-4 md:px-6 py-3 text-left text-xs font-medium uppercase">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y" style={{ borderColor: 'var(--border-color)' }}>
-              {blogs && blogs.length > 0 ? (
-                blogs.map((blog) => (
-                  <tr key={blog._id}>
-                    <td className="px-4 md:px-6 py-4">
-                      <img 
-                        src={blog.coverImage} 
+            <tbody>
+              {blogs.map((blog) => (
+                <tr 
+                  key={blog._id}
+                  className="border-t"
+                  style={{ borderColor: 'var(--border-color)' }}
+                >
+                  <td className="px-4 md:px-6 py-4">
+                    <div className="w-16 h-16 relative">
+                      <Image
+                        src={blog.thumbnailImage}
                         alt={blog.title}
-                        className="h-10 w-10 md:h-12 md:w-12 object-cover rounded"
+                        fill
+                        className="object-cover rounded"
+                        sizes="64px"
                       />
-                    </td>
-                    <td className="px-4 md:px-6 py-4">
-                      <div className="max-w-[150px] md:max-w-none">
-                        {truncateText(blog.title, 30)}
-                      </div>
-                    </td>
-                    <td className="hidden md:table-cell px-6 py-4 max-w-md">
-                      {truncateText(blog.description, 100)}
-                    </td>
-                    <td className="hidden sm:table-cell px-6 py-4">
-                      {new Date(blog.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 md:px-6 py-4">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleEdit(blog._id)}
-                          className="text-blue-500 hover:text-blue-700"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(blog._id)}
-                          className="text-red-500 hover:underline"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5" className="px-6 py-4 text-center">
-                    {loading ? 'Loading...' : error ? 'Error loading blogs' : 'No blogs found'}
+                    </div>
+                  </td>
+                  <td className="px-4 md:px-6 py-4">
+                    <div className="max-w-xs truncate">{blog.title}</div>
+                  </td>
+                  <td className="hidden md:table-cell px-6 py-4">
+                    <div className="max-w-xs truncate">{blog.description}</div>
+                  </td>
+                  <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
+                    {new Date(blog.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
+                    {new Date(blog.updatedAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 md:px-6 py-4">
+                    <div className="flex gap-6">
+                      <button
+                        onClick={() => handleEdit(blog._id)}
+                        className="text-blue-600 hover:text-blue-800"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(blog._id)}
+                        className="text-red-600 hover:underline"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
-              )}
+              ))}
             </tbody>
           </table>
         </div>

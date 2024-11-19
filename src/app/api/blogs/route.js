@@ -9,7 +9,9 @@ import { uploadFile } from '@/lib/uploadFile';
 export async function GET() {
   try {
     await dbConnect();
-    const blogs = await Blog.find({}).sort({ createdAt: -1 });
+    const blogs = await Blog.find({})
+      .select('title description thumbnailImage createdAt updatedAt')
+      .sort({ createdAt: -1 });
     return NextResponse.json(blogs);
   } catch (error) {
     return NextResponse.json(
@@ -47,9 +49,7 @@ export async function POST(request) {
       { coverImage, thumbnailImage },
       title
     );
-    console.log("imagePaths",imagePaths)
-    // Create blog post
-    console.log("thumbnailImage",imagePaths.thumbnailImage)
+
     const blog = await Blog.create({
       title,
       description,
@@ -57,7 +57,7 @@ export async function POST(request) {
       coverImage: imagePaths.coverImage,
       thumbnailImage: imagePaths.thumbnailImage,
     });
-    console.log("blog",blog)
+
     return NextResponse.json(blog);
   } catch (error) {
     console.error('Error creating blog:', error);
