@@ -25,37 +25,40 @@ export async function GET() {
 export async function POST(request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== 'admin') {
+    if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    await dbConnect();
     const formData = await request.formData();
-
-    // Get all form fields
     const title = formData.get('title');
     const description = formData.get('description');
     const content = formData.get('content');
     const coverImage = formData.get('coverImage');
     const thumbnailImage = formData.get('thumbnailImage');
 
-    // Validate required fields
-    if (!title || !description || !content || !coverImage || !thumbnailImage) {
-      throw new Error('All fields including both images are required');
+    if (!title || !content || !coverImage || !thumbnailImage) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
     }
 
     // Upload images
-    const imagePaths = await uploadFile(
+    console.log('Uploading images...');
+    const uploadedImages = await uploadFile(
       { coverImage, thumbnailImage },
       title
     );
+    console.log('Images uploaded:', uploadedImages);
+
+    await dbConnect();
 
     const blog = await Blog.create({
       title,
       description,
       content,
-      coverImage: imagePaths.coverImage,
-      thumbnailImage: imagePaths.thumbnailImage,
+      coverImage: uploadedImages.coverImage,
+      thumbnailImage: uploadedImages.thumbnailImage,
     });
 
     return NextResponse.json(blog);

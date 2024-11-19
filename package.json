@@ -12,6 +12,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
+    "firebase": "^11.0.2",
     "mongodb": "^6.3.0",
     "mongoose": "^8.0.3",
     "next": "^14.0.4",

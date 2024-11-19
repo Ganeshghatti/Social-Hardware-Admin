@@ -3,34 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/mongodb';
 import Blog from '@/models/Blog';
-import { uploadFile } from '@/lib/uploadFile';
-import fs from 'fs/promises';
-import path from 'path';
-
-async function deleteImages(blog) {
-  try {
-    if (blog.coverImage) {
-      const coverPath = path.join(process.cwd(), 'public', blog.coverImage.replace(/^\//, ''));
-      await fs.unlink(coverPath);
-    }
-    if (blog.thumbnailImage) {
-      const thumbnailPath = path.join(process.cwd(), 'public', blog.thumbnailImage.replace(/^\//, ''));
-      await fs.unlink(thumbnailPath);
-    }
-
-    // Delete the parent folder if it exists
-    if (blog.coverImage) {
-      const folderPath = path.join(
-        process.cwd(),
-        'public',
-        path.dirname(blog.coverImage.replace(/^\//, ''))
-      );
-      await fs.rm(folderPath, { recursive: true, force: true });
-    }
-  } catch (error) {
-    console.error('Error deleting images:', error);
-  }
-}
+import { uploadFile, deleteImages } from '@/lib/uploadFile';
 
 // GET single blog
 export async function GET(request, { params }) {
@@ -41,7 +14,6 @@ export async function GET(request, { params }) {
     if (!blog) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
-    console.log(blog)
     return NextResponse.json(blog);
   } catch (error) {
     return NextResponse.json(
@@ -55,7 +27,7 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== 'admin') {
+    if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -73,24 +45,35 @@ export async function PUT(request, { params }) {
       updatedAt: new Date(),
     };
 
+    // Handle image updates
     const newCoverImage = formData.get('coverImage');
     const newThumbnailImage = formData.get('thumbnailImage');
 
     if (newCoverImage || newThumbnailImage) {
-      // Delete old images first
-      await deleteImages(blog);
+      const imagesToUpload = {};
+      const imagesToDelete = {};
+
+      if (newCoverImage) {
+        imagesToUpload.coverImage = newCoverImage;
+        imagesToDelete.coverImage = blog.coverImage;
+      }
+
+      if (newThumbnailImage) {
+        imagesToUpload.thumbnailImage = newThumbnailImage;
+        imagesToDelete.thumbnailImage = blog.thumbnailImage;
+      }
+
+      // Delete old images that are being replaced
+      if (Object.keys(imagesToDelete).length > 0) {
+        await deleteImages(imagesToDelete);
+      }
 
       // Upload new images
-      const imagePaths = await uploadFile(
-        {
-          coverImage: newCoverImage || null,
-          thumbnailImage: newThumbnailImage || null,
-        },
-        updates.title
-      );
-
-      if (imagePaths.coverImage) updates.coverImage = imagePaths.coverImage;
-      if (imagePaths.thumbnailImage) updates.thumbnailImage = imagePaths.thumbnailImage;
+      if (Object.keys(imagesToUpload).length > 0) {
+        const imagePaths = await uploadFile(imagesToUpload, updates.title);
+        if (imagePaths.coverImage) updates.coverImage = imagePaths.coverImage;
+        if (imagePaths.thumbnailImage) updates.thumbnailImage = imagePaths.thumbnailImage;
+      }
     }
 
     const updatedBlog = await Blog.findByIdAndUpdate(
@@ -113,7 +96,7 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== 'admin') {
+    if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -126,8 +109,9 @@ export async function DELETE(request, { params }) {
     // Delete images first
     await deleteImages(blog);
 
-    // Then delete the blog
+    // Delete the blog post
     await Blog.findByIdAndDelete(params.id);
+
     return NextResponse.json({ message: 'Blog deleted successfully' });
   } catch (error) {
     console.error('Error deleting blog:', error);

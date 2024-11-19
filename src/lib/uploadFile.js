@@ -1,13 +1,11 @@
-import fs from 'fs/promises';
-import path from 'path';
+import { storage } from './firebase';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 
 export async function uploadFile(files, title) {
   try {
-    if (!title) {
-      throw new Error('Title is required for upload');
-    }
-
-    // Format title for folder name
+    console.log('Starting upload process');
+    console.log('Files received:', files);
+    
     const formattedTitle = title
       .toLowerCase()
       .replace(/[^a-z0-9\s-]/g, '')
@@ -15,54 +13,77 @@ export async function uploadFile(files, title) {
     
     const timestamp = Date.now();
     const folderName = `${formattedTitle}_${timestamp}`;
-    const folderPath = path.join(process.cwd(), 'public', 'uploads', folderName);
-    
-    // Create folder
-    await fs.mkdir(folderPath, { recursive: true });
-
     const imagePaths = {};
 
-    // Process cover image
+    // Upload cover image if provided
     if (files.coverImage) {
-      const ext = path.extname(files.coverImage.name);
-      const coverPath = path.join(folderPath, `cover${ext}`);
-      const coverBuffer = Buffer.from(await files.coverImage.arrayBuffer());
-      await fs.writeFile(coverPath, coverBuffer);
-      imagePaths.coverImage = `/uploads/${folderName}/cover${ext}`;
+      const coverExt = files.coverImage.name.split('.').pop();
+      const coverPath = `blogs/${folderName}/cover.${coverExt}`;
+      const coverRef = ref(storage, coverPath);
+      const coverBuffer = await files.coverImage.arrayBuffer();
+      await uploadBytes(coverRef, coverBuffer, {
+        contentType: files.coverImage.type
+      });
+      imagePaths.coverImage = await getDownloadURL(coverRef);
+      console.log('Cover image uploaded:', imagePaths.coverImage);
     }
 
-    // Process thumbnail image
+    // Upload thumbnail image if provided
     if (files.thumbnailImage) {
-      const ext = path.extname(files.thumbnailImage.name);
-      const thumbnailPath = path.join(folderPath, `thumbnail${ext}`);
-      const thumbnailBuffer = Buffer.from(await files.thumbnailImage.arrayBuffer());
-      await fs.writeFile(thumbnailPath, thumbnailBuffer);
-      imagePaths.thumbnailImage = `/uploads/${folderName}/thumbnail${ext}`;
+      const thumbnailExt = files.thumbnailImage.name.split('.').pop();
+      const thumbnailPath = `blogs/${folderName}/thumbnail.${thumbnailExt}`;
+      const thumbnailRef = ref(storage, thumbnailPath);
+      const thumbnailBuffer = await files.thumbnailImage.arrayBuffer();
+      await uploadBytes(thumbnailRef, thumbnailBuffer, {
+        contentType: files.thumbnailImage.type
+      });
+      imagePaths.thumbnailImage = await getDownloadURL(thumbnailRef);
+      console.log('Thumbnail image uploaded:', imagePaths.thumbnailImage);
     }
 
     return imagePaths;
   } catch (error) {
     console.error('Error in uploadFile:', error);
-    throw new Error(`Upload failed: ${error.message}`);
+    throw error;
   }
 }
 
-export async function deleteImages(blog) {
+export async function deleteImages(images) {
   try {
-    if (!blog.coverImage && !blog.thumbnailImage) return;
+    const deletePromises = [];
 
-    // Get folder path from either image path
-    const imagePath = blog.coverImage || blog.thumbnailImage;
-    const folderPath = path.join(
-      process.cwd(),
-      'public',
-      path.dirname(imagePath.replace(/^\//, ''))
-    );
+    if (images.coverImage) {
+      try {
+        const coverRef = ref(storage, getPathFromUrl(images.coverImage));
+        deletePromises.push(deleteObject(coverRef));
+      } catch (error) {
+        console.error('Error deleting cover image:', error);
+      }
+    }
 
-    // Delete the entire folder and its contents
-    await fs.rm(folderPath, { recursive: true, force: true });
+    if (images.thumbnailImage) {
+      try {
+        const thumbnailRef = ref(storage, getPathFromUrl(images.thumbnailImage));
+        deletePromises.push(deleteObject(thumbnailRef));
+      } catch (error) {
+        console.error('Error deleting thumbnail image:', error);
+      }
+    }
+
+    await Promise.all(deletePromises);
   } catch (error) {
     console.error('Error deleting images:', error);
     throw new Error('Failed to delete images');
+  }
+}
+
+function getPathFromUrl(url) {
+  try {
+    const baseUrl = `https://firebasestorage.googleapis.com/v0/b/${process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET}/o/`;
+    const path = url.replace(baseUrl, '');
+    return decodeURIComponent(path.split('?')[0]);
+  } catch (error) {
+    console.error('Error extracting path:', error);
+    return null;
   }
 }
