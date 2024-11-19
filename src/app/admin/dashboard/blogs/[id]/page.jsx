@@ -85,110 +85,113 @@ export default function EditBlog({ params }) {
   return (
     <>
       {loading && <Loader />}
-      <div className="max-w-4xl mx-auto rounded-lg shadow p-6" 
-           style={{ backgroundColor: 'var(--background-primary)' }}>
-        <h1 className="text-2xl font-bold mb-6">Edit Blog</h1>
-        
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 rounded">
-            {error}
+      <div className="md:w-[85%] md:ml-[15%]">
+        <div className="bg-white rounded-lg shadow-lg p-4 md:p-6" 
+             style={{ backgroundColor: 'var(--background-primary)' }}>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <h1 className="text-xl md:text-2xl font-bold">Edit Blog</h1>
+            <button
+              onClick={() => router.back()}
+              className="text-sm hover:underline w-full sm:w-auto text-center"
+            >
+              ← Back to Dashboard
+            </button>
           </div>
-        )}
+          
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
+              {error}
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium mb-2">Title</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleInputChange}
-              className="w-full rounded p-2"
-              style={{ 
-                backgroundColor: 'var(--background-primary)',
-                border: '1px solid var(--border-color)',
-              }}
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-2">Description</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              rows={3}
-              className="w-full rounded p-2"
-              style={{ 
-                backgroundColor: 'var(--background-primary)',
-                border: '1px solid var(--border-color)',
-              }}
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-2">Content</label>
-            <div style={{ 
-              backgroundColor: 'var(--background-primary)',
-              border: '1px solid var(--border-color)',
-            }}>
-              <ReactQuill
-                value={formData.content}
-                onChange={(content) => setFormData(prev => ({ ...prev, content }))}
-                className="h-64 mb-12"
-                theme="snow"
+          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+            <div>
+              <label className="block text-sm font-medium mb-2">Title</label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                className="w-full rounded p-2 text-sm md:text-base"
+                style={{ 
+                  backgroundColor: 'var(--background-primary)',
+                  border: '1px solid var(--border-color)',
+                }}
+                required
               />
             </div>
-          </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-2">Cover Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="w-full"
-              style={{ 
-                backgroundColor: 'var(--background-primary)',
-                border: '1px solid var(--border-color)',
-              }}
-            />
-            <p className="mt-1 text-sm">
-              Supported formats: JPG, PNG, GIF, WebP
-            </p>
-            {imagePreview && (
-              <div className="mt-2">
-                <Image 
-                  src={imagePreview}
-                  alt="Preview"
-                  width={200}
-                  height={200}
-                  className="object-cover rounded"
+            <div>
+              <label className="block text-sm font-medium mb-2">Description</label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                rows={3}
+                className="w-full rounded p-2 text-sm md:text-base"
+                style={{ 
+                  backgroundColor: 'var(--background-primary)',
+                  border: '1px solid var(--border-color)',
+                }}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Content</label>
+              <div className="h-[300px] md:h-[400px] mb-12">
+                <ReactQuill
+                  value={formData.content}
+                  onChange={(content) => setFormData(prev => ({ ...prev, content }))}
+                  className="h-full"
+                  theme="snow"
                 />
               </div>
-            )}
-          </div>
+            </div>
 
-          <div className="flex justify-end space-x-4">
-            <button
-              type="button"
-              onClick={() => router.back()}
-              className="px-4 py-2 rounded"
-              style={{ border: '1px solid var(--border-color)' }}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={saving}
-              className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded disabled:opacity-50"
-            >
-              {saving ? 'Saving...' : 'Save Changes'}
-            </button>
-          </div>
-        </form>
+            <div>
+              <label className="block text-sm font-medium mb-2">Cover Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="w-full text-sm md:text-base"
+              />
+              <p className="mt-1 text-xs md:text-sm opacity-70">
+                Supported formats: JPG, PNG, GIF, WebP
+              </p>
+              {imagePreview && (
+                <div className="mt-2">
+                  <Image 
+                    src={imagePreview}
+                    alt="Preview"
+                    width={200}
+                    height={200}
+                    className="object-cover rounded"
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
+              <button
+                type="button"
+                onClick={() => router.back()}
+                className="w-full sm:w-auto px-4 py-2 rounded text-sm md:text-base order-2 sm:order-1"
+                style={{ border: '1px solid var(--border-color)' }}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={saving}
+                className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded disabled:opacity-50 text-sm md:text-base order-1 sm:order-2"
+              >
+                {saving ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </>
   );

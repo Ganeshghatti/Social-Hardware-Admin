@@ -85,3 +85,18 @@ body {
     border-color: var(--border-color) !important;
   }
 }
+
+/* Responsive styles for ReactQuill */
+@media (max-width: 768px) {
+  .ql-toolbar.ql-snow {
+    padding: 4px !important;
+  }
+  
+  .ql-toolbar.ql-snow .ql-formats {
+    margin-right: 8px !important;
+  }
+  
+  .ql-container.ql-snow {
+    font-size: 14px !important;
+  }
+}

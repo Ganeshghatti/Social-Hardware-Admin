@@ -66,12 +66,12 @@ export default function Dashboard() {
   return (
     <>
       {loading && <Loader />}
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
+      <div className="space-y-6 md:w-[85%] md:ml-[15%]">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <h1 className="text-2xl font-bold">Blog Management</h1>
           <Link 
             href="/admin/dashboard/blogs/new"
-            className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded w-full sm:w-auto text-center"
           >
             Create New Blog
           </Link>
@@ -83,53 +83,63 @@ export default function Dashboard() {
           </div>
         )}
 
-        <div className="rounded-lg shadow overflow-hidden" 
+        <div className="rounded-lg shadow overflow-x-auto" 
              style={{ backgroundColor: 'var(--background-primary)' }}>
           <table className="min-w-full">
             <thead>
               <tr style={{ backgroundColor: 'var(--background-secondary)' }}>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase">Cover</th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase">Title</th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase">Description</th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase">Created At</th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase">Actions</th>
+                <th className="px-4 md:px-6 py-3 text-left text-xs font-medium uppercase">Cover</th>
+                <th className="px-4 md:px-6 py-3 text-left text-xs font-medium uppercase">Title</th>
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium uppercase">Description</th>
+                <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium uppercase">Created At</th>
+                <th className="px-4 md:px-6 py-3 text-left text-xs font-medium uppercase">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y" style={{ borderColor: 'var(--border-color)' }}>
               {blogs && blogs.length > 0 ? (
                 blogs.map((blog) => (
                   <tr key={blog._id}>
-                    <td className="px-6 py-4">
+                    <td className="px-4 md:px-6 py-4">
                       <img 
                         src={blog.coverImage} 
                         alt={blog.title}
-                        className="h-12 w-12 object-cover rounded"
+                        className="h-10 w-10 md:h-12 md:w-12 object-cover rounded"
                       />
                     </td>
-                    <td className="px-6 py-4">{truncateText(blog.title, 50)}</td>
-                    <td className="px-6 py-4 max-w-md">{truncateText(blog.description, 100)}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 md:px-6 py-4">
+                      <div className="max-w-[150px] md:max-w-none">
+                        {truncateText(blog.title, 30)}
+                      </div>
+                    </td>
+                    <td className="hidden md:table-cell px-6 py-4 max-w-md">
+                      {truncateText(blog.description, 100)}
+                    </td>
+                    <td className="hidden sm:table-cell px-6 py-4">
                       {new Date(blog.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 space-x-2">
-                      <Link 
-                        href={`/admin/dashboard/blogs/${blog._id}`}
-                        className="hover:underline"
-                      >
-                        Edit
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(blog._id)}
-                        className="hover:underline"
-                      >
-                        Delete
-                      </button>
+                    <td className="px-4 md:px-6 py-4">
+                      <div className="flex flex-col items-center sm:flex-row gap-2 sm:gap-4">
+                        <Link 
+                          href={`/admin/dashboard/blogs/${blog._id}`}
+                          className="text-orange-500 hover:underline"
+                        >
+                          Edit
+                        </Link>
+                        <button
+                          onClick={() => handleDelete(blog._id)}
+                          className="text-red-500 hover:underline"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="text-center">No blogs available</td>
+                  <td colSpan="5" className="px-6 py-4 text-center">
+                    {loading ? 'Loading...' : error ? 'Error loading blogs' : 'No blogs found'}
+                  </td>
                 </tr>
               )}
             </tbody>
