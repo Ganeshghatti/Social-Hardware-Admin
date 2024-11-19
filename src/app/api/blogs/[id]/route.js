@@ -27,7 +27,7 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) {
+    if (!session || session.user.role !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -38,8 +38,18 @@ export async function PUT(request, { params }) {
     }
 
     const formData = await request.formData();
+    const title = formData.get('title');
+    
+    // Generate new slug if title changed
+    let slug = blog.slug;
+    if (title && title !== blog.title) {
+      const baseSlug = generateSlug(title);
+      slug = await ensureUniqueSlug(baseSlug);
+    }
+
     const updates = {
-      title: formData.get('title'),
+      title,
+      slug,
       description: formData.get('description'),
       content: formData.get('content'),
       updatedAt: new Date(),

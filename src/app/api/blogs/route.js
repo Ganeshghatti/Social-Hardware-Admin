@@ -21,44 +21,66 @@ export async function GET() {
   }
 }
 
+// Helper function to generate slug
+function generateSlug(title) {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+// Helper function to ensure unique slug
+async function ensureUniqueSlug(baseSlug) {
+  let slug = baseSlug;
+  let counter = 1;
+  
+  while (await Blog.findOne({ slug })) {
+    slug = `${baseSlug}-${counter}`;
+    counter++;
+  }
+  
+  return slug;
+}
+
 // POST new blog
 export async function POST(request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) {
+    if (!session || session.user.role !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    await dbConnect();
     const formData = await request.formData();
+
     const title = formData.get('title');
     const description = formData.get('description');
     const content = formData.get('content');
     const coverImage = formData.get('coverImage');
     const thumbnailImage = formData.get('thumbnailImage');
 
-    if (!title || !content || !coverImage || !thumbnailImage) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+    if (!title || !description || !content || !coverImage || !thumbnailImage) {
+      throw new Error('All fields including both images are required');
     }
 
+    // Generate and ensure unique slug
+    const baseSlug = generateSlug(title);
+    const slug = await ensureUniqueSlug(baseSlug);
+
     // Upload images
-    console.log('Uploading images...');
-    const uploadedImages = await uploadFile(
+    const imagePaths = await uploadFile(
       { coverImage, thumbnailImage },
       title
     );
-    console.log('Images uploaded:', uploadedImages);
 
-    await dbConnect();
-
+    // Create blog post with slug
     const blog = await Blog.create({
       title,
+      slug,
       description,
       content,
-      coverImage: uploadedImages.coverImage,
-      thumbnailImage: uploadedImages.thumbnailImage,
+      coverImage: imagePaths.coverImage,
+      thumbnailImage: imagePaths.thumbnailImage,
     });
 
     return NextResponse.json(blog);
