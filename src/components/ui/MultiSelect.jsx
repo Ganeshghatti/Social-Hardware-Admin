@@ -12,10 +12,10 @@ const Multiselect = ({
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
 
-  const filteredOptions = options.filter(
+  const filteredOptions = options?.filter(
     (option) =>
-      option.label.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      !selectedOptions.some((selected) => selected.value === option.value)
+      option?.name?.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      !selectedOptions.some((selected) => selected.name === option.name)
   );
 
   useEffect(() => {
@@ -82,13 +82,13 @@ const Multiselect = ({
 
   const toggleOption = (option) => {
     const isSelected = selectedOptions.some(
-      (selected) => selected.value === option.value
+      (selected) => selected.name === option.name
     );
     let newSelection;
 
     if (isSelected) {
       newSelection = selectedOptions.filter(
-        (selected) => selected.value !== option.value
+        (selected) => selected.name !== option.name
       );
     } else {
       newSelection = [...selectedOptions, option];
@@ -102,7 +102,7 @@ const Multiselect = ({
   const removeOption = (option, e) => {
     e.stopPropagation();
     const newSelection = selectedOptions.filter(
-      (selected) => selected.value !== option.value
+      (selected) => selected.name !== option.name
     );
     setSelectedOptions(newSelection);
     onChange(newSelection);
@@ -111,14 +111,18 @@ const Multiselect = ({
 
   return (
     <div className="max-w-sm w-full relative" ref={dropdownRef}>
-      <div className={`bg-[#1A1A1A] w-full rounded-lg border border-white/30 outline-none transition-all ${isOpen ? "ring-1 ring-white" : ""} p-1.5`}>
+      <div
+        className={`bg-[#1A1A1A] w-full rounded-lg border border-white/30 outline-none transition-all ${
+          isOpen ? "ring-1 ring-white" : ""
+        } p-1.5`}
+      >
         <div className="flex flex-wrap gap-1 min-h-[28px] items-center">
-          {selectedOptions.map((option) => (
+          {selectedOptions.map((option, i) => (
             <div
-              key={option.value}
+              key={i}
               className="bg-[#2D2D2D] rounded px-2 py-0.5 flex items-center gap-1 text-white text-sm"
             >
-              <span>{option.label}</span>
+              <span>{option.name}</span>
               <button
                 onClick={(e) => removeOption(option, e)}
                 className="hover:text-white/50 ml-1 font-medium"
@@ -148,7 +152,7 @@ const Multiselect = ({
           <div className="p-1">
             {filteredOptions.map((option, index) => (
               <div
-                key={option.value}
+                key={index}
                 className={`rounded px-3 py-2 cursor-pointer text-sm ${
                   index === activeIndex
                     ? "bg-orange-500/20 text-orange-400"
@@ -160,9 +164,18 @@ const Multiselect = ({
                 }}
                 onMouseEnter={() => setActiveIndex(index)}
               >
-                {option.label}
+                {option.name}
               </div>
             ))}
+          </div>
+        </div>
+      )}
+      {filteredOptions.length === 0 && isOpen && (
+        <div className="absolute mt-1 w-full bg-[#2D2D2D] rounded-lg shadow-lg border border-[#2D2D2D]/30 z-50">
+          <div className="p-1">
+            <div className="rounded px-3 py-2 cursor-pointer text-sm text-gray-300 ">
+              No results found
+            </div>
           </div>
         </div>
       )}

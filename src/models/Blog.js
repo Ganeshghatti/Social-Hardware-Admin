@@ -30,6 +30,12 @@ const BlogSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  category: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+    }
+  ],
   updatedAt: {
     type: Date,
     default: Date.now,

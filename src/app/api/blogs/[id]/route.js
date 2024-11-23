@@ -9,7 +9,7 @@ import { uploadFile, deleteImages } from '@/lib/uploadFile';
 export async function GET(request, { params }) {
   try {
     await dbConnect();
-    const blog = await Blog.findById(params.id);
+    const blog = await Blog.findById(params.id).populate('category');
     
     if (!blog) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
@@ -52,6 +52,7 @@ export async function PUT(request, { params }) {
       slug,
       description: formData.get('description'),
       content: formData.get('content'),
+      category: JSON.parse(formData.get('category')),
       updatedAt: new Date(),
     };
 

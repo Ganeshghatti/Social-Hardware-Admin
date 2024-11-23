@@ -32,6 +32,7 @@ export default function Dashboard() {
         throw new Error('Failed to fetch blogs');
       }
       const data = await response.json();
+      console.log("datas",data)
       setBlogs(data);
     } catch (err) {
       setError(err.message);
