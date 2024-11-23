@@ -6,6 +6,7 @@ import Image from "next/image";
 import Loader from "@/components/Loader";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
+import MultiSelect from "@/components/ui/MultiSelect";
 
 export default function NewBlog() {
   const router = useRouter();
@@ -78,6 +79,16 @@ export default function NewBlog() {
     }
   };
 
+  const options = [
+    { value: "React JS", label: "React JS" },
+    { value: "Angular", label: "Angular" },
+    { value: "Vue JS", label: "Vue JS" },
+    { value: "Svelte", label: "Svelte" },
+    { value: "Next JS", label: "Next JS" },
+    { value: "Gatsby", label: "Gatsby" },
+    { value: "Nuxt JS", label: "Nuxt JS" },
+  ];
+
   return (
     <>
       {loading && <Loader />}
@@ -121,6 +132,16 @@ export default function NewBlog() {
                 required
               />
             </div>
+            <h2>Category</h2>
+            <MultiSelect
+        options={options}
+        defaultValue={[
+          { value: "Vue JS", label: "Vue JS" },
+          { value: "Svelte", label: "Svelte" },
+          { value: "Next JS", label: "Next JS" },
+        ]}
+        onChange={(selectedOptions) => console.log(selectedOptions)}
+      />
 
             <div>
               <label className="block text-sm font-medium mb-2">
