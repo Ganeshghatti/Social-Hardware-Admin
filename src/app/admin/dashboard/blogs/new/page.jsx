@@ -152,7 +152,7 @@ export default function NewBlog() {
               onChange={(selectedOptions) => {
                 setFormData({
                   ...formData,
-                  category:  selectedOptions.map((option) => (option) => option._id),
+                  category:  selectedOptions.map((option) => option._id),
                 })
               }}
             />
