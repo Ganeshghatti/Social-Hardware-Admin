@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import CategoryTable from "@/components/CategoryTable";
 import Link from "next/link";
-import Modal, { ModalTrigger } from "@/components/ui/Modal";
+import Modal from "@/components/ui/Modal";
 
 const page = () => {
   const [categoryName, setCategoryName] = useState("");
@@ -92,11 +92,10 @@ const page = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 className="text-2xl font-bold">Category Management</h1>
         <Modal
-          open={isModalOpen}
-          onOpenChange={setIsModalOpen}
-          title="Add New Category"
-          defaultOpen={false}
-          modalBtn={
+          openModal={isModalOpen}
+          setOpenModal={setIsModalOpen}
+          modalTitle="Add New Category"
+          openBtn={
             <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded w-full sm:w-auto text-center">
               Add Category
             </button>

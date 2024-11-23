@@ -10,7 +10,6 @@
     "create-admin": "node -r dotenv/config scripts/create-admin.js"
   },
   "dependencies": {
-    "@radix-ui/react-dialog": "^1.1.2",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "firebase": "^11.0.2",

@@ -1,47 +1,57 @@
- import React from "react";
-import * as Dialog from "@radix-ui/react-dialog";
-import { IoMdClose } from "react-icons/io";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { IoIosCloseCircleOutline } from "react-icons/io";
 
-export const ModalTrigger = ({ children }) => {
-  return <Dialog.Trigger asChild>{children}</Dialog.Trigger>;
-};
 const Modal = ({
-  title,
   children,
-  modalBtn,
-  closeIcon = true,
-  contentProps,
-  customCloseIcon,
-  ...props
+  openModal,
+  setOpenModal,
+  openBtn,
+  modalTitle,
 }) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
-    <Dialog.Root {...props}>
-      <Dialog.Trigger asChild>{modalBtn}</Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Overlay className="Modal-Overlay inset-0 fixed bg-black/50 z-50" />
-        <Dialog.Content
-          {...contentProps}
-          className={`Modal-Content md:w-auto w-[95vw] md:min-w-[400px] overflow-auto max-w-screen max-h-screen fixed z-50 top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-[#F5F8FF] dark:bg-[#2d2d2d] border border-[#1a1a1a]/30  ${contentProps?.className}`}
-        >
-          {(closeIcon || title) && (
-            <div className="flex items-start justify-end w-full p-2">
-              {title && (
-                <Dialog.Title className="flex-grow font-semibold text-white text-lg">
-                  {title}
-                </Dialog.Title>
-              )}
-              {closeIcon && !customCloseIcon && (
-                <Dialog.Close className="aspect-square transition-all p-0.5 rounded-md ring ring-orange-500/20 active:ring-orange-500/50">
-                  <IoMdClose />
-                </Dialog.Close>
-              )}
-              {customCloseIcon && customCloseIcon}
+    <>
+      <div className="w-fit" onClick={() => setOpenModal(true)}>
+        {openBtn}
+      </div>
+
+      {mounted &&
+        createPortal(
+          <div
+            className={`fixed inset-0 h-screen w-screen grid place-content-center bg-black/50 z-50 transition-all duration-200 ${
+              openModal
+                ? "opacity-100 visible"
+                : "opacity-0 invisible"
+            }`}
+            onClick={() => setOpenModal(false)}
+          >
+            <div
+              className={`relative w-[90vw] flex flex-col sm:max-w-[400px] rounded-xl shadow-md bg-[#2D2D2D] overflow-hidden transition-transform duration-200 ${
+                openModal ? "scale-100" : "scale-95"
+              }`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="w-full bg-[#2D2D2D]/20 font-semibold flex items-center justify-between relative">
+                <h3 className="p-3 text-white font-medium text-md">{modalTitle}</h3>
+                <IoIosCloseCircleOutline
+                  onClick={() => setOpenModal(false)}
+                  className="absolute top-3 right-3 text-2xl cursor-pointer text-white hover:text-white/50"
+                />
+              </div>
+              <div className="flex items-center justify-center flex-1">
+                {children}
+              </div>
             </div>
-          )}
-          {children}
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+          </div>,
+          document.body
+        )}
+    </>
   );
 };
 
