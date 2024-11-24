@@ -9,7 +9,7 @@ import { uploadFile } from "@/lib/uploadFile";
 export async function GET() {
   try {
     await dbConnect();
-    const blogs = await Blog.find({})
+    const blogs = await Blog.find()
       .populate("category")
       .select("title description thumbnailImage createdAt updatedAt category")
       .sort({ createdAt: -1 });

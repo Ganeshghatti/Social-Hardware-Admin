@@ -20,19 +20,16 @@ export default function Dashboard() {
       : text;
   };
 
-  useEffect(() => {
-    fetchBlogs();
-  }, []);
-
   const fetchBlogs = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/blogs');
+      const response = await fetch('/api/blogs', {
+        method: 'GET',
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch blogs');
       }
       const data = await response.json();
-      console.log("datas",data)
       setBlogs(data);
     } catch (err) {
       setError(err.message);
@@ -70,6 +67,10 @@ export default function Dashboard() {
   const handleEdit = (id) => {
     router.push(`/admin/dashboard/blogs/${id}`);
   };
+
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
 
   return (
     <>
