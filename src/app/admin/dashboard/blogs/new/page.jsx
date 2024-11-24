@@ -94,14 +94,9 @@ export default function NewBlog() {
     }
   };
 
-
-  useEffect(() => {
-    console.log("formData", formData);
-  }, [formData]);
   useEffect(() => {
     fetchCategories();
   }, []);
-
   return (
     <>
       {loading && <Loader />}
@@ -146,16 +141,16 @@ export default function NewBlog() {
               />
             </div>
             <div>
-            <label className="block text-sm font-medium mb-2">Category</label>
-            <MultiSelect
-              options={Categories}
-              onChange={(selectedOptions) => {
-                setFormData({
-                  ...formData,
-                  category:  selectedOptions.map((option) => option._id),
-                })
-              }}
-            />
+              <label className="block text-sm font-medium mb-2">Category</label>
+              <MultiSelect
+                options={Categories}
+                onChange={(selectedOptions) => {
+                  setFormData({
+                    ...formData,
+                    category: selectedOptions.map((option) => option._id),
+                  });
+                }}
+              />
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">

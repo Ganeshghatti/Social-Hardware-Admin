@@ -39,12 +39,10 @@ export default function EditBlog({ params }) {
   };
 
   useEffect(() => {
-    (
-      async () => {
-        await fetchBlog();
-        await fetchCategories();
-      }
-    )()
+    (async () => {
+      await fetchBlog();
+      await fetchCategories();
+    })();
   }, [params.id]);
 
   const fetchBlog = async () => {
@@ -52,7 +50,6 @@ export default function EditBlog({ params }) {
       const response = await fetch(`/api/blogs/${params.id}`);
       const data = await response.json();
       setFormData(data);
-      console.log(data);
       setCoverPreview(data.coverImage);
       setThumbnailPreview(data.thumbnailImage);
     } catch (error) {
@@ -167,17 +164,17 @@ export default function EditBlog({ params }) {
               />
             </div>
             <div>
-            <label className="block text-sm font-medium mb-2">Category</label>
-            <MultiSelect
-              options={categories || []}
-              defaultValue={formData.category || []}
-              onChange={(selectedOptions) => {
-                setFormData({
-                  ...formData,
-                  category:  selectedOptions,
-                })
-              }}
-            />
+              <label className="block text-sm font-medium mb-2">Category</label>
+              <MultiSelect
+                options={categories || []}
+                defaultValue={formData.category || []}
+                onChange={(selectedOptions) => {
+                  setFormData({
+                    ...formData,
+                    category: selectedOptions,
+                  });
+                }}
+              />
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">

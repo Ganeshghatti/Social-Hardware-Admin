@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import Modal from "./ui/Modal";
 
 const CategoryTable = ({ data, fetchCategories }) => {
+  // for delete
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [activeDeleteId, setActiveDeleteId] = useState(null);
+
+  // for update
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [activeUpdateId, setActiveUpdateId] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateValue, setUpdateValue] = useState("");
@@ -97,39 +100,52 @@ const CategoryTable = ({ data, fetchCategories }) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((category) => (
+          {data.length > 0 ? (
+            data.map((category) => (
+              <tr
+                key={category._id}
+                className="border-t"
+                style={{ borderColor: "var(--border-color)" }}
+              >
+                <td className="px-4 md:px-6 py-4">
+                  <div className="max-w-xs truncate">{category.name}</div>
+                </td>
+                <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
+                  {new Date(category.createdAt).toLocaleDateString()}
+                </td>
+                <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
+                  {new Date(category.updatedAt).toLocaleDateString()}
+                </td>
+                <td className="px-4 md:px-6 py-4">
+                  <div className="flex gap-6">
+                    <button
+                      onClick={() =>
+                        openUpdateModal(category._id, category.name)
+                      }
+                      className="text-blue-600 hover:text-blue-800"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => openDeleteModal(category._id)}
+                      className="text-red-600 hover:underline"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))
+          ) : (
             <tr
-              key={category._id}
-              className="border-t"
+              className="border-t text-center !w-full"
               style={{ borderColor: "var(--border-color)" }}
             >
-              <td className="px-4 md:px-6 py-4">
-                <div className="max-w-xs truncate">{category.name}</div>
-              </td>
-              <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
-                {new Date(category.createdAt).toLocaleDateString()}
-              </td>
-              <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
-                {new Date(category.updatedAt).toLocaleDateString()}
-              </td>
-              <td className="px-4 md:px-6 py-4">
-                <div className="flex gap-6">
-                  <button
-                    onClick={() => openUpdateModal(category._id, category.name)}
-                    className="text-blue-600 hover:text-blue-800"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => openDeleteModal(category._id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    Delete
-                  </button>
-                </div>
+              <td className="px-4 flex-1 md:px-6 py-4 text-center">
+                No Category Found{" "}
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
 

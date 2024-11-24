@@ -6,7 +6,6 @@ import Modal from "@/components/ui/Modal";
 
 const page = () => {
   const [categoryName, setCategoryName] = useState("");
-  const [updatedCategoryName, setUpdatedCategoryName] = useState("");
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,7 +36,7 @@ const page = () => {
 
       const newCategory = await response.json();
       setCategoryName("");
-      setIsModalOpen(false)
+      setIsModalOpen(false);
       await fetchCategories();
     } catch (error) {
       alert(error.message);
@@ -48,38 +47,14 @@ const page = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('/api/category');
+      const response = await fetch("/api/category");
       if (!response.ok) {
-        throw new Error('Failed to fetch categories');
+        throw new Error("Failed to fetch categories");
       }
       const data = await response.json();
       setCategories(data);
     } catch (error) {
-      alert('Error fetching categories');
-    }
-  };
-
-  const handleEdit = async (e, id) => {
-    e.preventDefault();
-
-    try {
-      const response = await fetch(`/api/categories/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // body: JSON.stringify({ name: UpdatedcategoryName.trim() }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update category');
-      }
-
-      alert('Category updated successfully');
-      fetchCategories();
-    //   setCategoryName('');
-    } catch (error) {
-      alert('Error updating category');
+      alert("Error fetching categories");
     }
   };
 
@@ -140,11 +115,7 @@ const page = () => {
           </form>
         </Modal>
       </div>
-      {
-        categories.length > 0 ? (
-            <CategoryTable data={categories} fetchCategories={fetchCategories}/>
-        ) : <p>No categories found</p>
-      }
+        <CategoryTable data={categories || []} fetchCategories={fetchCategories} />
     </div>
   );
 };
