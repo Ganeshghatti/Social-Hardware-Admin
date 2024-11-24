@@ -1,29 +1,50 @@
-'use client';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
-import Loader from '@/components/Loader';
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
-import 'react-quill/dist/quill.snow.css';
+"use client";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import Loader from "@/components/Loader";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
+import MultiSelect from "@/components/ui/MultiSelect";
 
 export default function EditBlog({ params }) {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    content: '',
+    title: "",
+    description: "",
+    content: "",
     coverImage: null,
     thumbnailImage: null,
+    category: [],
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [coverPreview, setCoverPreview] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [error, setError] = useState(null);
+  const [categories, setCategories] = useState([]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch("/api/category");
+      if (!response.ok) {
+        throw new Error("Failed to fetch categories");
+      }
+      const data = await response.json();
+      setCategories(data);
+    } catch (error) {
+      alert("Error fetching categories");
+    }
+  };
 
   useEffect(() => {
-    fetchBlog();
+    (
+      async () => {
+        await fetchBlog();
+        await fetchCategories();
+      }
+    )()
   }, [params.id]);
 
   const fetchBlog = async () => {
@@ -31,12 +52,12 @@ export default function EditBlog({ params }) {
       const response = await fetch(`/api/blogs/${params.id}`);
       const data = await response.json();
       setFormData(data);
-      console.log(data)
+      console.log(data);
       setCoverPreview(data.coverImage);
       setThumbnailPreview(data.thumbnailImage);
     } catch (error) {
-      console.error('Error fetching blog:', error);
-      setError('Failed to fetch blog');
+      console.error("Error fetching blog:", error);
+      setError("Failed to fetch blog");
     } finally {
       setLoading(false);
     }
@@ -48,30 +69,33 @@ export default function EditBlog({ params }) {
 
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('title', formData.title);
-      formDataToSend.append('description', formData.description);
-      formDataToSend.append('content', formData.content);
-      
+      formDataToSend.append("title", formData.title);
+      formDataToSend.append("description", formData.description);
+      formDataToSend.append("content", formData.content);
+
+      const categoryIds = formData.category.map((category) => category._id);
+      formDataToSend.append("category", JSON.stringify(categoryIds));
+
       if (formData.coverImage instanceof File) {
-        formDataToSend.append('coverImage', formData.coverImage);
+        formDataToSend.append("coverImage", formData.coverImage);
       }
       if (formData.thumbnailImage instanceof File) {
-        formDataToSend.append('thumbnailImage', formData.thumbnailImage);
+        formDataToSend.append("thumbnailImage", formData.thumbnailImage);
       }
 
       const response = await fetch(`/api/blogs/${params.id}`, {
-        method: 'PUT',
+        method: "PUT",
         body: formDataToSend,
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update blog');
+        throw new Error("Failed to update blog");
       }
 
-      router.push('/admin/dashboard');
+      router.push("/admin/dashboard");
     } catch (error) {
-      console.error('Error updating blog:', error);
-      setError('Failed to update blog');
+      console.error("Error updating blog:", error);
+      setError("Failed to update blog");
     } finally {
       setSaving(false);
     }
@@ -79,26 +103,26 @@ export default function EditBlog({ params }) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e, type) => {
     const file = e.target.files[0];
     if (file) {
-      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
       if (!validTypes.includes(file.type)) {
-        setError('Invalid file type. Only images are allowed');
-        e.target.value = '';
+        setError("Invalid file type. Only images are allowed");
+        e.target.value = "";
         return;
       }
 
-      setFormData(prev => ({ ...prev, [type]: file }));
-      if (type === 'coverImage') {
+      setFormData((prev) => ({ ...prev, [type]: file }));
+      if (type === "coverImage") {
         setCoverPreview(URL.createObjectURL(file));
       } else {
         setThumbnailPreview(URL.createObjectURL(file));
       }
-      setError('');
+      setError("");
     }
   };
 
@@ -106,8 +130,10 @@ export default function EditBlog({ params }) {
     <>
       {loading && <Loader />}
       <div className="md:w-[85%] md:ml-[15%]">
-        <div className="bg-white rounded-lg shadow-lg p-4 md:p-6" 
-             style={{ backgroundColor: 'var(--background-primary)' }}>
+        <div
+          className="bg-white rounded-lg shadow-lg p-4 md:p-6"
+          style={{ backgroundColor: "var(--background-primary)" }}
+        >
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h1 className="text-xl md:text-2xl font-bold">Edit Blog</h1>
             <button
@@ -117,7 +143,7 @@ export default function EditBlog({ params }) {
               ← Back to Dashboard
             </button>
           </div>
-          
+
           {error && (
             <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
               {error}
@@ -133,25 +159,39 @@ export default function EditBlog({ params }) {
                 value={formData.title}
                 onChange={handleInputChange}
                 className="w-full rounded p-2 text-sm md:text-base"
-                style={{ 
-                  backgroundColor: 'var(--background-primary)',
-                  border: '1px solid var(--border-color)',
+                style={{
+                  backgroundColor: "var(--background-primary)",
+                  border: "1px solid var(--border-color)",
                 }}
                 required
               />
             </div>
-
             <div>
-              <label className="block text-sm font-medium mb-2">Description</label>
+            <label className="block text-sm font-medium mb-2">Category</label>
+            <MultiSelect
+              options={categories || []}
+              defaultValue={formData.category || []}
+              onChange={(selectedOptions) => {
+                setFormData({
+                  ...formData,
+                  category:  selectedOptions,
+                })
+              }}
+            />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Description
+              </label>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
                 rows={3}
                 className="w-full rounded p-2 text-sm md:text-base"
-                style={{ 
-                  backgroundColor: 'var(--background-primary)',
-                  border: '1px solid var(--border-color)',
+                style={{
+                  backgroundColor: "var(--background-primary)",
+                  border: "1px solid var(--border-color)",
                 }}
                 required
               />
@@ -162,7 +202,9 @@ export default function EditBlog({ params }) {
               <div className="h-[300px] md:h-[400px] mb-12">
                 <ReactQuill
                   value={formData.content}
-                  onChange={(content) => setFormData(prev => ({ ...prev, content }))}
+                  onChange={(content) =>
+                    setFormData((prev) => ({ ...prev, content }))
+                  }
                   className="h-full"
                   theme="snow"
                 />
@@ -170,11 +212,13 @@ export default function EditBlog({ params }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Cover Image</label>
+              <label className="block text-sm font-medium mb-2">
+                Cover Image
+              </label>
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleFileChange(e, 'coverImage')}
+                onChange={(e) => handleFileChange(e, "coverImage")}
                 className="w-full text-sm md:text-base"
               />
               <p className="mt-1 text-xs md:text-sm opacity-70">
@@ -182,7 +226,7 @@ export default function EditBlog({ params }) {
               </p>
               {coverPreview && (
                 <div className="mt-2">
-                  <Image 
+                  <Image
                     src={coverPreview}
                     alt="Preview"
                     width={200}
@@ -193,11 +237,13 @@ export default function EditBlog({ params }) {
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Thumbnail Image</label>
+              <label className="block text-sm font-medium mb-2">
+                Thumbnail Image
+              </label>
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleFileChange(e, 'thumbnailImage')}
+                onChange={(e) => handleFileChange(e, "thumbnailImage")}
                 className="w-full text-sm md:text-base"
               />
               <p className="mt-1 text-xs md:text-sm opacity-70">
@@ -205,7 +251,7 @@ export default function EditBlog({ params }) {
               </p>
               {thumbnailPreview && (
                 <div className="mt-2">
-                  <Image 
+                  <Image
                     src={thumbnailPreview}
                     alt="Preview"
                     width={200}
@@ -220,7 +266,7 @@ export default function EditBlog({ params }) {
                 type="button"
                 onClick={() => router.back()}
                 className="w-full sm:w-auto px-4 py-2 rounded text-sm md:text-base order-2 sm:order-1"
-                style={{ border: '1px solid var(--border-color)' }}
+                style={{ border: "1px solid var(--border-color)" }}
               >
                 Cancel
               </button>
@@ -229,7 +275,7 @@ export default function EditBlog({ params }) {
                 disabled={saving}
                 className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded disabled:opacity-50 text-sm md:text-base order-1 sm:order-2"
               >
-                {saving ? 'Saving...' : 'Save Changes'}
+                {saving ? "Saving..." : "Save Changes"}
               </button>
             </div>
           </form>

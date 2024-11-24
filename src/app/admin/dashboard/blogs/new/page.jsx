@@ -148,7 +148,7 @@ export default function NewBlog() {
             <div>
             <label className="block text-sm font-medium mb-2">Category</label>
             <MultiSelect
-              options={Categories || []}
+              options={Categories}
               onChange={(selectedOptions) => {
                 setFormData({
                   ...formData,

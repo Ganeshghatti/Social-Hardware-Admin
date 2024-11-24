@@ -19,6 +19,15 @@ const Multiselect = ({
   );
 
   useEffect(() => {
+    if (defaultValue.length > 0) {
+      setSelectedOptions(defaultValue);
+    }
+  }, [defaultValue]);
+
+  useEffect(() => {
+    if (defaultValue.length > 0) {
+      setSelectedOptions(defaultValue);
+    }
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
@@ -32,6 +41,9 @@ const Multiselect = ({
 
   // Show dropdown when typing
   useEffect(() => {
+    if (defaultValue.length > 0) {
+      setSelectedOptions(defaultValue);
+    }
     if (searchTerm.length > 0) {
       setIsOpen(true);
       setActiveIndex(0); // Reset selection to first item
