@@ -17,6 +17,7 @@ export default function EditBlog({ params }) {
     title: "",
     description: "",
     content: "",
+    slug: "",
     coverImage: null,
     thumbnailImage: null,
     category: [],
@@ -40,13 +41,13 @@ export default function EditBlog({ params }) {
       const file = input.files[0];
       if (file) {
         try {
-          const formDatatoSend = new FormData();
-          formDatatoSend.append("image", file);
-          formDatatoSend.append("slug", formData.slug);
-          console.log(formDatatoSend);
+          const uploadFormData = new FormData();
+          uploadFormData.append("image", file);
+          uploadFormData.append("id", params.id);
+
           const response = await fetch("/api/blogs/upload-inline-image", {
             method: "POST",
-            body: formDatatoSend,
+            body: uploadFormData,
           });
 
           if (!response.ok) {
@@ -58,7 +59,6 @@ export default function EditBlog({ params }) {
           const range = editor.getSelection(true);
           editor.insertEmbed(range.index, "image", data.url);
           editor.setSelection(range.index + 1);
-          editor.insertText(range.index + 1, "\n");
         } catch (error) {
           console.error("Error uploading image:", error);
           setError("Failed to upload image");
@@ -133,18 +133,16 @@ export default function EditBlog({ params }) {
       if (imagesToDelete.length > 0) {
         formDataToSend.append("imagesToDelete", JSON.stringify(imagesToDelete));
       }
-      console.log(formDataToSend);
       const response = await fetch(`/api/blogs/${params.id}`, {
         method: "PUT",
         body: formDataToSend,
       });
-      console.log(response);
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.error || "Failed to update blog");
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       setError(error.message);
     } finally {
       setSaving(false);
@@ -333,22 +331,18 @@ export default function EditBlog({ params }) {
               />
             </div>
 
-            <div>
+            <div className="mb-12">
               <label className="block text-sm font-medium mb-2">Content</label>
-              <div className="h-[300px] md:h-[400px] mb-12">
-                <ReactQuill
-                  value={formData.content}
-                  onChange={(content) => {
-                    console.log("Content changed:", content);
-                    setFormData({ ...formData, content });
-                  }}
-                  className="h-64 mb-12"
-                  theme="snow"
-                  ref={quillRef}
-                  modules={modules}
-                  formats={formats}
-                />
-              </div>
+              <ReactQuill
+                value={formData.content}
+                onChange={(content) => {
+                  setFormData({ ...formData, content });
+                }}
+                theme="snow"
+                ref={quillRef}
+                modules={modules}
+                formats={formats}
+              />
             </div>
 
             <div>

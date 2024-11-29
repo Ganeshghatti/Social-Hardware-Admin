@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { uploadImg } from "@/lib/uploadImg";
+import Blog from "@/models/Blog";
+import dbConnect from "@/lib/mongodb";
 
 export async function POST(request) {
   try {
@@ -10,17 +12,25 @@ export async function POST(request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    await dbConnect();
     const formData = await request.formData();
     const image = formData.get("image");
-    const slug = formData.get("slug");
-    console.log(image, slug);
-    if (!image) {
-      return NextResponse.json({ error: "Image is required" }, { status: 400 });
+    const blogId = formData.get("id");
+
+    if (!image || !blogId) {
+      return NextResponse.json(
+        { error: "Image and blog ID are required" },
+        { status: 400 }
+      );
     }
 
-    // Upload image to the blog's inline-images folder
-    const imageUrl = await uploadImg(image, `${slug}/inline-images`);
-    console.log(imageUrl);
+    const blog = await Blog.findById(blogId);
+    if (!blog) {
+      return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+    }
+
+    const imageUrl = await uploadImg(image, `${blog.slug}/inline-images`);
+
     return NextResponse.json({ url: imageUrl });
   } catch (error) {
     console.error("Error uploading image:", error);

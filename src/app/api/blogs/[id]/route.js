@@ -41,19 +41,21 @@ export async function PUT(request, { params }) {
     const formData = await request.formData();
     const newContent = formData.get("content");
     const oldContent = blog.content;
-    
+
     // Get old and new inline image URLs from the content
-    const oldInlineImages = oldContent.match(/src="([^"]+)"/g)?.map(src => 
-      src.replace('src="', '').replace('"', '')
-    ) || [];
-    
-    const newInlineImages = newContent.match(/src="([^"]+)"/g)?.map(src => 
-      src.replace('src="', '').replace('"', '')
-    ) || [];
+    const oldInlineImages =
+      oldContent
+        .match(/src="([^"]+)"/g)
+        ?.map((src) => src.replace('src="', "").replace('"', "")) || [];
+
+    const newInlineImages =
+      newContent
+        .match(/src="([^"]+)"/g)
+        ?.map((src) => src.replace('src="', "").replace('"', "")) || [];
 
     // Find images that were removed
     const removedImages = oldInlineImages.filter(
-      oldUrl => !newInlineImages.includes(oldUrl) && oldUrl.includes('blogs/')
+      (oldUrl) => !newInlineImages.includes(oldUrl) && oldUrl.includes("blogs/")
     );
 
     const updates = {
@@ -82,7 +84,8 @@ export async function PUT(request, { params }) {
     }
 
     // Handle thumbnail image update
-    const thumbnailImageChanged = formData.get("thumbnailImageChanged") === "true";
+    const thumbnailImageChanged =
+      formData.get("thumbnailImageChanged") === "true";
     if (thumbnailImageChanged) {
       const newThumbnailImage = formData.get("thumbnailImage");
       if (!newThumbnailImage) {
@@ -96,7 +99,7 @@ export async function PUT(request, { params }) {
 
     // Delete all removed images
     if (imagesToDelete.length > 0) {
-      await Promise.all(imagesToDelete.map(imageUrl => deleteImg(imageUrl)));
+      await Promise.all(imagesToDelete.map((imageUrl) => deleteImg(imageUrl)));
     }
 
     const updatedBlog = await Blog.findByIdAndUpdate(params.id, updates, {
