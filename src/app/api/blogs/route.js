@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
 import { uploadFile } from "@/lib/uploadFile";
+import { generateUniqueSlug } from "@/lib/generateUniqueSlug";
+import { uploadImg } from "@/lib/uploadImg";
 
 // GET all blogs
 export async function GET() {
@@ -11,37 +13,19 @@ export async function GET() {
     await dbConnect();
     const blogs = await Blog.find()
       .populate("category")
-      .select("title description thumbnailImage createdAt updatedAt category")
+      .select(
+        "title description thumbnailImage createdAt updatedAt category status"
+      )
       .sort({ createdAt: -1 });
 
     return NextResponse.json(blogs);
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { error: error.message || "Internal Server Error" },
       { status: 500 }
     );
   }
-}
-
-// Helper function to generate slug
-function generateSlug(title) {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
-// Helper function to ensure unique slug
-async function ensureUniqueSlug(baseSlug) {
-  let slug = baseSlug;
-  let counter = 1;
-
-  while (await Blog.findOne({ slug })) {
-    slug = `${baseSlug}-${counter}`;
-    counter++;
-  }
-
-  return slug;
 }
 
 // POST new blog
@@ -57,38 +41,39 @@ export async function POST(request) {
 
     const title = formData.get("title");
     const description = formData.get("description");
-    const content = formData.get("content");
     const coverImage = formData.get("coverImage");
     const thumbnailImage = formData.get("thumbnailImage");
     const category = JSON.parse(formData.get("category"));
+    const status = formData.get("status") || "private";
 
     if (
       !title ||
       !description ||
-      !content ||
       !coverImage ||
       !thumbnailImage ||
+      !Array.isArray(category) ||
       category.length === 0
     ) {
       throw new Error("All fields including both images are required");
     }
 
     // Generate and ensure unique slug
-    const baseSlug = generateSlug(title);
-    const slug = await ensureUniqueSlug(baseSlug);
+    const slug = await generateUniqueSlug(title);
 
     // Upload images
-    const imagePaths = await uploadFile({ coverImage, thumbnailImage }, title);
+    const coverImageUrl = await uploadImg(coverImage, slug);
+    const thumbnailImageUrl = await uploadImg(thumbnailImage, slug);
 
-    // Create blog post with slug
+    // Create blog post
     const blog = await Blog.create({
       title,
       slug,
       description,
-      content,
-      coverImage: imagePaths.coverImage,
-      thumbnailImage: imagePaths.thumbnailImage,
+      content: "",
+      coverImage: coverImageUrl,
+      thumbnailImage: thumbnailImageUrl,
       category,
+      status,
     });
 
     return NextResponse.json(blog);

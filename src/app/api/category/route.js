@@ -2,14 +2,14 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
-import Category from "@/models/category"
+import Category from "@/models/Category"
 
 
 // GET all categories
 export async function GET(request) {
   try {
     await dbConnect();
-    const categories = await Category.find({});
+    const categories = await Category.find();
     return NextResponse.json(categories);
   } catch (error) {
     return NextResponse.json(

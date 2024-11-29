@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import category from './category';
+import "./Category"
 
 const BlogSchema = new mongoose.Schema({
   title: {
@@ -17,7 +17,7 @@ const BlogSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    required: true,
+    default: ''
   },
   coverImage: {
     type: String,
@@ -26,6 +26,11 @@ const BlogSchema = new mongoose.Schema({
   thumbnailImage: {
     type: String,
     required: true,
+  },
+  status: {
+    type: String,
+    enum: ['public', 'private'],
+    default: 'private'
   },
   createdAt: {
     type: Date,

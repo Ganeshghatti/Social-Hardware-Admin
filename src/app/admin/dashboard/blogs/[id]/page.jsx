@@ -1,15 +1,18 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Loader from "@/components/Loader";
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import MultiSelect from "@/components/ui/MultiSelect";
+import { extractImageUrls } from "@/lib/extractImageUrls";
 
 export default function EditBlog({ params }) {
   const router = useRouter();
+  const quillRef = useRef();
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -17,13 +20,52 @@ export default function EditBlog({ params }) {
     coverImage: null,
     thumbnailImage: null,
     category: [],
+    status: "private",
   });
+  const [initialImages, setInitialImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [coverPreview, setCoverPreview] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
+
+  const imageHandler = async () => {
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files[0];
+      if (file) {
+        try {
+          const formDatatoSend = new FormData();
+          formDatatoSend.append("image", file);
+          formDatatoSend.append("slug", formData.slug);
+          console.log(formDatatoSend);
+          const response = await fetch("/api/blogs/upload-inline-image", {
+            method: "POST",
+            body: formDatatoSend,
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to upload image");
+          }
+
+          const data = await response.json();
+          const editor = quillRef.current.getEditor();
+          const range = editor.getSelection(true);
+          editor.insertEmbed(range.index, "image", data.url);
+          editor.setSelection(range.index + 1);
+          editor.insertText(range.index + 1, "\n");
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          setError("Failed to upload image");
+        }
+      }
+    };
+  };
 
   const fetchCategories = async () => {
     try {
@@ -33,6 +75,8 @@ export default function EditBlog({ params }) {
       }
       const data = await response.json();
       setCategories(data);
+      const initialImages = extractImageUrls(data.content);
+      setInitialImages(initialImages);
     } catch (error) {
       alert("Error fetching categories");
     }
@@ -63,36 +107,45 @@ export default function EditBlog({ params }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
+    setError("");
 
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
       formDataToSend.append("description", formData.description);
       formDataToSend.append("content", formData.content);
-
-      const categoryIds = formData.category.map((category) => category._id);
-      formDataToSend.append("category", JSON.stringify(categoryIds));
+      formDataToSend.append("category", JSON.stringify(formData.category));
+      formDataToSend.append("status", formData.status);
 
       if (formData.coverImage instanceof File) {
         formDataToSend.append("coverImage", formData.coverImage);
-      }
-      if (formData.thumbnailImage instanceof File) {
-        formDataToSend.append("thumbnailImage", formData.thumbnailImage);
+        formDataToSend.append("coverImageChanged", "true");
       }
 
+      if (formData.thumbnailImage instanceof File) {
+        formDataToSend.append("thumbnailImage", formData.thumbnailImage);
+        formDataToSend.append("thumbnailImageChanged", "true");
+      }
+      const currentImages = extractImageUrls(formData.content);
+      const imagesToDelete = initialImages.filter(
+        (url) => !currentImages.includes(url)
+      );
+      if (imagesToDelete.length > 0) {
+        formDataToSend.append("imagesToDelete", JSON.stringify(imagesToDelete));
+      }
+      console.log(formDataToSend);
       const response = await fetch(`/api/blogs/${params.id}`, {
         method: "PUT",
         body: formDataToSend,
       });
-
+      console.log(response);
       if (!response.ok) {
-        throw new Error("Failed to update blog");
+        const data = await response.json();
+        throw new Error(data.error || "Failed to update blog");
       }
-
-      router.push("/admin/dashboard");
     } catch (error) {
-      console.error("Error updating blog:", error);
-      setError("Failed to update blog");
+      console.log(error)
+      setError(error.message);
     } finally {
       setSaving(false);
     }
@@ -114,15 +167,101 @@ export default function EditBlog({ params }) {
       }
 
       setFormData((prev) => ({ ...prev, [type]: file }));
+
+      const previewUrl = URL.createObjectURL(file);
       if (type === "coverImage") {
-        setCoverPreview(URL.createObjectURL(file));
-      } else {
-        setThumbnailPreview(URL.createObjectURL(file));
+        setCoverPreview(previewUrl);
+      } else if (type === "thumbnailImage") {
+        setThumbnailPreview(previewUrl);
       }
+
       setError("");
     }
   };
 
+  const formats = [
+    "header",
+    "height",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "color",
+    "bullet",
+    "indent",
+    "link",
+    "image",
+    "align",
+    "size",
+  ];
+
+  const modules = useMemo(
+    () => ({
+      toolbar: {
+        container: [
+          [{ size: ["small", false, "large", "huge"] }],
+          ["bold", "italic", "underline", "strike", "blockquote"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          ["link", "image"],
+          [
+            { list: "ordered" },
+            { list: "bullet" },
+            { indent: "-1" },
+            { indent: "+1" },
+            { align: [] },
+          ],
+          [
+            {
+              color: [
+                "#000000",
+                "#e60000",
+                "#ff9900",
+                "#ffff00",
+                "#008a00",
+                "#0066cc",
+                "#9933ff",
+                "#ffffff",
+                "#facccc",
+                "#ffebcc",
+                "#ffffcc",
+                "#cce8cc",
+                "#cce0f5",
+                "#ebd6ff",
+                "#bbbbbb",
+                "#f06666",
+                "#ffc266",
+                "#ffff66",
+                "#66b966",
+                "#66a3e0",
+                "#c285ff",
+                "#888888",
+                "#a10000",
+                "#b26b00",
+                "#b2b200",
+                "#006100",
+                "#0047b2",
+                "#6b24b2",
+                "#444444",
+                "#5c0000",
+                "#663d00",
+                "#666600",
+                "#003700",
+                "#002966",
+                "#3d1466",
+                "custom-color",
+              ],
+            },
+          ],
+        ],
+        handlers: {
+          image: imageHandler,
+        },
+      },
+    }),
+    []
+  );
   return (
     <>
       {loading && <Loader />}
@@ -199,11 +338,15 @@ export default function EditBlog({ params }) {
               <div className="h-[300px] md:h-[400px] mb-12">
                 <ReactQuill
                   value={formData.content}
-                  onChange={(content) =>
-                    setFormData((prev) => ({ ...prev, content }))
-                  }
-                  className="h-full"
+                  onChange={(content) => {
+                    console.log("Content changed:", content);
+                    setFormData({ ...formData, content });
+                  }}
+                  className="h-64 mb-12"
                   theme="snow"
+                  ref={quillRef}
+                  modules={modules}
+                  formats={formats}
                 />
               </div>
             </div>
@@ -257,6 +400,23 @@ export default function EditBlog({ params }) {
                   />
                 </div>
               )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Status</label>
+              <select
+                value={formData.status}
+                onChange={(e) =>
+                  setFormData({ ...formData, status: e.target.value })
+                }
+                className="w-full rounded p-2 text-sm md:text-base"
+                style={{
+                  backgroundColor: "var(--background-primary)",
+                  border: "1px solid var(--border-color)",
+                }}
+              >
+                <option value="private">Private</option>
+                <option value="public">Public</option>
+              </select>
             </div>
             <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
               <button

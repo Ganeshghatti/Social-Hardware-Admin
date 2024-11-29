@@ -1,11 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect,useRef,useMemo } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Loader from "@/components/Loader";
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-import "react-quill/dist/quill.snow.css";
 import MultiSelect from "@/components/ui/MultiSelect";
 
 export default function NewBlog() {
@@ -14,10 +12,10 @@ export default function NewBlog() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    content: "",
     coverImage: null,
     thumbnailImage: null,
     category: [],
+    status: "private"
   });
   const [imagePreview, setImagePreview] = useState({
     coverImage: null,
@@ -54,8 +52,8 @@ export default function NewBlog() {
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
       formDataToSend.append("description", formData.description);
-      formDataToSend.append("content", formData.content);
       formDataToSend.append("category", JSON.stringify(formData.category));
+      formDataToSend.append("status", formData.status);
 
       if (formData.coverImage) {
         formDataToSend.append("coverImage", formData.coverImage);
@@ -63,6 +61,7 @@ export default function NewBlog() {
       if (formData.thumbnailImage) {
         formDataToSend.append("thumbnailImage", formData.thumbnailImage);
       }
+
       const response = await fetch("/api/blogs", {
         method: "POST",
         body: formDataToSend,
@@ -172,18 +171,6 @@ export default function NewBlog() {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Content</label>
-              <ReactQuill
-                value={formData.content}
-                onChange={(content) => {
-                  console.log("Content changed:", content);
-                  setFormData({ ...formData, content });
-                }}
-                className="h-64 mb-12"
-              />
-            </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-2">
@@ -232,6 +219,22 @@ export default function NewBlog() {
                   </div>
                 )}
               </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Status</label>
+              <select
+                value={formData.status}
+                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                className="w-full rounded p-2 text-sm md:text-base"
+                style={{
+                  backgroundColor: "var(--background-primary)",
+                  border: "1px solid var(--border-color)",
+                }}
+              >
+                <option value="private">Private</option>
+                <option value="public">Public</option>
+              </select>
             </div>
 
             <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">

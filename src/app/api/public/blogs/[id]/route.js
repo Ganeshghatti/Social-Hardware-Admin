@@ -6,7 +6,10 @@ import Blog from '@/models/Blog';
 export async function GET(request, { params }) {
   try {
     await dbConnect();
-    const blog = await Blog.findById(params.id);
+    const blog = await Blog.findOne({ 
+      _id: params.id,
+      status: 'public'
+    });
     
     if (!blog) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
@@ -15,7 +18,7 @@ export async function GET(request, { params }) {
     const response = NextResponse.json(blog);
     
     // Set CORS headers
-    response.headers.set('Access-Control-Allow-Origin', '*'); // Or specify your frontend domain
+    response.headers.set('Access-Control-Allow-Origin', '*');
     response.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
     

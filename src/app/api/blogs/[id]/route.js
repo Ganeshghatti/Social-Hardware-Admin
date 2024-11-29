@@ -3,7 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
-import { uploadFile, deleteImages } from "@/lib/uploadFile";
+import { deleteImg, deleteBlogFolder } from "@/lib/deleteImg";
+import { uploadImg } from "@/lib/uploadImg";
 
 // GET single blog
 export async function GET(request, { params }) {
@@ -38,60 +39,64 @@ export async function PUT(request, { params }) {
     }
 
     const formData = await request.formData();
-    const title = formData.get("title");
-    const category = JSON.parse(formData.get("category"));
-    if (category.length === 0) {
-      return NextResponse.json(
-        { error: "Category is required" },
-        { status: 400 }
-      );
-    }
-    // Generate new slug if title changed
-    let slug = blog.slug;
-    if (title && title !== blog.title) {
-      const baseSlug = generateSlug(title);
-      slug = await ensureUniqueSlug(baseSlug);
-    }
+    const newContent = formData.get("content");
+    const oldContent = blog.content;
+    
+    // Get old and new inline image URLs from the content
+    const oldInlineImages = oldContent.match(/src="([^"]+)"/g)?.map(src => 
+      src.replace('src="', '').replace('"', '')
+    ) || [];
+    
+    const newInlineImages = newContent.match(/src="([^"]+)"/g)?.map(src => 
+      src.replace('src="', '').replace('"', '')
+    ) || [];
+
+    // Find images that were removed
+    const removedImages = oldInlineImages.filter(
+      oldUrl => !newInlineImages.includes(oldUrl) && oldUrl.includes('blogs/')
+    );
 
     const updates = {
-      title,
-      slug,
+      title: formData.get("title"),
       description: formData.get("description"),
-      content: formData.get("content"),
-      category,
+      content: newContent,
+      category: JSON.parse(formData.get("category")),
+      status: formData.get("status"),
       updatedAt: new Date(),
     };
 
-    // Handle image updates
-    const newCoverImage = formData.get("coverImage");
-    const newThumbnailImage = formData.get("thumbnailImage");
+    // Track images that need to be deleted
+    const imagesToDelete = [...removedImages];
 
-    if (newCoverImage || newThumbnailImage) {
-      const imagesToUpload = {};
-      const imagesToDelete = {};
-
-      if (newCoverImage) {
-        imagesToUpload.coverImage = newCoverImage;
-        imagesToDelete.coverImage = blog.coverImage;
+    // Handle cover image update
+    const coverImageChanged = formData.get("coverImageChanged") === "true";
+    if (coverImageChanged) {
+      const newCoverImage = formData.get("coverImage");
+      if (!newCoverImage) {
+        throw new Error("Cover image is required");
       }
-
-      if (newThumbnailImage) {
-        imagesToUpload.thumbnailImage = newThumbnailImage;
-        imagesToDelete.thumbnailImage = blog.thumbnailImage;
+      if (blog.coverImage) {
+        imagesToDelete.push(blog.coverImage);
       }
+      updates.coverImage = await uploadImg(newCoverImage, blog.slug);
+    }
 
-      // Delete old images that are being replaced
-      if (Object.keys(imagesToDelete).length > 0) {
-        await deleteImages(imagesToDelete);
+    // Handle thumbnail image update
+    const thumbnailImageChanged = formData.get("thumbnailImageChanged") === "true";
+    if (thumbnailImageChanged) {
+      const newThumbnailImage = formData.get("thumbnailImage");
+      if (!newThumbnailImage) {
+        throw new Error("Thumbnail image is required");
       }
+      if (blog.thumbnailImage) {
+        imagesToDelete.push(blog.thumbnailImage);
+      }
+      updates.thumbnailImage = await uploadImg(newThumbnailImage, blog.slug);
+    }
 
-      // Upload new images
-      if (Object.keys(imagesToUpload).length > 0) {
-        const imagePaths = await uploadFile(imagesToUpload, updates.title);
-        if (imagePaths.coverImage) updates.coverImage = imagePaths.coverImage;
-        if (imagePaths.thumbnailImage)
-          updates.thumbnailImage = imagePaths.thumbnailImage;
-      }
+    // Delete all removed images
+    if (imagesToDelete.length > 0) {
+      await Promise.all(imagesToDelete.map(imageUrl => deleteImg(imageUrl)));
     }
 
     const updatedBlog = await Blog.findByIdAndUpdate(params.id, updates, {
@@ -112,7 +117,7 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) {
+    if (!session || session.user.role !== "admin") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -122,10 +127,10 @@ export async function DELETE(request, { params }) {
       return NextResponse.json({ error: "Blog not found" }, { status: 404 });
     }
 
-    // Delete images first
-    await deleteImages(blog);
+    // Delete the blog's folder from Firebase Storage
+    await deleteBlogFolder(blog.slug);
 
-    // Delete the blog post
+    // Delete the blog from database
     await Blog.findByIdAndDelete(params.id);
 
     return NextResponse.json({ message: "Blog deleted successfully" });

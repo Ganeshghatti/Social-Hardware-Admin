@@ -6,7 +6,7 @@ import Blog from '@/models/Blog';
 export async function GET(request) {
   try {
     await dbConnect();
-    const blogs = await Blog.find({})
+    const blogs = await Blog.find({ status: 'public' })
       .select('title description thumbnailImage createdAt updatedAt')
       .sort({ createdAt: -1 });
 
