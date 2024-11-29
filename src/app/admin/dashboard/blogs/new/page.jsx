@@ -1,20 +1,23 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Loader from "@/components/Loader";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
+import MultiSelect from "@/components/ui/MultiSelect";
 
 export default function NewBlog() {
   const router = useRouter();
+  const [Categories, setCategories] = useState();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     content: "",
     coverImage: null,
     thumbnailImage: null,
+    category: [],
   });
   const [imagePreview, setImagePreview] = useState({
     coverImage: null,
@@ -33,10 +36,10 @@ export default function NewBlog() {
         return;
       }
 
-      setFormData(prev => ({ ...prev, [type]: file }));
-      setImagePreview(prev => ({
+      setFormData((prev) => ({ ...prev, [type]: file }));
+      setImagePreview((prev) => ({
         ...prev,
-        [type]: URL.createObjectURL(file)
+        [type]: URL.createObjectURL(file),
       }));
       setError("");
     }
@@ -52,14 +55,14 @@ export default function NewBlog() {
       formDataToSend.append("title", formData.title);
       formDataToSend.append("description", formData.description);
       formDataToSend.append("content", formData.content);
-      
+      formDataToSend.append("category", JSON.stringify(formData.category));
+
       if (formData.coverImage) {
         formDataToSend.append("coverImage", formData.coverImage);
       }
       if (formData.thumbnailImage) {
         formDataToSend.append("thumbnailImage", formData.thumbnailImage);
       }
-
       const response = await fetch("/api/blogs", {
         method: "POST",
         body: formDataToSend,
@@ -78,6 +81,22 @@ export default function NewBlog() {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch("/api/category");
+      if (!response.ok) {
+        throw new Error("Failed to fetch categories");
+      }
+      const data = await response.json();
+      setCategories(data);
+    } catch (error) {
+      alert("Error fetching categories");
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
   return (
     <>
       {loading && <Loader />}
@@ -121,7 +140,18 @@ export default function NewBlog() {
                 required
               />
             </div>
-
+            <div>
+              <label className="block text-sm font-medium mb-2">Category</label>
+              <MultiSelect
+                options={Categories}
+                onChange={(selectedOptions) => {
+                  setFormData({
+                    ...formData,
+                    category: selectedOptions.map((option) => option._id),
+                  });
+                }}
+              />
+            </div>
             <div>
               <label className="block text-sm font-medium mb-2">
                 Description
@@ -156,17 +186,19 @@ export default function NewBlog() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Cover Image</label>
+                <label className="block text-sm font-medium mb-2">
+                  Cover Image
+                </label>
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => handleFileChange(e, 'coverImage')}
+                  onChange={(e) => handleFileChange(e, "coverImage")}
                   className="w-full text-sm md:text-base"
                   required
                 />
                 {imagePreview.coverImage && (
                   <div className="mt-2">
-                    <Image 
+                    <Image
                       src={imagePreview.coverImage}
                       alt="Cover Preview"
                       width={200}
@@ -178,17 +210,19 @@ export default function NewBlog() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Thumbnail Image</label>
+                <label className="block text-sm font-medium mb-2">
+                  Thumbnail Image
+                </label>
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => handleFileChange(e, 'thumbnailImage')}
+                  onChange={(e) => handleFileChange(e, "thumbnailImage")}
                   className="w-full text-sm md:text-base"
                   required
                 />
                 {imagePreview.thumbnailImage && (
                   <div className="mt-2">
-                    <Image 
+                    <Image
                       src={imagePreview.thumbnailImage}
                       alt="Thumbnail Preview"
                       width={200}

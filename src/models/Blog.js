@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import category from './category';
 
 const BlogSchema = new mongoose.Schema({
   title: {
@@ -30,6 +31,12 @@ const BlogSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  category: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+    }
+  ],
   updatedAt: {
     type: Date,
     default: Date.now,

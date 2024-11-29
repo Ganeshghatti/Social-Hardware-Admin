@@ -20,14 +20,12 @@ export default function Dashboard() {
       : text;
   };
 
-  useEffect(() => {
-    fetchBlogs();
-  }, []);
-
   const fetchBlogs = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/blogs');
+      const response = await fetch('/api/blogs', {
+        method: 'GET',
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch blogs');
       }
@@ -69,6 +67,10 @@ export default function Dashboard() {
   const handleEdit = (id) => {
     router.push(`/admin/dashboard/blogs/${id}`);
   };
+
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
 
   return (
     <>
