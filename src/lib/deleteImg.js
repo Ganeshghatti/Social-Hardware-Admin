@@ -1,5 +1,5 @@
 import { storage } from "./firebase";
-import { ref, deleteObject } from "firebase/storage";
+import { ref, deleteObject, listAll } from "firebase/storage";
 
 export async function deleteImg(imageUrl) {
   try {
@@ -28,8 +28,27 @@ export async function deleteBlogFolder(slug) {
     }
 
     const folderRef = ref(storage, `blogs/${slug}`);
-    await deleteObject(folderRef);
-    console.log('Blog folder deleted successfully:', slug);
+    
+    // List all items in the folder and its subfolders
+    const listResult = await listAll(folderRef);
+    
+    // Delete all files in the main folder
+    const deletePromises = listResult.items.map(item => deleteObject(item));
+    
+    // List and delete files in inline-images subfolder if it exists
+    const inlineFolderRef = ref(storage, `blogs/${slug}/inline-images`);
+    try {
+      const inlineListResult = await listAll(inlineFolderRef);
+      const inlineDeletePromises = inlineListResult.items.map(item => deleteObject(item));
+      deletePromises.push(...inlineDeletePromises);
+    } catch (error) {
+      console.log('No inline-images folder found or error:', error);
+    }
+
+    // Wait for all deletions to complete
+    await Promise.all(deletePromises);
+    
+    console.log('Blog folder contents deleted successfully:', slug);
   } catch (error) {
     console.error("Error deleting blog folder:", error);
     throw error;

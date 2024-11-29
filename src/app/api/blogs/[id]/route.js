@@ -142,8 +142,13 @@ export async function DELETE(request, { params }) {
       return NextResponse.json({ error: "Blog not found" }, { status: 404 });
     }
 
-    // Delete the blog's folder from Firebase Storage
-    await deleteBlogFolder(blog.slug);
+    try {
+      // Try to delete files from Firebase Storage
+      await deleteBlogFolder(blog.slug);
+    } catch (storageError) {
+      console.error("Error deleting files from storage:", storageError);
+      // Continue with blog deletion even if storage deletion fails
+    }
 
     // Delete the blog from database
     await Blog.findByIdAndDelete(params.id);
