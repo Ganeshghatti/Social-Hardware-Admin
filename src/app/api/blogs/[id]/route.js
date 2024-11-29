@@ -5,6 +5,13 @@ import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
 import { deleteImg, deleteBlogFolder } from "@/lib/deleteImg";
 import { uploadImg } from "@/lib/uploadImg";
+import { ref, listAll, getDownloadURL } from "firebase/storage";
+import { storage } from "@/lib/firebase";
+
+// Add this helper function at the top of the file
+function normalizeUrl(url) {
+  return url.replace(/&amp;/g, '&');
+}
 
 // GET single blog
 export async function GET(request, { params }) {
@@ -40,24 +47,39 @@ export async function PUT(request, { params }) {
 
     const formData = await request.formData();
     const newContent = formData.get("content");
-    const oldContent = blog.content;
 
-    // Get old and new inline image URLs from the content
-    const oldInlineImages =
-      oldContent
-        .match(/src="([^"]+)"/g)
-        ?.map((src) => src.replace('src="', "").replace('"', "")) || [];
+    // Extract and normalize image URLs from the new content
+    const newInlineImages = (newContent.match(/src="([^"]+)"/g)?.map(src => 
+      normalizeUrl(src.replace('src="', '').replace('"', ''))
+    ) || []);
 
-    const newInlineImages =
-      newContent
-        .match(/src="([^"]+)"/g)
-        ?.map((src) => src.replace('src="', "").replace('"', "")) || [];
-
-    // Find images that were removed
-    const removedImages = oldInlineImages.filter(
-      (oldUrl) => !newInlineImages.includes(oldUrl) && oldUrl.includes("blogs/")
+    // List all files in the blog's inline-images folder
+    const folderRef = ref(storage, `blogs/${blog.slug}/inline-images`);
+    const listResult = await listAll(folderRef);
+    
+    // Get full URLs of all files in the folder
+    const existingUrls = await Promise.all(
+      listResult.items.map(async (item) => {
+        return await getDownloadURL(item);
+      })
     );
 
+    console.log('Images in folder:', existingUrls);
+    console.log('Normalized images in content:', newInlineImages);
+
+    // Find images that exist in folder but not in content
+    const imagesToDelete = existingUrls.filter(url => 
+      !newInlineImages.includes(normalizeUrl(url))
+    );
+
+    console.log('Images to delete:', imagesToDelete);
+
+    // Delete unused images
+    if (imagesToDelete.length > 0) {
+      await Promise.all(imagesToDelete.map((imageUrl) => deleteImg(imageUrl)));
+    }
+
+    // Update blog with new data
     const updates = {
       title: formData.get("title"),
       description: formData.get("description"),
@@ -67,10 +89,7 @@ export async function PUT(request, { params }) {
       updatedAt: new Date(),
     };
 
-    // Track images that need to be deleted
-    const imagesToDelete = [...removedImages];
-
-    // Handle cover image update
+    // Handle cover and thumbnail image updates as before
     const coverImageChanged = formData.get("coverImageChanged") === "true";
     if (coverImageChanged) {
       const newCoverImage = formData.get("coverImage");
@@ -78,28 +97,21 @@ export async function PUT(request, { params }) {
         throw new Error("Cover image is required");
       }
       if (blog.coverImage) {
-        imagesToDelete.push(blog.coverImage);
+        await deleteImg(blog.coverImage);
       }
       updates.coverImage = await uploadImg(newCoverImage, blog.slug);
     }
 
-    // Handle thumbnail image update
-    const thumbnailImageChanged =
-      formData.get("thumbnailImageChanged") === "true";
+    const thumbnailImageChanged = formData.get("thumbnailImageChanged") === "true";
     if (thumbnailImageChanged) {
       const newThumbnailImage = formData.get("thumbnailImage");
       if (!newThumbnailImage) {
         throw new Error("Thumbnail image is required");
       }
       if (blog.thumbnailImage) {
-        imagesToDelete.push(blog.thumbnailImage);
+        await deleteImg(blog.thumbnailImage);
       }
       updates.thumbnailImage = await uploadImg(newThumbnailImage, blog.slug);
-    }
-
-    // Delete all removed images
-    if (imagesToDelete.length > 0) {
-      await Promise.all(imagesToDelete.map((imageUrl) => deleteImg(imageUrl)));
     }
 
     const updatedBlog = await Blog.findByIdAndUpdate(params.id, updates, {

@@ -23,7 +23,6 @@ export default function EditBlog({ params }) {
     category: [],
     status: "private",
   });
-  const [initialImages, setInitialImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [coverPreview, setCoverPreview] = useState(null);
@@ -50,8 +49,6 @@ export default function EditBlog({ params }) {
         status: data.status,
       });
 
-      const contentImages = extractImageUrls(data.content);
-      setInitialImages(contentImages);
       setContent(data.content);
       setCoverPreview(data.coverImage);
       setThumbnailPreview(data.thumbnailImage);
@@ -176,13 +173,6 @@ export default function EditBlog({ params }) {
       if (formData.thumbnailImage instanceof File) {
         formDataToSend.append("thumbnailImage", formData.thumbnailImage);
         formDataToSend.append("thumbnailImageChanged", "true");
-      }
-      const currentImages = extractImageUrls(formData.content);
-      const imagesToDelete = initialImages.filter(
-        (url) => !currentImages.includes(url)
-      );
-      if (imagesToDelete.length > 0) {
-        formDataToSend.append("imagesToDelete", JSON.stringify(imagesToDelete));
       }
       const response = await fetch(`/api/blogs/${params.id}`, {
         method: "PUT",
