@@ -63,7 +63,8 @@ export async function POST(request) {
     // Upload images
     const coverImageUrl = await uploadImg(coverImage, slug);
     const thumbnailImageUrl = await uploadImg(thumbnailImage, slug);
-
+    console.log(slug, coverImageUrl, thumbnailImageUrl);
+    
     // Create blog post
     const blog = await Blog.create({
       title,

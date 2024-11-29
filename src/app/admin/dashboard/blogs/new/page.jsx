@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Loader from "@/components/Loader";
 import MultiSelect from "@/components/ui/MultiSelect";
+import toast from 'react-hot-toast';
 
 export default function NewBlog() {
   const router = useRouter();
@@ -72,9 +73,12 @@ export default function NewBlog() {
         throw new Error(data.error || "Failed to create blog");
       }
 
-      router.push("/admin/dashboard");
+      toast.success('Blog created successfully');
+      router.push('/admin/dashboard');
     } catch (error) {
+      console.error("Error creating blog:", error);
       setError(error.message);
+      toast.error(error.message || 'Failed to create blog');
     } finally {
       setLoading(false);
     }

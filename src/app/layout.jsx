@@ -1,5 +1,6 @@
 import { AuthProvider } from './providers';
 import './globals.css';
+import { Toaster } from 'react-hot-toast';
 
 export const metadata = {
   title: 'Blog Admin',
@@ -36,6 +37,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <AuthProvider>{children}</AuthProvider>
+        <Toaster position="top-right" />
       </body>
     </html>
   );

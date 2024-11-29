@@ -8,6 +8,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import MultiSelect from "@/components/ui/MultiSelect";
 import { extractImageUrls } from "@/lib/extractImageUrls";
+import toast from "react-hot-toast";
 
 export default function EditBlog({ params }) {
   const router = useRouter();
@@ -16,7 +17,6 @@ export default function EditBlog({ params }) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    content: "",
     slug: "",
     coverImage: null,
     thumbnailImage: null,
@@ -30,6 +30,39 @@ export default function EditBlog({ params }) {
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [content, setContent] = useState("");
+
+  const fetchBlog = async () => {
+    try {
+      const response = await fetch(`/api/blogs/${params.id}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch blog");
+      }
+      const data = await response.json();
+
+      setFormData({
+        title: data.title,
+        description: data.description,
+        category: data.category,
+        slug: data.slug,
+        coverImage: data.coverImage,
+        thumbnailImage: data.thumbnailImage,
+        status: data.status,
+      });
+
+      const contentImages = extractImageUrls(data.content);
+      setInitialImages(contentImages);
+      setContent(data.content);
+      setCoverPreview(data.coverImage);
+      setThumbnailPreview(data.thumbnailImage);
+    } catch (error) {
+      console.error("Error fetching blog:", error);
+      setError("Failed to fetch blog");
+      toast.error("Failed to fetch blog");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const imageHandler = async () => {
     const input = document.createElement("input");
@@ -59,9 +92,13 @@ export default function EditBlog({ params }) {
           const range = editor.getSelection(true);
           editor.insertEmbed(range.index, "image", data.url);
           editor.setSelection(range.index + 1);
+          editor.insertText(range.index + 1, "\n");
+
+          toast.success("Image uploaded successfully");
         } catch (error) {
           console.error("Error uploading image:", error);
           setError("Failed to upload image");
+          toast.error("Failed to upload image");
         }
       }
     };
@@ -75,34 +112,48 @@ export default function EditBlog({ params }) {
       }
       const data = await response.json();
       setCategories(data);
-      const initialImages = extractImageUrls(data.content);
-      setInitialImages(initialImages);
     } catch (error) {
-      alert("Error fetching categories");
+      toast.error("Error fetching categories");
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleFileChange = (e, type) => {
+    const file = e.target.files[0];
+    if (file) {
+      const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+      if (!validTypes.includes(file.type)) {
+        setError("Invalid file type. Only images are allowed");
+        e.target.value = "";
+        return;
+      }
+
+      setFormData((prev) => ({ ...prev, [type]: file }));
+
+      const previewUrl = URL.createObjectURL(file);
+      if (type === "coverImage") {
+        setCoverPreview(previewUrl);
+      } else if (type === "thumbnailImage") {
+        setThumbnailPreview(previewUrl);
+      }
+
+      setError("");
     }
   };
 
   useEffect(() => {
-    (async () => {
-      await fetchBlog();
-      await fetchCategories();
-    })();
-  }, [params.id]);
-
-  const fetchBlog = async () => {
-    try {
-      const response = await fetch(`/api/blogs/${params.id}`);
-      const data = await response.json();
-      setFormData(data);
-      setCoverPreview(data.coverImage);
-      setThumbnailPreview(data.thumbnailImage);
-    } catch (error) {
-      console.error("Error fetching blog:", error);
-      setError("Failed to fetch blog");
-    } finally {
-      setLoading(false);
-    }
-  };
+    setLoading(true);
+    fetchCategories();
+    fetchBlog();
+    setLoading(false);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -113,7 +164,7 @@ export default function EditBlog({ params }) {
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
       formDataToSend.append("description", formData.description);
-      formDataToSend.append("content", formData.content);
+      formDataToSend.append("content", content);
       formDataToSend.append("category", JSON.stringify(formData.category));
       formDataToSend.append("status", formData.status);
 
@@ -141,39 +192,15 @@ export default function EditBlog({ params }) {
         const data = await response.json();
         throw new Error(data.error || "Failed to update blog");
       }
+
+      toast.success("Blog updated successfully");
+      router.refresh();
     } catch (error) {
       console.log(error);
       setError(error.message);
+      toast.error(error.message || "Failed to update blog");
     } finally {
       setSaving(false);
-    }
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleFileChange = (e, type) => {
-    const file = e.target.files[0];
-    if (file) {
-      const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
-      if (!validTypes.includes(file.type)) {
-        setError("Invalid file type. Only images are allowed");
-        e.target.value = "";
-        return;
-      }
-
-      setFormData((prev) => ({ ...prev, [type]: file }));
-
-      const previewUrl = URL.createObjectURL(file);
-      if (type === "coverImage") {
-        setCoverPreview(previewUrl);
-      } else if (type === "thumbnailImage") {
-        setThumbnailPreview(previewUrl);
-      }
-
-      setError("");
     }
   };
 
@@ -334,9 +361,9 @@ export default function EditBlog({ params }) {
             <div className="mb-12">
               <label className="block text-sm font-medium mb-2">Content</label>
               <ReactQuill
-                value={formData.content}
+                value={content}
                 onChange={(content) => {
-                  setFormData({ ...formData, content });
+                  setContent(content);
                 }}
                 theme="snow"
                 ref={quillRef}
