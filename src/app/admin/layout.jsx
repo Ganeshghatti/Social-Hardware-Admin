@@ -10,7 +10,7 @@ export default function AdminLayout({ children }) {
     <AuthCheck>
       <div className="min-h-screen flex flex-col md:flex-row">
         <Sidebar />
-        <div className="flex-1">
+        <div className="w-full">
           <Navbar />
           <main className="p-4 md:p-8">
             {children}
