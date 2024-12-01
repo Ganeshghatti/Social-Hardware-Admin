@@ -6,8 +6,9 @@ import Blog from '@/models/Blog';
 export async function GET(request) {
   try {
     await dbConnect();
-    const blogs = await Blog.find({ status: 'public' })
-      .select('title description thumbnailImage createdAt updatedAt')
+    const blogs = await Blog.find()
+      .populate("category")
+      .select('title description thumbnailImage createdAt updatedAt category status')
       .sort({ createdAt: -1 });
 
     // Create response with CORS and cache control headers
