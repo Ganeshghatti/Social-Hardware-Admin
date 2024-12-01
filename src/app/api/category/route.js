@@ -9,7 +9,19 @@ export async function GET(request) {
   try {
     await dbConnect();
     const categories = await Category.find();
-    return NextResponse.json(categories);
+    const response = NextResponse.json(categories);
+
+    // Set CORS headers
+    response.headers.set("Access-Control-Allow-Origin", "*"); // Or specify your frontend domain
+    response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
+    response.headers.set("Access-Control-Allow-Headers", "Content-Type");
+
+    // Set cache control headers
+    response.headers.set("Cache-Control", "no-store, max-age=0");
+    response.headers.set("Pragma", "no-cache");
+
+    return response;
+
   } catch (error) {
     return NextResponse.json(
       { error: error.message || "Failed to fetch categories" },
