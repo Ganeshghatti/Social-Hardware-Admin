@@ -30,6 +30,17 @@ export async function GET(request) {
   }
 }
 
+// Handle OPTIONS request for CORS preflight
+export async function OPTIONS(request) {
+  const response = new NextResponse(null, { status: 200 });
+  
+  response.headers.set('Access-Control-Allow-Origin', '*'); // Or specify your frontend domain
+  response.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+  
+  return response;
+}
+
 // CREATE new category
 export async function POST(request) {
   try {
