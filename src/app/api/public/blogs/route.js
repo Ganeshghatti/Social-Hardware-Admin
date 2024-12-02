@@ -1,13 +1,12 @@
+import Blog from '@/models/Blog';
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
-import Blog from '@/models/Blog';
-import Category from '@/models/category';
 
 // GET all blogs (public)
 export async function GET(request) {
   try {
     await dbConnect();
-    const blogs = await Blog.find()
+    const blogs = await Blog.find({})
       .populate("category")
       .select('title description thumbnailImage createdAt updatedAt category status')
       .sort({ createdAt: -1 });
@@ -16,7 +15,7 @@ export async function GET(request) {
     const response = NextResponse.json(blogs);
     
     // Set CORS headers
-    response.headers.set('Access-Control-Allow-Origin', '*'); // Or specify your frontend domain
+    response.headers.set('Access-Control-Allow-Origin', '*');
     response.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
     

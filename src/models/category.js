@@ -15,12 +15,18 @@ const CategorySchema = new mongoose.Schema(
 );
 
 // Add pre-remove middleware to clean up blog references
-CategorySchema.pre('deleteOne', { document: false, query: true }, async function() {
-  const categoryId = this.getFilter()._id;
-  await Blog.updateMany(
-    { category: categoryId },
-    { $pull: { category: categoryId } }
-  );
-});
+CategorySchema.pre(
+  "deleteOne",
+  { document: false, query: true },
+  async function () {
+    const categoryId = this.getFilter()._id;
+    await Blog.updateMany(
+      { category: categoryId },
+      { $pull: { category: categoryId } }
+    );
+  }
+);
 
-export default mongoose.models.Category || mongoose.model("Category", CategorySchema);
+const Category =
+  mongoose.models.Category || mongoose.model("Category", CategorySchema);
+export default Category;

@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
-import Category from '@/models/category';
+import Category from '@/models/Category';
 
 // GET all blogs (public)
 export async function GET(request) {
   try {
     await dbConnect();
-    const categories = await Category.find()
+    const categories = await Category.find({})
 
     // Create response with CORS and cache control headers
     const response = NextResponse.json(categories);

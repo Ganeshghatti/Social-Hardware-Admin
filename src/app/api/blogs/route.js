@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
-import { uploadFile } from "@/lib/uploadFile";
 import { generateUniqueSlug } from "@/lib/generateUniqueSlug";
 import { uploadImg } from "@/lib/uploadImg";
 
@@ -11,8 +10,7 @@ import { uploadImg } from "@/lib/uploadImg";
 export async function GET() {
   try {
     await dbConnect();
-    const blogs = await Blog.find()
-      .populate("category")
+    const blogs = await Blog.find({})
       .select(
         "title description thumbnailImage createdAt updatedAt category status"
       )
