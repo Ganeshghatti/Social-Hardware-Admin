@@ -25,6 +25,6 @@ CategorySchema.pre(
       { $pull: { category: categoryId } }
     );
   }
-);
+)
 
 export default mongoose.models.Category || mongoose.model('Category', CategorySchema);
