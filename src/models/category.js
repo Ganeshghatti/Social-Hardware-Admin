@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Blog from "./Blog"; // Import Blog model
+import Blog from "./blog"; // Import Blog model
 
 const CategorySchema = new mongoose.Schema(
   {
