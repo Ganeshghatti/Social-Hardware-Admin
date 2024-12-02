@@ -7,7 +7,6 @@ import { deleteImg, deleteBlogFolder } from "@/lib/deleteImg";
 import { uploadImg } from "@/lib/uploadImg";
 import { ref, listAll, getDownloadURL } from "firebase/storage";
 import { storage } from "@/lib/firebase";
-import Category from "@/models/category";
 
 // Add this helper function at the top of the file
 function normalizeUrl(url) {

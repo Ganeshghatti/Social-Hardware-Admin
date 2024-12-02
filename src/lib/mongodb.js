@@ -18,9 +18,7 @@ async function dbConnect() {
   }
 
   try {
-    cached.promise = mongoose.connect(MONGODB_URI, {
-      bufferCommands: false,
-    });
+    cached.promise = mongoose.connect(MONGODB_URI);
 
     cached.conn = await cached.promise;
     return cached.conn;

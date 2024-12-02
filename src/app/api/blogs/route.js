@@ -11,8 +11,7 @@ import { uploadImg } from "@/lib/uploadImg";
 export async function GET() {
   try {
     await dbConnect();
-    const blogs = await Blog.find()
-      .populate("category")
+    const blogs = await Blog.find({})
       .select(
         "title description thumbnailImage createdAt updatedAt category status"
       )
