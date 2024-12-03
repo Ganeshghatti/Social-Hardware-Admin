@@ -1,10 +1,11 @@
 'use client'
 import React, { useState, useEffect } from "react";
-import Card1 from "../../../../public/client-side/assets/images/functionalities/section-1-tech.gif";
-import Card2 from "../../../../public/client-side/assets/images/functionalities/section-2-tech.gif";
-import Card3 from "../../../../public/client-side/assets/images/functionalities/section-3-tech.gif";
-import Card4 from "../../../../public/client-side/assets/images/functionalities/section-4-tech.gif";
-import Card5 from "../../../../public/client-side/assets/images/functionalities/section-5-tech.gif";
+import Image from "next/image";
+import Card1 from "../../../../../public/client/assets/images/functionalities/section-1-tech.gif";
+import Card2 from "../../../../../public/client/assets/images/functionalities/section-2-tech.gif";
+import Card3 from "../../../../../public/client/assets/images/functionalities/section-3-tech.gif";
+import Card4 from "../../../../../public/client/assets/images/functionalities/section-4-tech.gif";
+import Card5 from "../../../../../public/client/assets/images/functionalities/section-5-tech.gif";
 
 const cardsData = [
   {
@@ -57,9 +58,10 @@ export default function Functionalities() {
     >
       <div className="carousel z-10 px-0 w-full md:w-11/12 self-center flex items-center gap-4 md:gap-8 overflow-hidden">
         <div className="card card-prev flex-col gap-6 transition-all duration-750 opacity-25 hidden md:flex">
-          <img
+          <Image
             src={cardsData[prevIndex].image}
             alt={cardsData[prevIndex].text}
+            sizes="100%"
             className="img w-full transition-opacity duration-750"
           />
           <p className="standard-title transition-opacity duration-750">
@@ -67,9 +69,10 @@ export default function Functionalities() {
           </p>
         </div>
         <div className="card card-active flex flex-col gap-6 transition-all duration-750 opacity-100">
-          <img
+          <Image
             src={cardsData[currentIndex].image}
             alt={cardsData[currentIndex].text}
+            sizes="100%"
             className="img w-full transition-opacity duration-750"
             loading="lazy" // Added lazy loading
           />
@@ -78,9 +81,10 @@ export default function Functionalities() {
           </p>
         </div>
         <div className="card card-next flex-col gap-6 transition-all duration-750 opacity-25 hidden md:flex">
-          <img
+          <Image
             src={cardsData[nextIndex].image}
             alt={cardsData[nextIndex].text}
+            sizes="100%"
             className="img w-full transition-opacity duration-750"
           />
           <p className="standard-title transition-opacity duration-750">

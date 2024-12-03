@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-// import loaderimg from '../../../../public/client-side/assets/images/loader.png';
+import loaderimg from '../../../../public/client/assets/images/loader.png';
+import Image from 'next/image';
 import './Loader.scss';
 
 export default function Loader() {
@@ -23,12 +24,13 @@ export default function Loader() {
   return (
     <div className="loader-container h-screen w-screen">
       <div className="loader-image-container">
-        {/* <img
+        <Image
           src={loaderimg}
           alt="Loader"
+          sizes='100%'
           className="loader-image w-32"
           style={{ left: `${progress}%` }}
-        /> */}
+        />
       </div>
       <div className="progress-bar">
         <div className="progress" style={{ width: `${progress}%` }}></div>

@@ -1,8 +1,9 @@
 'use client'
 import React from "react";
 import "./Footer.scss";
-import logo from "../../../../public/client-side/assets/images/logo.png"
+import logo from "../../../../public/client/assets/images/logo.png"
 import { FaLinkedin, FaXTwitter } from "react-icons/fa6";
+import Image from "next/image";
 
 export default function Footer() {
   const scrollToSection = (sectionId) => {
@@ -22,8 +23,9 @@ export default function Footer() {
   return (
     <footer className="flex flex-col">
       <div className="flex px-[4%] justify-between flex-col gap-6 relative md:gap-0 md:flex-row items-center py-5">
-        <img
+        <Image 
           src={logo}
+          sizes="100%"
           alt="Eclipse Remote Systems"
           className="w-44 h-6 md:w-72 md:h-11 object-contain"
         />

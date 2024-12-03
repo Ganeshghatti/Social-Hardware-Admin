@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from "react";
 import TitleComponent from "../../ui/TitleComponent";
+import Link from "next/link";
 
 const TwitterPosts = () => {
   const [tweets] = useState([
@@ -37,9 +38,9 @@ const TwitterPosts = () => {
               data-theme="dark"
               data-align="center"
             >
-              <a
+              <Link
                 href={`https://twitter.com/social_hardware/status/${tweetId}`}
-              ></a>
+              ></Link>
             </blockquote>
           </div>
         ))}

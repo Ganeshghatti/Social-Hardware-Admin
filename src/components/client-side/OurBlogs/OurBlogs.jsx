@@ -1,11 +1,9 @@
 'use client'
 import React, { useEffect, useState } from "react";
 import CategoryBlog from "./components/CategoryBlog";
-import Subscribe from "@/models/subscribe";
 import "./OurBlogs.scss";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
-import BlockComponent from "../Home/components/BlockComponent";
 
 const OurBlogs = () => {
   const [blogs, setBlogs] = useState([]);

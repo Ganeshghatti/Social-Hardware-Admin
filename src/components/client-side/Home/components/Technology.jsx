@@ -1,11 +1,8 @@
-'use client'
+"use client";
 import React, { useState, useEffect } from "react";
 import TitleComponent from "../../ui/TitleComponent";
-import { Canvas } from "@react-three/fiber";
-import { EclipseRobot } from "../../ThreeD/EclipseRobot";
-import { OrbitControls } from "@react-three/drei";
-import Loader from "../../Loader/Loader";
-// import EclipseRobotimg from "../../../../public/client-side/assets/images/EclipseRobot.webp"
+import EclipseRobotimg from "../../../../../public/client/assets/images/EclipseRobot.webp"
+import Image from "next/image";
 
 export default function Technology() {
   const carouselData = [
@@ -40,10 +37,7 @@ export default function Technology() {
       id="technology"
       className="relative py-8 flex md:items-start flex-col md:flex-row w-full justify-between"
     >
-      <TitleComponent
-        title="Technology"
-        styles={"absolute"}
-      />
+      <TitleComponent title="Technology" styles={"absolute"} />
       <div className="carousel-container relative md:static pt-10 md:pt-0 md:mt-32 z-10 ml-[4%] w-[80%] md:w-[40%] h-80 md:h-auto">
         <div className="carousel">
           {carouselData.map((item, index) => (
@@ -98,7 +92,14 @@ export default function Technology() {
           </button>
         </div>
       </div>
-      <img src={"../../../../public/client-side/assets/images/EclipseRobot.webp"} alt="Eclipse Robot" className="block w-[84%] md:mr-[18%] md:w-[35%] self-start z-10 md:my-8" />
+      <Image
+        src={EclipseRobotimg}
+        height={1000}
+        width={1000}
+        quality={100}
+        alt="Eclipse Robot"
+        className="block w-[84%] md:mr-[18%] md:w-[35%] self-start z-10 md:my-8"
+      />
       {/* <div className="threeD-container block md:absolute left-[39%] w-11/12 md:w-[45%] self-start h-[50vh] top-0 z-10">
         <Canvas style={{ background: "transparent" }}>
           <EclipseRobot

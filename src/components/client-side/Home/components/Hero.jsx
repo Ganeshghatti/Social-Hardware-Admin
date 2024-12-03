@@ -1,6 +1,7 @@
-'use client'
+"use client";
 import React from "react";
-// import heroimg from "../../../../public/client/assets/images/heroImage.webp";
+import heroImg from "../../../../../public/client/assets/images/heroImage.webp"
+import Image from "next/image";
 
 export default function Hero() {
   const handleWhatsAppClick = () => {
@@ -10,16 +11,19 @@ export default function Hero() {
   };
   return (
     <section
-      style={{ backgroundImage: "../../../../public/client/assets/images/heroImage.webp"}}
       id="hero"
       className="flex w-full flex-col md:flex-row-reverse relative pt-24 py-8 md:py-0 md:justify-between gap-6 md:gap-0 md:h-[92.5vh] h-auto"
     >
       <div className="w-[95%] md:w-[50%] mr-[4%] z-10 flex items-end">
-        {/* <img
-          src={heroimg}
+        <Image
+          src={heroImg}
           alt="hero"
+          height={1000}
+          width={1000}
+          quality={100}
+          priority
           className="w-full h-auto object-cover md:pt-28"
-        /> */}
+        />
       </div>
       <div className="w-full text-center md:text-left md:w-[55%] relative self-center md:left-[4%] px-4 md:px-0 content flex flex-col gap-3 md:gap-6 z-10">
         <h1 className="text-white title">

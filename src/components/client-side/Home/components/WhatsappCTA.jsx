@@ -1,6 +1,7 @@
 'use client'
 import React from "react";
-import WhatsappCTAimg from "../../../../public/client-side/assets/images/WhatsappCTA.png";
+import WhatsappCTAimg from "../../../../../public/client/assets/images/WhatsappCTA.png";
+import Image from "next/image";
 
 export default function WhatsappCTA() {
   const handleWhatsAppClick = () => {
@@ -94,8 +95,9 @@ export default function WhatsappCTA() {
           Message us on WhatsApp
         </button>
       </div>
-      <img
+      <Image
         src={WhatsappCTAimg}
+        sizes="100%"
         alt="Eclipse Remote Systems"
         className="w-[68%] md:w-1/3 z-10"
       />

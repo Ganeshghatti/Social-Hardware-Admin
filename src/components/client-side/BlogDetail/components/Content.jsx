@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 export default function Content({ blog }) {
   return (
     <section id="blog-detail-content" className="relative flex mt-[85px] py-10">
@@ -11,21 +12,9 @@ export default function Content({ blog }) {
           </Link>
         </div>
         <ul className="flex gap-4 px-4 items-center text-white list-none">
-          {/* @AASU currently blog api fetches only category ID, modify api href also fetch category details. Also on clicking this, it should take user href our-blog page with clicked category selected */}
-
-          {/* <li className="list-none">
-            {blog.category.map((item) => {
-              <button className="bg-[#353232] py-1 rounded-full px-3 font-semibold text-white shadow-md shadow-black">
-                CATEGORY
-              </button>
-            })}
-          </li> */}
           <li className="opacity-65 text-sm">&#x2022; November 12, 2024</li>
           <li className="opacity-65 text-sm">&#x2022; 9 min read</li>
         </ul>
-        {/* <div className="w-full flex gap-2 px-4">
-          <p>{new Date(blog.updatedAt).toLocaleDateString('en-GB')}</p>
-        </div> */}
         <h1 className="title mt-8 px-4">{blog.title}</h1>
         <div className="mt-4 flex gap-4 items-center text-md px-4">
           <img
@@ -38,9 +27,11 @@ export default function Content({ blog }) {
           </div>
         </div>
         <p className="standard-description px-4 mt-4">{blog.description}</p>
-        <img
+        <Image
           src={blog.coverImage}
           alt={blog.title}
+          width={1200}
+          height={600}
           className="w-full h-auto md:h-[600px] object-cover mt-4 px-4"
         />
         <p

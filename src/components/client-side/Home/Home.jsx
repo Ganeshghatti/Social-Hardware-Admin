@@ -4,17 +4,17 @@ import Hero from "./components/Hero";
 import "./Home.scss";
 import BlockComponent from "./components/BlockComponent";
 import Features from "./components/Features";
-// import Features1 from "./components/Features1";
+import Features1 from "./components/Features1";
 import Partnerships from "./components/Partnerships";
 import FAQs from "./components/FAQs";
 import SectionIndicator from "../ui/SectionIndicator";
-// import Functionalities from "./components/Functionalities";
+import Functionalities from "./components/Functionalities";
 import Contact from "./components/Contact";
 import Technology from "./components/Technology";
 import Video from "./components/Video";
-// import WhatsappCTA from "./components/WhatsappCTA";
+import WhatsappCTA from "./components/WhatsappCTA";
 import TwitterPosts from "./components/TwitterPosts";
-// import Partners from "./components/Parnters";
+import Partners from "./components/Parnters";
 import Blogs from "./components/Blogs";
 
 export default function Home() {
@@ -31,30 +31,30 @@ export default function Home() {
 
   return (
     <>
-      <Hero />
-      <BlockComponent />
-      <Technology />
-      <BlockComponent />
-      <Blogs />
-      <BlockComponent />
-      <Video />
-      <BlockComponent />
-      <Features />
-      <BlockComponent />
-      {/* <Partners />
-      <BlockComponent /> */}
-      {/* <Functionalities />
-      <BlockComponent /> */}
-      <FAQs />
-      <BlockComponent />
-      <Partnerships />
-      <BlockComponent />
-      <Contact />
-      <BlockComponent />
-      <TwitterPosts />
-      <BlockComponent />
-      {/* <WhatsappCTA /> */}
-      <SectionIndicator />
-    </>
+    <Hero />
+    <BlockComponent />
+    <Technology />
+    <BlockComponent />
+    <Video />
+    <BlockComponent />
+    <Features />
+    <BlockComponent />
+    {/* <Partners />
+    <BlockComponent /> */}
+    {/* <Functionalities />
+    <BlockComponent /> */}
+    <FAQs />
+    <BlockComponent />
+    <Partnerships />
+    <BlockComponent />
+    <Contact />
+    <BlockComponent />
+    <Blogs />
+    <BlockComponent />
+    <TwitterPosts />
+    <BlockComponent />
+    {/* <WhatsappCTA /> */}
+    <SectionIndicator />
+  </>
   );
 }

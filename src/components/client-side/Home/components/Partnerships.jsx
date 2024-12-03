@@ -1,6 +1,5 @@
 import React from "react";
 import TitleComponent from "../../ui/TitleComponent";
-import ButtonComponentv2 from "../../ui/ButtonComponentv2";
 
 export default function Partnerships() {
   return (
