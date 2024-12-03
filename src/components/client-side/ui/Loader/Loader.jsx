@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import loaderimg from '../../../../public/client/assets/images/loader.png';
+import loaderimg from '../../../../../public/client/assets/images/loader.png';
 import Image from 'next/image';
 import './Loader.scss';
 

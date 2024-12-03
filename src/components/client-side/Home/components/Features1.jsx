@@ -1,9 +1,9 @@
 'use client'
 import React from "react";
 import TitleComponent from "../../ui/TitleComponent";
-import { AugmentedRealityControl } from "../../ThreeD/AugmentedRealityControl";
-import { ModularToolAttachments } from "../../ThreeD/ModularToolAttachments";
-import { MeshNetworkCommunication } from "../../ThreeD/MeshNetworkCommunication";
+import { AugmentedRealityControl } from "../../ui/ThreeD/AugmentedRealityControl";
+import { ModularToolAttachments } from "../../ui/ThreeD/ModularToolAttachments";
+import { MeshNetworkCommunication } from "../../ui/ThreeD/MeshNetworkCommunication";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 

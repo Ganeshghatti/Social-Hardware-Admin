@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import logo from "../../../../public/client/assets/images/logo.png";
+import logo from "../../../../../public/client/assets/images/logo.png";
 import "./Navbar.scss";
-import ButtonComponentv1 from "../ui/ButtonComponentv1";
+import ButtonComponentv1 from "../ButtonComponentv1";
 import { TfiAlignRight } from "react-icons/tfi";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";

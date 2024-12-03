@@ -7,7 +7,8 @@ export default function BlogCard({ thumbnailImage, title }) {
       <Image
         src={thumbnailImage}
         alt={title}
-        sizes="100%"
+        height={1000}
+        width={1000}
         className="w-full h-44 md:h-60 object-cover rounded-t-xl"
       />
       <div className="p-4 bg-[#353232]  absolute bottom-0 w-full h-28 md:h-40 rounded-xl flex flex-col gap-4">

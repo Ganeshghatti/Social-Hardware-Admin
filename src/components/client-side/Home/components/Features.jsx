@@ -1,8 +1,8 @@
 import React from "react";
 import TitleComponent from "../../ui/TitleComponent";
-import { AugmentedRealityControl } from "../../ThreeD/AugmentedRealityControl";
-import { ModularToolAttachments } from "../../ThreeD/ModularToolAttachments";
-import { MeshNetworkCommunication } from "../../ThreeD/MeshNetworkCommunication";
+import { AugmentedRealityControl } from "../../ui/ThreeD/AugmentedRealityControl";
+import { ModularToolAttachments } from "../../ui/ThreeD/ModularToolAttachments";
+import { MeshNetworkCommunication } from "../../ui/ThreeD/MeshNetworkCommunication";
 import Card1 from "../../../../../public/client/assets/images/features/card1.gif";
 import Card2 from "../../../../../public/client/assets/images/features/card2.gif";
 import Card3 from "../../../../../public/client/assets/images/features/card3.gif";

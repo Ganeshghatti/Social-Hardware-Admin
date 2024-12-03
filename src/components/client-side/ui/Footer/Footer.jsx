@@ -1,7 +1,7 @@
 'use client'
 import React from "react";
 import "./Footer.scss";
-import logo from "../../../../public/client/assets/images/logo.png"
+import logo from "../../../../../public/client/assets/images/logo.png"
 import { FaLinkedin, FaXTwitter } from "react-icons/fa6";
 import Image from "next/image";
 

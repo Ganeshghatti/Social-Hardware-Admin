@@ -1,14 +1,12 @@
 'use client'
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import axios from "axios";
 import Content from "./components/Content";
 import { ClipLoader } from "react-spinners";
 import "./BlogDetail.scss";
 import RelatedPost from "./components/RelatedPost";
 
-export default function BlogDetail() {
-  const { id } = useParams();
+export default function BlogDetail({id}) {
   const [blog, setBlog] = useState([]);
   const [loading, setLoading] = useState(false);
   

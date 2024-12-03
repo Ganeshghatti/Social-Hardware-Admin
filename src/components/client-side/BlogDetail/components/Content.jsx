@@ -17,8 +17,12 @@ export default function Content({ blog }) {
         </ul>
         <h1 className="title mt-8 px-4">{blog.title}</h1>
         <div className="mt-4 flex gap-4 items-center text-md px-4">
-          <img
-            src="/assets/images/favicon.png"
+          <Image
+            src="/client/assets/images/favicon.png"
+            alt="Cameron Norris"
+            height={1000}
+            width={1000}
+            quality={100}
             className="h-[50px] aspect-square w-[50px] object-cover rounded-full"
           />
           <div className="text-white">

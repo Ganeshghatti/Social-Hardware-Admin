@@ -4,6 +4,7 @@ import CategoryBlog from "./components/CategoryBlog";
 import "./OurBlogs.scss";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
+import Subscription from "./components/Subscription";
 
 const OurBlogs = () => {
   const [blogs, setBlogs] = useState([]);
