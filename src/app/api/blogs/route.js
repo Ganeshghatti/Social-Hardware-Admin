@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
-import Blog from "@/models/Blog";
+import Blog from "@/models/blog";
+import { uploadFile } from "@/lib/uploadFile";
 import { generateUniqueSlug } from "@/lib/generateUniqueSlug";
 import { uploadImg } from "@/lib/uploadImg";
 

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
-import Blog from "@/models/Blog";
+import Blog from "@/models/blog";
 import { deleteImg, deleteBlogFolder } from "@/lib/deleteImg";
 import { uploadImg } from "@/lib/uploadImg";
 import { ref, listAll, getDownloadURL } from "firebase/storage";

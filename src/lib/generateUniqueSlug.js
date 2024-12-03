@@ -1,4 +1,4 @@
-import Blog from "@/models/Blog";
+import Blog from "@/models/blog";
 
 // Helper function to generate and ensure unique slug
 export async function generateUniqueSlug(title) {
