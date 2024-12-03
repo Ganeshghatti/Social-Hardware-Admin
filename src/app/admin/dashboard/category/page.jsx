@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import CategoryTable from "@/components/CategoryTable";
+import CategoryTable from "@/components/admin-dashboard/CategoryTable";
 import Link from "next/link";
-import Modal from "@/components/ui/Modal";
+import Modal from "@/components/admin-dashboard/ui/Modal";
 
 const page = () => {
   const [categoryName, setCategoryName] = useState("");

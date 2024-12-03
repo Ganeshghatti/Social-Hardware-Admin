@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
-import AuthCheck from '@/components/AuthCheck';
+import AuthCheck from '@/components/admin-dashboard/AuthCheck';
 
 export default function AdminLayout({ children }) {
   return (

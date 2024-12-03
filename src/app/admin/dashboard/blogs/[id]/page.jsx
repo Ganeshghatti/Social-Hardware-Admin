@@ -3,10 +3,10 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import Loader from "@/components/Loader";
+import Loader from "@/components/admin-dashboard/Loader";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import MultiSelect from "@/components/ui/MultiSelect";
+import MultiSelect from "@/components/admin-dashboard/ui/MultiSelect";
 import { extractImageUrls } from "@/lib/extractImageUrls";
 import toast from "react-hot-toast";
 
