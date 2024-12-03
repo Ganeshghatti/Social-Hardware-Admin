@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React from "react";
 // import heroimg from "../../../../public/client/assets/images/heroImage.webp";
 
@@ -10,7 +10,10 @@ export default function Hero() {
   };
   return (
     <section
-      style={{ backgroundImage: "../../../../public/client/assets/images/heroImage.webp"}}
+      style={{
+        backgroundImage:
+          "../../../../public/client/assets/images/heroImage.webp",
+      }}
       id="hero"
       className="flex w-full flex-col md:flex-row-reverse relative pt-24 py-8 md:py-0 md:justify-between gap-6 md:gap-0 md:h-[92.5vh] h-auto"
     >

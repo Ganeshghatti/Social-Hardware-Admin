@@ -1,12 +1,13 @@
-'use client'
+"use client";
 import React from "react";
-import logo from "../../../../public/client-side/assets/images/logo.png";
+import logo from "../../../../public/client/assets/images/logo.png";
 // import "./Navbar.scss";
 import ButtonComponentv1 from "../ui/ButtonComponentv1";
 import { TfiAlignRight } from "react-icons/tfi";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,7 +36,7 @@ export default function Navbar() {
   return (
     <nav className="flex justify-between items-center lg:px-16 px-4 absolute top-0 left-0 w-full z-50">
       <Link href="/">
-        <img
+        <Image
           src={logo}
           alt="logo"
           className="w-44 h-6 lg:w-72 lg:h-11 object-contain"

@@ -18,7 +18,7 @@ export default function Features() {
       description:
         "Operators control Eclipse through an AR interface that provides a real-time video feed from the robot's perspective, with key data seamlessly integrated into the display.<br/><br/> This combination of live video and information allows for precise control, making the system ideal for high-risk tasks where accuracy and quick decision-making are essential.",
       params: ["5MS LATENCY", "REAL-TIME DATA OVERLAY"],
-      img: "../../../../public/client-side/assets/images/features/card1.gif",
+      img: "@/public/client-side/assets/images/features/card1.gif",
       model: {
         component: AugmentedRealityControl,
         scale: [5.5, 5.5, 5.5],
@@ -65,10 +65,7 @@ export default function Features() {
 
   return (
     <section id="features" className="relative flex">
-      <TitleComponent
-        title="Features"
-        styles={"absolute h-fit"}
-      />
+      <TitleComponent title="Features" styles={"absolute h-fit"} />
       <div className="cards-parent-container relative flex flex-col w-full mt-10 md:mt-32">
         {cardData.map((card, index) => (
           <div className="cards-container py-8" key={index}>
