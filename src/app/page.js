@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
-import Home from "@/components/client-side/Home/Home";
+// import Home from "@/components/client-side/Home/Home";
+import Navbar from "@/components/client-side/Navbar/Navbar";
 
 
 export default function page() {
@@ -13,7 +14,7 @@ export default function page() {
       width={100}
     /> */}
       <Navbar />
-      <Home />
+      {/* <Home /> */}
     </>
   );
 }
