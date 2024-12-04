@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
-import Blog from '@/models/blog';
+import Blog from '@/models/Blog';
 
 // GET single blog (public)
 export async function GET(request, { params }) {
@@ -9,7 +9,8 @@ export async function GET(request, { params }) {
     const blog = await Blog.findOne({ 
       _id: params.id,
       status: 'public'
-    });
+    }).populate('category');
+
     
     if (!blog) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });

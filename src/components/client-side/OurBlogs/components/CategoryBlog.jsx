@@ -1,13 +1,14 @@
-'use client'
+"use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import BlogCard from "../../ui/BlogCard";
+import { useSearchParams } from "next/navigation";
 
 const CategoryBlog = ({ blogs, categories }) => {
   const [activeCategory, setActiveCategory] = useState("All Category");
+  const searchParams = useSearchParams();
   const [filteredBlogs, setFilteredBlogs] = useState([]);
 
-  console.log(blogs, categories);
   const handleActiveCategory = (category) => {
     setActiveCategory(category);
     if (category === "All Category") {
@@ -20,7 +21,7 @@ const CategoryBlog = ({ blogs, categories }) => {
       if (selectedCategoryObj) {
         const filtered = blogs.filter((blog) =>
           blog.category.some(
-            (blogCategory) => blogCategory._id === selectedCategoryObj._id // Ensure this matches the correct property
+            (blogCategory) => blogCategory._id === selectedCategoryObj._id
           )
         );
         setFilteredBlogs(filtered);
@@ -29,8 +30,25 @@ const CategoryBlog = ({ blogs, categories }) => {
   };
 
   useEffect(() => {
-    setFilteredBlogs(blogs);
-  }, [blogs]);
+    const category = searchParams.get("category");
+    if (category) {
+      const getCategoryData = categories.find((cat) => cat.slug === category);
+      setActiveCategory(getCategoryData.name);
+      const selectedCategoryObj = categories.find(
+        (cat) => cat.name === getCategoryData.name
+      );
+      if (selectedCategoryObj) {
+        const filtered = blogs.filter((blog) =>
+          blog.category.some(
+            (blogCategory) => blogCategory._id === selectedCategoryObj._id // Ensure this matches the correct property
+          )
+        );
+        setFilteredBlogs(filtered);
+      }
+    } else {
+      setFilteredBlogs(blogs);
+    }
+  }, [blogs, searchParams]);
 
   return (
     <section className="relative flex py-4 md:py-8" id="category-blog">

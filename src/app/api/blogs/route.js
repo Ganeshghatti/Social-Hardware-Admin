@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
-import Blog from "@/models/blog";
+import Blog from "@/models/Blog";
 import { uploadFile } from "@/lib/uploadFile";
 import { generateUniqueSlug } from "@/lib/generateUniqueSlug";
 import { uploadImg } from "@/lib/uploadImg";
@@ -63,7 +63,7 @@ export async function POST(request) {
     const coverImageUrl = await uploadImg(coverImage, slug);
     const thumbnailImageUrl = await uploadImg(thumbnailImage, slug);
     console.log(slug, coverImageUrl, thumbnailImageUrl);
-    
+
     // Create blog post
     const blog = await Blog.create({
       title,

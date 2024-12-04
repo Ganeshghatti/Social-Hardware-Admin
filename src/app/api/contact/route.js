@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/mongodb';
-import Contact from '@/models/contact';
+import Contact from '@/models/Contact';
 
 export async function GET(request) {
   const session = await getServerSession(authOptions);

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useEffect, useState } from "react";
 import TitleComponent from "../../ui/TitleComponent";
 import axios from "axios";
@@ -9,9 +9,7 @@ export default function Blogs() {
   const [blogs, setBlogs] = useState([]);
 
   const fetchBlogs = async () => {
-    const res = await axios.get(
-      `https://social-hardware-admin.vercel.app/api/public/blogs`
-    );
+    const res = await axios.get(`/api/public/blogs`);
     setBlogs(res.data);
   };
   useEffect(() => {

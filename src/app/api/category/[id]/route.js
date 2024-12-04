@@ -2,12 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
-<<<<<<< HEAD
 import Category from "@/models/Categories";
-=======
-import Category from "@/models/category"
->>>>>>> 84f1dc9fdd0321cad045f6f1d96f4fa49eb7fde7
-
 
 // GET single category
 export async function GET(request, { params }) {
@@ -32,12 +27,11 @@ export async function GET(request, { params }) {
 
 // PUT update category
 export async function PUT(request, { params }) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   try {
-    const session = await getServerSession(authOptions);
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     await dbConnect();
     const data = await request.json();
 
@@ -49,6 +43,7 @@ export async function PUT(request, { params }) {
       },
       { new: true }
     );
+
 
     if (!updatedCategory) {
       return NextResponse.json(

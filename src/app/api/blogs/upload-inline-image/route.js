@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { uploadImg } from "@/lib/uploadImg";
-import Blog from "@/models/blog";
+import Blog from "@/models/Blog";
 import dbConnect from "@/lib/mongodb";
 
 export async function POST(request) {

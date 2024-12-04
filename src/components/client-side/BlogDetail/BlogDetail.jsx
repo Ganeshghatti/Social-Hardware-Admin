@@ -13,8 +13,9 @@ export default function BlogDetail({id}) {
   const fetchBlog = async () => {
     setLoading(true);
     const res = await axios.get(
-      `https://social-hardware-admin.vercel.app/api/public/blogs/${id}`
+      `/api/public/blogs/${id}`
     );
+    console.log("resposne ", res)
     setBlog(res.data);
     setLoading(false);
   };

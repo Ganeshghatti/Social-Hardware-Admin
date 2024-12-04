@@ -13,7 +13,7 @@ const RelatedPost = ({ currentBlogId }) => {
     try {
       setLoading(true);
       const res = await axios.get(
-        `https://social-hardware-admin.vercel.app/api/public/blogs`
+        `/api/public/blogs`
       );
       setBlogs(res?.data);
       setLoading(false);

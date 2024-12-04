@@ -89,6 +89,9 @@ const CategoryTable = ({ data, fetchCategories }) => {
               Name
             </th>
             <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium uppercase">
+              Slug
+            </th>
+            <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium uppercase">
               Created
             </th>
             <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium uppercase">
@@ -109,6 +112,9 @@ const CategoryTable = ({ data, fetchCategories }) => {
               >
                 <td className="px-4 md:px-6 py-4">
                   <div className="max-w-xs truncate">{category.name}</div>
+                </td>
+                <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
+                  {category.slug}
                 </td>
                 <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
                   {new Date(category.createdAt).toLocaleDateString()}

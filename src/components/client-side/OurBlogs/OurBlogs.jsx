@@ -14,9 +14,9 @@ const OurBlogs = () => {
   const fetchData = async () => {
     try {
       const [blogsResponse, categoriesResponse] = await Promise.all([
-        axios.get("https://social-hardware-admin.vercel.app/api/public/blogs"),
+        axios.get("/api/public/blogs"),
         axios.get(
-          "https://social-hardware-admin.vercel.app/api/public/category"
+          "/api/public/category"
         ),
       ]);
 
