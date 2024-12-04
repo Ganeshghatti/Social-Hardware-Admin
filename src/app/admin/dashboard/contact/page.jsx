@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
+import { CSVLink } from "react-csv";
 import Loader from "@/components/admin-dashboard/Loader";
-import Link from "next/link";
 import { FaEnvelope, FaPhone } from "react-icons/fa";
 
 const ContactSubmissions = () => {
@@ -28,16 +28,32 @@ const ContactSubmissions = () => {
     fetchSubmissions();
   }, []);
 
+  const csvHeaders = [
+    { label: "Name", key: "name" },
+    { label: "Email", key: "email" },
+    { label: "Country Code", key: "countryCode" },
+    { label: "Phone", key: "phone" },
+    { label: "Message", key: "message" },
+    { label: "Submitted At", key: "submittedAt" },
+  ];
+
+  const formattedSubmissions = submissions.map((submission) => ({
+    ...submission,
+    submittedAt: new Date(submission.submittedAt).toLocaleString(),
+  }));
+
   return (
     <div className="md:w-[85%] md:ml-[15%]">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h1 className="text-2xl font-bold">Contact Form Submissions</h1>
-        <Link
-          href="/admin/dashboard"
+        <CSVLink
+          data={formattedSubmissions}
+          headers={csvHeaders}
+          filename="contact_submissions.csv"
           className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded w-full sm:w-auto text-center"
         >
-          Back to Dashboard
-        </Link>
+          Download CSV
+        </CSVLink>
       </div>
 
       {loading && <Loader />}
