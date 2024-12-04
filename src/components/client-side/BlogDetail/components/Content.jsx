@@ -4,7 +4,6 @@ import Image from "next/image";
 
 export default function Content({ blog }) {
   const readingTime = useMemo(() => {
-    console.log(blog);
     const stripHtml = (html) => {
       const tmp = document.createElement("DIV");
       tmp.innerHTML = html;
@@ -30,7 +29,6 @@ export default function Content({ blog }) {
           </Link>
         </div>
         <ul className="flex gap-4 px-4 items-center text-white list-none">
-          {/* @AASU currently blog api fetches only category ID, modify api to also fetch category details. Also on clicking this, it should take user to our-blog page with clicked category selected */}
           {blog && blog?.category?.length > 0 && (
             <div className="flex flex-row gap-2">
               {blog.category.map((item) => (
@@ -45,11 +43,6 @@ export default function Content({ blog }) {
               ))}
             </div>
           )}
-          {/* {blog.category.map((item) => {
-                <button className="bg-[#353232] py-1 rounded-full px-3 font-semibold text-white shadow-md shadow-black">
-                  {item.name}
-                </button>
-              })} */}
           <li className="opacity-65 text-sm">
             &#x2022;{" "}
             {new Date(blog?.createdAt).toLocaleDateString("en-US", {

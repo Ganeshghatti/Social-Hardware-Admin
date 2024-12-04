@@ -4,6 +4,35 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/mongodb';
 import Subscribe from '@/models/Subscription';
 
+export async function POST(request) {
+  try {
+    await dbConnect();
+    const data = await request.json();
+
+    // Validate email
+    if (!data.email) {
+      return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+    }
+
+    const isExisting = await Subscribe.findOne({ email: data.email });
+
+    if (isExisting) {
+      return NextResponse.json({ error: 'Email already exists' }, { status: 400 });
+    }
+
+    // Create a new subscription
+    const newSubscription = await Subscribe.create(data);
+
+    return NextResponse.json(newSubscription, { status: 201 });
+  } catch (error) {
+    console.error("Error subscribing:", error);
+    return NextResponse.json(
+      { error: error.message || "Failed to subscribe" },
+      { status: 500 }
+    );
+  }
+} 
+
 export async function GET(request) {
   const session = await getServerSession(authOptions);
 

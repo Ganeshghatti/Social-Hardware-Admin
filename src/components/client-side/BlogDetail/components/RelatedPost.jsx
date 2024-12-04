@@ -13,7 +13,7 @@ const RelatedPost = ({ currentBlogId }) => {
     try {
       setLoading(true);
       const res = await axios.get(
-        `/api/public/blogs`
+        `/api/blogs`
       );
       setBlogs(res?.data);
       setLoading(false);

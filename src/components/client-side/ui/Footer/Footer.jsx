@@ -4,6 +4,7 @@ import "./Footer.scss";
 import logo from "../../../../../public/client/assets/images/logo.png"
 import { FaLinkedin, FaXTwitter } from "react-icons/fa6";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
   const scrollToSection = (sectionId) => {
@@ -41,22 +42,22 @@ export default function Footer() {
           ))}
         </ul>
         <span className="flex items-center justify-center gap-4">
-          <a
+          <Link
             href="https://www.linkedin.com/company/social-hardware"
             target="_blank"
             rel="noopener noreferrer"
             className="text-white hover:text-oranges transition-all duration-300"
           >
             <FaLinkedin size={24} />
-          </a>
-          <a
+          </Link>
+          <Link
             href="https://x.com/social_hardware"
             target="_blank"
             rel="noopener noreferrer"
             className="text-white hover:text-oranges transition-all duration-300"
           >
             <FaXTwitter size={24} />
-          </a>
+          </Link>
         </span>
       </div>
       <div className="flex w-full justify-center items-center py-5">
