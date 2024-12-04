@@ -3,7 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { FaTachometerAlt, FaBlog, FaTags, FaEnvelope } from "react-icons/fa";
+import { FaTachometerAlt, FaBlog, FaTags, FaEnvelope, FaUser } from "react-icons/fa";
+
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -121,6 +122,16 @@ export default function Sidebar() {
           >
             <FaEnvelope className="inline-block mr-2" />
             Contact
+          </Link>
+          <Link
+            href="/admin/dashboard/subscribed"
+            className={`flex items-center p-4 ${isActive(
+              "/admin/dashboard/subscribed"
+            )}`}
+            onClick={() => isMobile && setIsMobileMenuOpen(false)}
+          >
+            <FaUser className="inline-block mr-2" />
+            Subscribed Users
           </Link>
         </nav>
       </div>

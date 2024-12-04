@@ -1,5 +1,5 @@
-import Sidebar from './components/Sidebar';
-import Navbar from './components/Navbar';
+import Sidebar from '../../components/admin-dashboard/ui/Sidebar';
+import Navbar from '../../components/admin-dashboard/ui/Navbar';
 import AuthCheck from '@/components/admin-dashboard/AuthCheck';
 import "../globals.css"
 

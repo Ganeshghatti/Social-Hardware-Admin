@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import Categories from './Categories';
 
 const BlogSchema = new mongoose.Schema({
   title: {
