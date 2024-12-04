@@ -3,8 +3,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { FaTachometerAlt, FaBlog, FaTags, FaEnvelope, FaUser } from "react-icons/fa";
-
+import {
+  FaTachometerAlt,
+  FaBlog,
+  FaTags,
+  FaEnvelope,
+  FaUser,
+} from "react-icons/fa";
 
 export default function Sidebar() {
   const pathname = usePathname();
