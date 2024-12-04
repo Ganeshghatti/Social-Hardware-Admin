@@ -1,0 +1,343 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap");
+@font-face {
+  font-family: VioletSans;
+  src: url("/client/assets/fonts/VioletSans-Regular.ttf");
+}
+
+body {
+  background: linear-gradient(268deg, #000 1.93%, #1b1b1b 100.68%);
+  width: 100%;
+  overflow-x: hidden;
+}
+#root {
+  background: linear-gradient(268deg, #000 1.93%, #1b1b1b 100.68%);
+}
+#hero {
+  background: linear-gradient(268deg, #000 1.93%, #1b1b1b 100.68%);
+  .content {
+    .title {
+      color: #d4d4d4;
+      font-family: VioletSans;
+      font-size: clamp(26px, calc(26px + (56 - 26) * ((100vw - 320px) / (1200 - 320))), 56px);
+      font-style: normal;
+      font-weight: 400;
+      line-height: 110%;
+    }
+    .desc {
+      color: #d4d4d4;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(12px, calc(12px + (24 - 12) * ((100vw - 320px) / (1200 - 320))), 24px);
+      font-style: normal;
+      font-weight: 400;
+      line-height: 124%;
+    }
+  }
+  .line-h-1 {
+    position: absolute;
+    top: 6vw;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    z-index: 0;
+    background: #353539;
+    @media (max-width: 768px) {
+      top: 120px;
+    }
+  }
+}
+#BlockComponent {
+  border-top: 1px solid #353539;
+  border-bottom: 1px solid #353539;
+}
+#video {
+  border-bottom: 1px solid #353539;
+  border-top: 1px solid #353539;
+  .video-mp4 {
+    --s: 125px; /* the size on the corner */
+    --t: 5px; /* the thickness of the border */
+    --g: 20px; /* the gap between the border and image */
+
+    padding: calc(var(--g) + var(--t));
+    outline: var(--t) solid #fc8500; /* the color here */
+    outline-offset: calc(-1 * var(--t));
+    mask: conic-gradient(at var(--s) var(--s), #0000 75%, #000 0) 0 0 /
+        calc(100% - var(--s)) calc(100% - var(--s)),
+      linear-gradient(#000 0 0) content-box;
+    @media (max-width: 768px) {
+      --s: 35px; /* the size on the corner */
+      --t: 1.5px; /* the thickness of the border */
+      --g: 10px; /* the gap between the border and image */
+    }
+  }
+}
+#technology {
+
+}
+#partners {
+  width: 100%;
+  .left-container {
+    width: 16%;
+  }
+  .center-container {
+    width: 68%;
+    padding: 0 7.5%; // Added left padding
+    @media (max-width: 768px) {
+      padding: 0 3%;
+    }
+    .images-container {
+      .image-block {
+        border: 3px solid #fc8500;
+        // box-shadow: #fc8500 0px 5px 15px;
+      }
+    }
+  }
+  .right-container {
+    width: 16%;
+  }
+}
+#twitterposts {
+
+}
+#features {
+  .cards-container {
+    border-bottom: 1px solid #353539;
+    width: 100%;
+  }
+  .card {
+    .card-left {
+      .index {
+        color: var(--Schemes-On-Primary, #fff);
+        font-family: VioletSans;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+
+        --s: 5px; /* the size on the corner */
+        --t: 1px; /* the thickness of the border */
+        --g: 5px; /* the gap between the border and image */
+
+        padding: calc(var(--g) + var(--t));
+        outline: var(--t) solid #fc8500; /* the color here */
+        outline-offset: calc(-1 * var(--t));
+        mask: conic-gradient(at var(--s) var(--s), #0000 75%, #000 0) 0 0 /
+            calc(100% - var(--s)) calc(100% - var(--s)),
+          linear-gradient(#000 0 0) content-box;
+      }
+    }
+  }
+}
+#features1 {
+  .cards-container {
+    border-bottom: 1px solid #353539;
+    width: 100%;
+  }
+  .card {
+    .card-left {
+      .index {
+        color: var(--Schemes-On-Primary, #fff);
+        font-family: VioletSans;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+
+        --s: 5px; /* the size on the corner */
+        --t: 1px; /* the thickness of the border */
+        --g: 5px; /* the gap between the border and image */
+
+        padding: calc(var(--g) + var(--t));
+        outline: var(--t) solid #fc8500; /* the color here */
+        outline-offset: calc(-1 * var(--t));
+        mask: conic-gradient(at var(--s) var(--s), #0000 75%, #000 0) 0 0 /
+            calc(100% - var(--s)) calc(100% - var(--s)),
+          linear-gradient(#000 0 0) content-box;
+      }
+    }
+    .card-right {
+      .param,
+      .get-a-trial {
+        padding: 20px 25px;
+        @media (max-width: 768px) {
+          padding: 8px 4px;
+        }
+      }
+      .param:first-child {
+        border-top: 1px solid #353539;
+      }
+      .param {
+        border-bottom: 1px solid #353539;
+      }
+      .get-a-trial {
+        border-top: 1px solid #353539;
+      }
+    }
+  }
+}
+#partnerships {
+  width: 100%;
+  .left-container {
+    width: 16%;
+  }
+  .center-container {
+    width: 68%;
+    table {
+      width: 100%;
+      border: 1px solid #353539;
+      border-collapse: collapse;
+      tr {
+        display: flex;
+      }
+      .table-title {
+        color: var(--Schemes-On-Primary, #fff);
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(12px, calc(12px + (24 - 12) * ((100vw - 320px) / (1200 - 320))), 24px);
+        font-style: normal;
+        font-weight: 400;
+        line-height: 120%;
+        width: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        border-right: 1px solid #353539;
+        padding: 50px 40px;
+        text-align: left;
+        @media (max-width: 768px) {
+          padding: 5px;
+          text-align: center;
+        }
+      }
+      .table-content {
+        color: #bfbfbf;
+        font-family: "Space Grotesk";
+        font-size: clamp(11px, calc(11px + (18 - 11) * ((100vw - 320px) / (1200 - 320))), 18px);
+        font-style: normal;
+        font-weight: 400;
+        line-height: 108.18%;
+        width: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 50px 40px;
+        @media (max-width: 768px) {
+          padding: 5px;
+        }
+      }
+      tr:not(:last-child) {
+        border-bottom: 1px solid #353539;
+      }
+    }
+    .cta {
+      padding: 50px 65px;
+      @media (max-width: 768px) {
+        padding: 15px 10px;
+      }
+      .cta-text {
+        color: var(--Schemes-On-Primary, #fff);
+        font-family: "Space Grotesk";
+        font-size: clamp(16px, calc(16px + (28 - 16) * ((100vw - 320px) / (1200 - 320))), 28px);
+        font-style: normal;
+        font-weight: 400;
+        line-height: 108.18%;
+      }
+    }
+  }
+  .right-container {
+    width: 16%;
+  }
+}
+#blogs{
+  width: 100%;
+  .left-container {
+    width: 16%;
+  }
+  .center-container {
+    width: 68%;
+  }
+  .right-container {
+    width: 16%;
+  }
+}
+#faq {
+  width: 100%;
+  .left-container {
+    width: 16%;
+  }
+  .center-container {
+    width: 68%;
+    .center-container-right-block {
+      border-left: 1px solid #353539;
+    }
+    .QnA-block {
+      border-top: 1px solid #353539;
+      padding: 35px 40px;
+      @media (max-width: 768px) {
+        padding: 15px 10px;
+      }
+      .question {
+        color: #d6d6d6;
+        font-family: VioletSans;
+        font-size: clamp(16px, calc(16px + (20 - 16) * ((100vw - 320px) / (1200 - 320))), 20px);
+        font-style: normal;
+        font-weight: 400;
+        line-height: 108.18%;
+        cursor: pointer;
+      }
+      .answer {
+        color: #d6d6d6;
+        font-family: VioletSans;
+        font-size: clamp(11px, calc(11px + (18 - 11) * ((100vw - 320px) / (1200 - 320))), 18px);
+        font-style: normal;
+        font-weight: 400;
+        line-height: 108.18%;
+      }
+    }
+  }
+  .right-container {
+    width: 16%;
+  }
+}
+#functionalities {
+  width: 100%;
+  .card-active {
+    width: 50%;
+  }
+  .card-next {
+    width: 25%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .card-prev {
+    width: 25%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .card {
+    @media (max-width: 768px) {
+      width: 80%;
+      margin-left: 4%;
+    }
+    .img {
+      width: 100%;
+    }
+  }
+}
+#contact {
+  width: 100%;
+  .left-container {
+    width: 16%;
+  }
+  .center-container {
+    width: 68%;
+    padding: 0 7.5%; // Added left padding
+    @media (max-width: 768px) {
+      padding: 0 3%;
+    }
+  }
+  .right-container {
+    width: 16%;
+  }
+}
+#whatsappCTA {
+
+}

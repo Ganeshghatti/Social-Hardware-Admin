@@ -1,9 +1,7 @@
-'use client';
-import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
-import Sidebar from './components/Sidebar';
-import Navbar from './components/Navbar';
-import AuthCheck from '@/components/AuthCheck';
+import Sidebar from '../../components/admin-dashboard/ui/Sidebar';
+import Navbar from '../../components/admin-dashboard/ui/Navbar';
+import AuthCheck from '@/components/admin-dashboard/AuthCheck';
+import "../globals.css"
 
 export default function AdminLayout({ children }) {
   return (

@@ -3,8 +3,8 @@ import { useState, useEffect,useRef,useMemo } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import Loader from "@/components/Loader";
-import MultiSelect from "@/components/ui/MultiSelect";
+import Loader from "@/components/admin-dashboard/Loader";
+import MultiSelect from "@/components/admin-dashboard/ui/MultiSelect";
 import toast from 'react-hot-toast';
 
 export default function NewBlog() {

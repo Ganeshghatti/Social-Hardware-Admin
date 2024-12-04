@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
-import Category from '@/models/Categories';
+import Category from '@/models/Categories'
 
 // GET all blogs (public)
 export async function GET(request) {

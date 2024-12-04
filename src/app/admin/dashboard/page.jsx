@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import Loader from "@/components/Loader";
+import Loader from "@/components/admin-dashboard/Loader";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 

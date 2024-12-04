@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import AuthCheck from '@/components/AuthCheck';
+import AuthCheck from '@/components/admin-dashboard/AuthCheck';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');

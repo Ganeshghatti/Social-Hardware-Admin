@@ -1,0 +1,30 @@
+@font-face {
+  font-family: VioletSans;
+  src: url("/client/assets/fonts/VioletSans-Regular.ttf");
+}
+nav {
+  background-color: rgba(0, 0, 0, 0.301);
+  height: 85px;
+  font-family: VioletSans;
+}
+nav ul li {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+}
+.menu-gradient {
+  background-color: #000;
+  opacity: 0.5;
+  z-index: 998 !important;
+}
+.navbar-menu {
+  z-index: 999 !important;
+}
+.cancel-icon {
+  z-index: 999 !important;
+}
