@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export default function Technology() {
   const carouselData = [
-    "Eclipse Remote Systems are teleoperated robots designed to handle tasks in dangerous environments. Equipped with sensors and cameras that provide real-time situational awareness, these robots allow workers to remotely perform inspections, repairs, and other critical tasks from a safe distance.",
+    "Endlessly customizable and scalable, Eclipse Remote Systems can be tailored to meet the unique demands of your industry. From bespoke tool attachments to network modifications, we ensure seamless integration into your operations; delivering secure, reliable, and consistent results—every time.",
     "Our telerobotics systems are designed for ease of use, even by non-technical users. With advanced sensory capabilities that surpass human limits, they leverage IoT and AI-enhanced data collection to deliver unparalleled operational insights, empowering smarter, more informed decisions for improved efficiency.",
     "Our fully customizable systems adapt to your industry's specific needs, with multiple units deployable for seamless coordination in large-scale operations. Designed with top-tier safety and privacy compliance, you can trust our solutions to deliver secure, high-performance results every time",
   ];
@@ -35,7 +35,7 @@ export default function Technology() {
   return (
     <section
       id="technology"
-      className="relative py-8 flex md:items-start flex-col md:flex-row w-full justify-between"
+      className="relative py-8 flex md:items-start flex-col md:flex-row md:gap-10 w-full justify-between"
     >
       <TitleComponent title="Technology" styles={"absolute"} />
       <div className="carousel-container relative md:static pt-10 md:pt-0 md:mt-32 z-10 ml-[4%] w-[80%] md:w-[40%] h-80 md:h-auto">
@@ -51,7 +51,7 @@ export default function Technology() {
             </p>
           ))}
         </div>
-        <div className="arrow-block absolute self-start bottom-[10%] flex gap-4  w-fit py-8">
+        {/* <div className="arrow-block absolute self-start bottom-[10%] flex gap-4  w-fit py-8">
           <button
             onClick={prevSlide}
             className="hover:opacity-75 transition-opacity"
@@ -90,7 +90,7 @@ export default function Technology() {
               />
             </svg>
           </button>
-        </div>
+        </div> */}
       </div>
       <Image
         src={EclipseRobotimg}

@@ -27,13 +27,12 @@ export default function Hero() {
       </div>
       <div className="w-full text-center md:text-left md:w-[55%] relative self-center md:left-[4%] px-4 md:px-0 content flex flex-col gap-3 md:gap-6 z-10">
         <h1 className="text-white title">
-          <span className="text-oranges"> Next-Generation </span>
-          <br /> Workplace Safety
+          <span className="text-oranges"> Next-Generation 
+          </span>
+          <br />All-Terrain Robots
         </h1>
         <p className="desc md:block w-full md:w-3/4">
-          Social Hardware offers cutting-edge telerobotic solutions for
-          high-risk operations, allowing critical tasks to be completed
-          remotely, significantly improving both safety and productivity.
+        Designed and manufactured in India, Eclipse Remote Systems are cutting-edge, remotely operated, and semi-autonomous all-terrain robots. Engineered to perform critical tasks in hazardous environments, these robots are designed to enhance safety, improve efficiency, and elevate operational performance.
           <br /> <br />
           <span className="text-oranges">
             Contact us today to discover how we can help your business save

@@ -14,9 +14,9 @@ export default function Features() {
   const cardData = [
     {
       index: "01",
-      title: "Augmented Reality (AR) Control",
+      title: "Immersive Control & Semi-Autonomous Operation",
       description:
-        "Operators control Eclipse through an AR interface that provides a real-time video feed from the robot's perspective, with key data seamlessly integrated into the display.<br/><br/> This combination of live video and information allows for precise control, making the system ideal for high-risk tasks where accuracy and quick decision-making are essential.",
+        "Eclipse can be operated remotely through an immersive XR-based control system or a semi-autonomous mode, both offering a real-time video feed from the robot's perspective with critical data seamlessly integrated into the display.",
       params: ["5MS LATENCY", "REAL-TIME DATA OVERLAY"],
       img: Card1,
       model: {
