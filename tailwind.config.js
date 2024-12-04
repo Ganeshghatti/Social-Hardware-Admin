@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        orange: "#FC8500",
+        oranges: "#FC8500",
       },
       fontFamily: {
         violetSans: ["VioletSans", "sans-serif"],

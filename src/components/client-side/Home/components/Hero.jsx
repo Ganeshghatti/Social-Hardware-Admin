@@ -27,7 +27,7 @@ export default function Hero() {
       </div>
       <div className="w-full text-center md:text-left md:w-[55%] relative self-center md:left-[4%] px-4 md:px-0 content flex flex-col gap-3 md:gap-6 z-10">
         <h1 className="text-white title">
-          <span className="text-orange"> Next-Generation </span>
+          <span className="text-oranges"> Next-Generation </span>
           <br /> Workplace Safety
         </h1>
         <p className="desc md:block w-full md:w-3/4">
@@ -35,7 +35,7 @@ export default function Hero() {
           high-risk operations, allowing critical tasks to be completed
           remotely, significantly improving both safety and productivity.
           <br /> <br />
-          <span className="text-orange">
+          <span className="text-oranges">
             Contact us today to discover how we can help your business save
             lives and achieve higher performance.
           </span>
@@ -119,7 +119,7 @@ export default function Hero() {
         operations, allowing critical tasks to be completed remotely,
         significantly improving both safety and productivity.
         <br />
-        <span className="text-orange">
+        <span className="text-oranges">
           Contact us today to discover how we can help your business save lives
           and achieve higher performance.
         </span>

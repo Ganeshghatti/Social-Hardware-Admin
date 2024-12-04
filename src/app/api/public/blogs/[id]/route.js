@@ -6,10 +6,13 @@ import Blog from '@/models/Blog';
 export async function GET(request, { params }) {
   try {
     await dbConnect();
+    console.log(params.id);
     const blog = await Blog.findOne({ 
       _id: params.id,
       status: 'public'
     }).populate('category');
+
+    console.log(blog);
 
     
     if (!blog) {

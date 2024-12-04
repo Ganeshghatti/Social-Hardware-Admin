@@ -63,7 +63,7 @@ export default function Subscription() {
           />
           <button
             type="submit"
-            className="text-orange w-fit md:w-1/5 bg-[#1A1A1A] rounded-r text-center flex justify-center px-4 md:px-8 py-3"
+            className="text-oranges w-fit md:w-1/5 bg-[#1A1A1A] rounded-r text-center flex justify-center px-4 md:px-8 py-3"
           >
             Subscribe
           </button>

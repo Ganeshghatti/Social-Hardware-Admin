@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useEffect, useState } from "react";
 import CategoryBlog from "./components/CategoryBlog";
 import "./OurBlogs.scss";
@@ -14,10 +14,8 @@ const OurBlogs = () => {
   const fetchData = async () => {
     try {
       const [blogsResponse, categoriesResponse] = await Promise.all([
-        axios.get("/api/public/blogs"),
-        axios.get(
-          "/api/public/category"
-        ),
+        axios.get("/api/blogs"),
+        axios.get("/api/category"),
       ]);
 
       setBlogs(blogsResponse.data);

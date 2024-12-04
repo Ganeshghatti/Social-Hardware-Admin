@@ -33,7 +33,7 @@ export default function Footer() {
           {navItems.map((item) => (
             <li
               key={item.id}
-              className="hover:text-orange transition-all duration-300 cursor-pointer text-sm md:text-base"
+              className="hover:text-oranges transition-all duration-300 cursor-pointer text-sm md:text-base"
               onClick={() => scrollToSection(item.id)}
             >
               {item.name}
@@ -45,7 +45,7 @@ export default function Footer() {
             href="https://www.linkedin.com/company/social-hardware"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white hover:text-orange transition-all duration-300"
+            className="text-white hover:text-oranges transition-all duration-300"
           >
             <FaLinkedin size={24} />
           </a>
@@ -53,7 +53,7 @@ export default function Footer() {
             href="https://x.com/social_hardware"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white hover:text-orange transition-all duration-300"
+            className="text-white hover:text-oranges transition-all duration-300"
           >
             <FaXTwitter size={24} />
           </a>

@@ -49,14 +49,14 @@ export default function Navbar() {
             <Link
               href={item.link}
               key={item.id}
-              className="hover:text-orange transition-all duration-300 cursor-pointer"
+              className="hover:text-oranges transition-all duration-300 cursor-pointer"
             >
               {item.name}
             </Link>
           ) : (
             <li
               key={item.id}
-              className="hover:text-orange transition-all duration-300 cursor-pointer"
+              className="hover:text-oranges transition-all duration-300 cursor-pointer"
               onClick={() => scrollToSection(item.id)}
             >
               {item.name}
@@ -74,13 +74,13 @@ export default function Navbar() {
           <IoMdClose
             size={30}
             onClick={toggleMenu}
-            className="cursor-pointer text-white hover:text-orange transition-all duration-300 z-50 relative"
+            className="cursor-pointer text-white hover:text-oranges transition-all duration-300 z-50 relative"
           />
         ) : (
           <TfiAlignRight
             size={30}
             onClick={toggleMenu}
-            className="cursor-pointer text-white hover:text-orange transition-all duration-300"
+            className="cursor-pointer text-white hover:text-oranges transition-all duration-300"
           />
         )}
         {isOpen && (
@@ -95,7 +95,7 @@ export default function Navbar() {
                   <Link
                     href={item.link}
                     key={item.id}
-                    className="text-white hover:text-orange transition-all duration-300 cursor-pointer"
+                    className="text-white hover:text-oranges transition-all duration-300 cursor-pointer"
                   >
                     {item.name}
                   </Link>

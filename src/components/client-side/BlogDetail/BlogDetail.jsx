@@ -13,7 +13,7 @@ export default function BlogDetail({id}) {
   const fetchBlog = async () => {
     setLoading(true);
     const res = await axios.get(
-      `/api/public/blogs/${id}`
+      `/api/blogs/${id}`
     );
     console.log("resposne ", res)
     setBlog(res.data);
