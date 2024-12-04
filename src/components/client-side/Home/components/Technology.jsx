@@ -38,7 +38,7 @@ export default function Technology() {
       className="relative py-8 flex md:items-start flex-col md:flex-row md:gap-10 w-full justify-between"
     >
       <TitleComponent title="Technology" styles={"absolute"} />
-      <div className="carousel-container relative md:static pt-10 md:pt-0 md:mt-32 z-10 ml-[4%] w-[80%] md:w-[40%] h-80 md:h-auto">
+      <div className="carousel-container relative md:static pt-10 md:pt-0 md:mt-32 z-10 ml-[4%] w-[80%] md:w-[40%] mb-10 md:mb-0 md:h-auto">
         <div className="carousel">
           {carouselData.map((item, index) => (
             <p
