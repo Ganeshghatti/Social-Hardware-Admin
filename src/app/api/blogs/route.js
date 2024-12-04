@@ -3,15 +3,27 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
-import { uploadFile } from "@/lib/uploadFile";
 import { generateUniqueSlug } from "@/lib/generateUniqueSlug";
 import { uploadImg } from "@/lib/uploadImg";
 
 // GET all blogs
 export async function GET() {
+  const session = await getServerSession(authOptions);
+
   try {
     await dbConnect();
-    const blogs = await Blog.find({})
+
+    if (session && session?.user?.role === "admin") {
+      const blogs = await Blog.find({})
+        .populate("category")
+        .select(
+          "title description thumbnailImage createdAt updatedAt category status"
+        )
+        .sort({ createdAt: -1 });
+      return NextResponse.json(blogs);
+    }
+
+    const blogs = await Blog.find({ status: "public" })
       .populate("category")
       .select(
         "title description thumbnailImage createdAt updatedAt category status"

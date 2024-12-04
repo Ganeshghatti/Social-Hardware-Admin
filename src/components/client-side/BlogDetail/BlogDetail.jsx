@@ -15,7 +15,6 @@ export default function BlogDetail({id}) {
     const res = await axios.get(
       `/api/blogs/${id}`
     );
-    console.log("resposne ", res)
     setBlog(res.data);
     setLoading(false);
   };

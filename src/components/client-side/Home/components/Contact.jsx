@@ -1,7 +1,6 @@
 'use client'
 import React, { useState } from "react";
 import validator from "validator";
-import emailjs from "emailjs-com";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ClipLoader from 'react-spinners/ClipLoader';
@@ -38,7 +37,7 @@ export default function Contact() {
 
     if (validateForm()) {
       try {
-        const response = await fetch('https://social-hardware-admin.vercel.app/api/public/contact', {
+        const response = await fetch('/api/contact', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
