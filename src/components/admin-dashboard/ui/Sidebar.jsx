@@ -10,6 +10,7 @@ import {
   FaEnvelope,
   FaUser,
 } from "react-icons/fa";
+import { TfiEmail } from "react-icons/tfi";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -137,6 +138,16 @@ export default function Sidebar() {
           >
             <FaUser className="inline-block mr-2" />
             Subscribed Users
+          </Link>
+          <Link
+            href="/admin/dashboard/email"
+            className={`flex items-center p-4 ${isActive(
+              "/admin/dashboard/email"
+            )}`}
+            onClick={() => isMobile && setIsMobileMenuOpen(false)}
+          >
+            <TfiEmail className="inline-block mr-2" />
+            Email Management
           </Link>
         </nav>
       </div>
