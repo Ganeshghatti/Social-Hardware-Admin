@@ -5,6 +5,7 @@ import Image from "next/image";
 import Loader from "../Loader";
 import toast from "react-hot-toast";
 
+
 export default function EmailForm({ id = null }) {
   const router = useRouter();
 
@@ -13,12 +14,15 @@ export default function EmailForm({ id = null }) {
     content: "",
     image: null,
     status: "draft",
+    blog: null,
   });
+  const [blogs, setBlogs] = useState([]);
   const [imagePreview, setImagePreview] = useState("");
   const [loading, setLoading] = useState({
     draft: false,
     public: false,
     fetch: false,
+    blog: false,
   });
   const [error, setError] = useState("");
 
@@ -40,7 +44,7 @@ export default function EmailForm({ id = null }) {
 
   const handleSubmit = async (status) => {
     setError("");
-
+  
     if (!formData.title.trim()) {
       setError("Title is required");
       return;
@@ -49,33 +53,56 @@ export default function EmailForm({ id = null }) {
       setError("Content is required");
       return;
     }
-
+  
     setLoading((prev) => ({ ...prev, [status]: true }));
-
+  
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
       formDataToSend.append("content", formData.content);
       formDataToSend.append("status", status);
-
+      
+      // Correctly append blog ID
+      if (formData.blog) {
+        formDataToSend.append("blog", formData.blog._id);
+      }
+  
       if (formData.image) {
         formDataToSend.append("image", formData.image);
       }
-
+  
       let api = id ? `/api/email/${id}` : "/api/email";
-
       let method = id ? "PUT" : "POST";
-
+  
       const response = await fetch(api, {
         method: method,
         body: formDataToSend,
       });
 
+      const data = await response.json();
+  
       if (!response.ok) {
-        const data = await response.json();
         throw new Error(data.error || "Failed to create email");
       }
 
+
+
+      if (status === "public") {
+        // await sendBulkEmails(data._id);
+
+        const emailSendResponse = await fetch(`/api/email/send/${data._id}`, {
+          method: 'POST',
+        });
+
+        const emailSendResult = await emailSendResponse.json();
+
+        console.log("email result", emailSendResponse)
+
+        if (!emailSendResponse.ok) {
+          throw new Error(emailSendResult.error || 'Failed to send emails');
+        }
+      }
+  
       toast.success("Email Sent successfully");
       router.push("/admin/dashboard/email");
     } catch (error) {
@@ -88,7 +115,7 @@ export default function EmailForm({ id = null }) {
   };
 
   const fetchEmail = async () => {
-    if(!id) return;
+    if (!id) return;
     setLoading((prev) => ({ ...prev, fetch: true }));
     setError("");
 
@@ -100,13 +127,16 @@ export default function EmailForm({ id = null }) {
       if (!response.ok) {
         throw new Error(data.error || "Failed to create email");
       }
-      
+
       setFormData({
         title: data.title,
         content: data.content,
         image: data.image,
+        blog: data.blog,
         status: data.status,
       });
+
+      console.log(data)
 
       setImagePreview(data.image);
     } catch (error) {
@@ -117,15 +147,39 @@ export default function EmailForm({ id = null }) {
     }
   };
 
+  const fetchBlogs = async () => {
+    setLoading((prev) => ({ ...prev, blog: true }));
+    try {
+      const response = await fetch("/api/blogs", {
+        method: "GET",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch blogs");
+      }
+      const data = await response.json();
+      console.log(data);
+      setBlogs(data);
+    } catch (err) {
+      setError(err.message);
+      console.error("Error fetching blogs:", err);
+    } finally {
+      setLoading((prev) => ({ ...prev, blog: false }));
+    }
+  };
+
   useEffect(() => {
     if (id) {
       fetchEmail();
     }
   }, [id]);
 
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
+
   return (
     <>
-      {(id && loading.fetch) && <Loader />}
+      {id && loading.fetch && <Loader />}
       <div className="mx-auto md:w-[85%] md:ml-[15%]">
         <div
           className="bg-white rounded-lg shadow-lg p-4 md:p-6"
@@ -206,23 +260,34 @@ export default function EmailForm({ id = null }) {
               )}
             </div>
 
-            {/* <div>
-              <label className="block text-sm font-medium mb-2">Status</label>
-              <select
-                value={formData.status}
-                onChange={(e) =>
-                  setFormData({ ...formData, status: e.target.value })
-                }
-                className="w-full rounded p-2 text-sm md:text-base"
-                style={{
-                  backgroundColor: "var(--background-primary)",
-                  border: "1px solid var(--border-color)",
-                }}
-              >
-                <option value="draft">Draft</option>
-                <option value="public">Public</option>
-              </select>
-            </div> */}
+            <div className="mt-2">
+              <label htmlFor="blog" className="block text-sm font-medium mb-2">
+                Select Blog
+              </label>
+              {blogs && blogs.length > 0 && (
+                <select
+                  id="blog"
+                  value={formData?.blog?.title}
+                  onChange={(e) => {
+                    const selectedBlog = blogs.find(
+                      (blog) => blog.title === e.target.value
+                    );
+                    setFormData({ ...formData, blog: selectedBlog });
+                  }}
+                  className="w-full rounded p-2 text-sm md:text-base"
+                  style={{
+                    backgroundColor: "var(--background-primary)",
+                    border: "1px solid var(--border-color)",
+                  }}
+                >
+                  {blogs.map((blog) => (
+                    <option key={blog._id} value={blog.title}>
+                      {blog.title}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
 
             <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
               <button

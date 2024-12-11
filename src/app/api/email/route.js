@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
 import EmailContent from "@/models/Email";
 import { uploadImg } from "@/lib/uploadImg";
+import mongoose from "mongoose";
 import { generateUniqueSlug } from "@/lib/generateUniqueSlug";
 
 // GET all email contents
@@ -55,6 +56,7 @@ export async function POST(request) {
     const content = formData.get("content");
     const image = formData.get("image");
     const status = formData.get("status") || "draft";
+    const blogId = formData.get("blog");
 
     if (!title || !content) {
       throw new Error("Title and content are required");
@@ -66,11 +68,14 @@ export async function POST(request) {
       imageUrl = await uploadImg(image, slug);
     }
 
+  
+
     const emailContent = await EmailContent.create({
       title,
       content,
       image: imageUrl,
       status,
+      blog: blogId ? new mongoose.Types.ObjectId(blogId) : null,
     });
 
     return NextResponse.json(emailContent);

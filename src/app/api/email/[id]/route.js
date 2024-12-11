@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
 import EmailContent from "@/models/Email";
 import { uploadImg } from "@/lib/uploadImg";
+import mongoose from "mongoose";
 
 // GET single email content
 export async function GET(request, { params }) {
@@ -16,7 +17,7 @@ export async function GET(request, { params }) {
   try {
     await dbConnect();
 
-    const emailContent = await EmailContent.findById(params.id);
+    const emailContent = await EmailContent.findById(params.id)?.populate("blog");
 
     if (!emailContent) {
       return NextResponse.json({ error: "Email content not found" }, { status: 404 });
@@ -51,10 +52,13 @@ export async function PUT(request, { params }) {
 
     const formData = await request.formData();
 
+    const blogId = formData.get("blog");
+
     const updates = {
       title: formData.get("title") || emailContent.title,
       content: formData.get("content") || emailContent.content,
       status: formData.get("status") || emailContent.status,
+      blog: blogId ? new mongoose.Types.ObjectId(blogId) : emailContent.blog,
       updatedAt: new Date(),
     };
 

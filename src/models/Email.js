@@ -15,9 +15,13 @@ const EmailContent = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["draft", "published"],
+      enum: ["draft", "public"],
       default: "draft",
       required: true,
+    },
+    blog: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Blog",
     },
     createdAt: {
       type: Date,
