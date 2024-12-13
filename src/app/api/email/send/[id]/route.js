@@ -8,20 +8,14 @@ export async function POST(request, { params }) {
   try {
     const emailContentId = params.id;
 
-    console.log("id",emailContentId);
-
-    if (!emailContentId) {
-      return NextResponse.json(
-        { error: "Email content ID is required" },
-        { status: 400 }
-      );
-    }
-
     // Connect to database
     await dbConnect();
 
     // Fetch the email content
-    const emailContent = await EmailContent.findById(emailContentId);
+    const emailContent = await EmailContent.findById(emailContentId).populate(
+      "blog"
+    );
+
     if (!emailContent || emailContent.status !== "public") {
       return NextResponse.json(
         { error: "Email content not found or not published" },
@@ -44,24 +38,18 @@ export async function POST(request, { params }) {
     // Send emails
     const emailPromises = subscribers.map(async (subscriber) => {
       const mailOptions = {
-        from: `"Social Hardware" <${process.env.SMTP_FROM_EMAIL}>`,
+        from: `"Social Hardware"`,
         to: subscriber.email,
         subject: emailContent.title,
         html: `
           <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
             ${
               emailContent.image
-                ? `<img src="${emailContent.image}" alt="${emailContent.title}" style="max-width: 100%; height: auto;" />`
+                ? `<img src="${emailContent.blog.image}" alt="${emailContent.title}" style="max-width: 100%; height: auto;" />`
                 : ""
             }
             <h1>${emailContent.title}</h1>
             <div>${emailContent.content}</div>
-            <p style="margin-top: 20px; font-size: 12px; color: #666;">
-              You are receiving this email because you subscribed to our newsletter. 
-              <a href="${process.env.WEBSITE_URL}/unsubscribe?email=${
-          subscriber.email
-        }">Unsubscribe</a>
-            </p>
           </div>
         `,
       };

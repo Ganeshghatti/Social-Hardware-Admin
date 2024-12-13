@@ -5,6 +5,7 @@ import Footer from '@/components/client-side/ui/Footer/Footer'
 import '../../components/client-side/Home/Home.scss'
 import Loader from '@/components/client-side/ui/Loader/Loader'
 
+
 const layout = ({children}) => {
     const [loading, setLoading] = useState(true);
   setTimeout(() => {

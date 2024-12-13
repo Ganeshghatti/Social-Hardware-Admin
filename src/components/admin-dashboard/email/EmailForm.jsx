@@ -237,7 +237,7 @@ export default function EmailForm({ id = null }) {
                 required
               />
             </div>
-
+{/* 
             <div>
               <label className="block text-sm font-medium mb-2">Image</label>
               <input
@@ -258,7 +258,7 @@ export default function EmailForm({ id = null }) {
                   />
                 </div>
               )}
-            </div>
+            </div> */}
 
             <div className="mt-2">
               <label htmlFor="blog" className="block text-sm font-medium mb-2">
