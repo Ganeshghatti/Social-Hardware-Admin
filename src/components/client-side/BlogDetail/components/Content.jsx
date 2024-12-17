@@ -28,21 +28,19 @@ export default function Content({ blog }) {
             <span>&larr;</span> <span className=" underline"> Back</span>
           </Link>
         </div>
-        <ul className="flex gap-4 px-4 items-center text-white list-none">
-          {blog && blog?.category?.length > 0 && (
-            <div className="flex flex-row gap-2">
-              {blog.category.map((item) => (
-                <Link href={`/our-blogs/?category=${item.slug}`}>
-                  <button
+        <ul className="flex gap-4 px-4 items-center text-white list-none flex-wrap">
+          {blog &&
+            blog?.category?.length > 0 &&
+            blog.category.map((item) => (
+              <Link href={`/our-blogs/?category=${item.slug}`}>
+                <button
                   key={item._id}
                   className="bg-[#353232] py-1 rounded-full px-3 text-white shadow-md shadow-black"
                 >
                   {item.name}
                 </button>
-                </Link>
-              ))}
-            </div>
-          )}
+              </Link>
+            ))}
           <li className="opacity-65 text-sm">
             &#x2022;{" "}
             {new Date(blog?.createdAt).toLocaleDateString("en-US", {

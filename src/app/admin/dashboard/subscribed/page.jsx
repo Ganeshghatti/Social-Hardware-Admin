@@ -5,6 +5,6 @@ const page = () => {
   return (
     <SubscribedTable/>
   )
-}
+}  
 
 export default page
