@@ -1,20 +1,20 @@
-import React from 'react'
-import BlockComponent from '@/components/client-side/Home/components/BlockComponent'
-import System from '@/components/client-side/Home/components/new/System'
-import Attachments from '@/components/client-side/Home/components/new/Attachments'
-import Capabilities from '@/components/client-side/Home/components/new/Capabilities'
-import Customization from '@/components/client-side/Home/components/new/Customization'
-import Eclipes from '@/components/client-side/Home/components/new/Eclipes'
-import '../../components/client-side/Home/Home.scss'
-import Navbar from '@/components/client-side/ui/Navbar/Navbar'
-import Footer from '@/components/client-side/ui/Footer/Footer'
+import React from "react";
+import BlockComponent from "@/components/client-side/Home/components/BlockComponent";
+import System from "@/components/client-side/Home/components/new/System";
+import Attachments from "@/components/client-side/Home/components/new/Attachments";
+import Capabilities from "@/components/client-side/Home/components/new/Capabilities";
+import Customization from "@/components/client-side/Home/components/new/Customization";
+import Eclipes from "@/components/client-side/Home/components/new/Eclipes";
+import "../../components/client-side/Home/Home.scss";
+import Navbar from "@/components/client-side/ui/Navbar/Navbar";
+import Footer from "@/components/client-side/ui/Footer/Footer";
 
 const page = () => {
   return (
-    <main className=''>
-        <Navbar />
-      <div className='mt-12'>
-      <BlockComponent />
+    <main className="">
+      <Navbar />
+      <div className="mt-12">
+        <BlockComponent />
       </div>
       <Eclipes />
       <BlockComponent />
@@ -26,9 +26,9 @@ const page = () => {
       <BlockComponent />
       <Customization />
       <BlockComponent />
-        <Footer />
+      <Footer />
     </main>
-  )
-}
+  );
+};
 
-export default page
+export default page;

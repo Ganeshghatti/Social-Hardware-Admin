@@ -1,5 +1,5 @@
 import React from "react";
-import EclipseRobotimg from "../../../../../../public/client/assets/images/EclipseRobot.webp"
+import EclipseRobotimg from "../../../../../../public/client/assets/images/new/case.png"
 import Image from "next/image";
 
 const EclipseControl = () => {

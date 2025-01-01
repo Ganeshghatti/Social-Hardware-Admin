@@ -37,7 +37,7 @@ const systemData = [
 const TechSpecs = () => {
   return (
     <section id="system" className="relative flex py-20 px-2 wrapper">
-      <TitleComponent title="System" styles={"absolute h-fit"} />
+      <TitleComponent title="Tech Specs" styles={"absolute h-fit"} />
       <div className="w-full z-10 mt-40 px-20">
         <div className="flex flex-col gap-8">
           {systemData.map((item, index) => (

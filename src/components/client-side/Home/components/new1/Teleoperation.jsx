@@ -1,5 +1,5 @@
 import React from "react";
-import EclipseRobotimg from "../../../../../../public/client/assets/images/EclipseRobot.webp"
+import heroImg from "../../../../../../public/client/assets/images/heroImage.webp"
 import Image from "next/image";
 
 const Teleoperation = () => {
@@ -15,7 +15,7 @@ const Teleoperation = () => {
         <p className="mt-10">Harness advanced "extended reality" control systems that allow remote operators to manage robotic systems with precision from a safe distance. These systems provide rich sensory feedback—visual, tactile, and auditory—ensuring intuitive operation. Infrared sensors seamlessly translate the operator's movements into precise robotic actions for enhanced efficiency</p>
       </div>
       <Image
-        src={EclipseRobotimg}
+        src={heroImg}
         height={1000}
         width={1000}
         quality={100}

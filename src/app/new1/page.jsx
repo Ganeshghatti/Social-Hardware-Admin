@@ -18,14 +18,33 @@ const page = () => {
       </div>
       <EclipseControl />
       <BlockComponent />
-        <TechSpecs />
-        <Teleoperation />
-        <BlockComponent />
-        <Head />
-        <BlockComponent />
-        <HeadDis />
-        <BlockComponent />
+      <TechSpecs />
+      <Teleoperation />
+      <BlockComponent />
+      <Head />
+      <BlockComponent />
+      <HeadDis />
+      <section
+        className="h-16 md:h-full w-full relative py-10"
+        id="BlockComponent"
+      >
+        <div className="max-w-[1100px] gap-20 md:flex-nowrap flex-wrap w-full relative flex justify-between items-center mx-auto">
+          <p>
+            State-of-the-art{" "}
+            <span className="text-oranges">mesh networking technology</span>{" "}
+            enables seamless and reliable data transfer between devices, even in
+            challenging environments without a direct line of sight.
+          </p>
+          <p>
+            These robust, self-healing networks provide seamless data transfer
+            between the robot and its operator, automatically adapting to
+            disruptions to ensure smoooth operations.
+          </p>
+        </div>
+      </section>
+      <div className="mt-12">
       <Footer />
+      </div>
     </main>
   );
 };
