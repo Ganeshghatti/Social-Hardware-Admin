@@ -16,6 +16,10 @@ import WhatsappCTA from "./components/WhatsappCTA";
 import TwitterPosts from "./components/TwitterPosts";
 import Partners from "./components/Parnters";
 import Blogs from "./components/Blogs";
+import System from "./components/new/System";
+import Attachments from "./components/new/Attachments";
+import Capabilities from "./components/new/Capabilities";
+import Customization from "./components/new/Customization";
 
 export default function Home() {
   useEffect(() => {
@@ -34,6 +38,10 @@ export default function Home() {
     <Hero />
     <BlockComponent />
     <Technology />
+    <System />
+    <Attachments />
+    <Capabilities />
+    <Customization />
     <BlockComponent />
     <Video />
     <BlockComponent />
