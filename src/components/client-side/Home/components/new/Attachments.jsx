@@ -24,7 +24,7 @@ const systemData = [
 
 const Attachments = () => {
   return (
-    <section id="attachments" className="relative flex">
+    <section id="attachments" className="relative flex py-8 px-2">
       <TitleComponent title="Attachments" styles={"absolute h-fit"} />
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-8 z-10 mt-40 px-20">
         <div className="">

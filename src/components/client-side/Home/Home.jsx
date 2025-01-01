@@ -20,6 +20,7 @@ import System from "./components/new/System";
 import Attachments from "./components/new/Attachments";
 import Capabilities from "./components/new/Capabilities";
 import Customization from "./components/new/Customization";
+import Eclipes from "./components/new/Eclipes";
 
 export default function Home() {
   useEffect(() => {
@@ -38,6 +39,8 @@ export default function Home() {
     <Hero />
     <BlockComponent />
     <Technology />
+    <BlockComponent />
+    <Eclipes />
     <System />
     <Attachments />
     <Capabilities />
