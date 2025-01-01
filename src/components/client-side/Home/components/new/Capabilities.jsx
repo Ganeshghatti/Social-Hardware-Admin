@@ -4,9 +4,9 @@ import TitleComponent from "@/components/client-side/ui/TitleComponent";
 import Cab1 from "../../../../../../public/client/assets/images/new/cab1.png";
 import Cab2 from "../../../../../../public/client/assets/images/new/cab2.png";
 
-const Capabilities = () => {
+const   Capabilities = () => {
   return (
-    <section id="capabilities" className="relative flex py-8 px-2">
+    <section id="capabilities" className="relative flex py-20 px-2 wrapper">
       <TitleComponent title="Capabilities" styles={"absolute h-fit"} />
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-8 z-10 mt-40 px-20">
         <div className="flex flex-col gap-28">

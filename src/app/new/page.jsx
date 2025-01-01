@@ -7,6 +7,7 @@ import Customization from '@/components/client-side/Home/components/new/Customiz
 import Eclipes from '@/components/client-side/Home/components/new/Eclipes'
 import '../../components/client-side/Home/Home.scss'
 import Navbar from '@/components/client-side/ui/Navbar/Navbar'
+import Footer from '@/components/client-side/ui/Footer/Footer'
 
 const page = () => {
   return (
@@ -25,6 +26,7 @@ const page = () => {
       <BlockComponent />
       <Customization />
       <BlockComponent />
+        <Footer />
     </main>
   )
 }

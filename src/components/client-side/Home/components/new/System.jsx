@@ -28,7 +28,7 @@ const systemData = [
 
 const System = () => {
   return (
-    <section id="system" className="relative flex py-8 px-2">
+    <section id="system" className="relative flex py-20 px-2 wrapper">
       <TitleComponent title="System" styles={"absolute h-fit"} />
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-8 z-10 mt-40 px-20">
         <div className="flex flex-col gap-8">

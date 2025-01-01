@@ -6,7 +6,7 @@ import Image from "next/image";
 
 const Customization = () => {
   return (
-    <section id="customization" className="relative flex py-8 px-2">
+    <section id="customization" className="relative flex py-20 px-2 wrapper">
       <TitleComponent title="Customization" styles={"absolute h-fit"} />
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-8 z-10 mt-40 px-20">
         <div className="flex flex-col gap-8">
