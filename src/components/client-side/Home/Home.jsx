@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useEffect } from "react";
 import Hero from "./components/Hero";
 import "./Home.scss";
@@ -16,17 +16,17 @@ import WhatsappCTA from "./components/WhatsappCTA";
 import TwitterPosts from "./components/TwitterPosts";
 import Partners from "./components/Parnters";
 import Blogs from "./components/Blogs";
-import System from "./components/new/System";
-import Attachments from "./components/new/Attachments";
-import Capabilities from "./components/new/Capabilities";
-import Customization from "./components/new/Customization";
-import Eclipes from "./components/new/Eclipes";
+import System from "./components/product/System";
+import Attachments from "./components/product/Attachments";
+import Capabilities from "./components/product/Capabilities";
+import Customization from "./components/product/Customization";
+import Eclipes from "./components/product/Eclipse";
 
 export default function Home() {
   useEffect(() => {
     const hash = window.location.hash;
     if (hash) {
-      const sectionId = hash.substring(1); // Remove the '#' character
+      const sectionId = hash.substring(1);
       const element = document.getElementById(sectionId);
       if (element) {
         element.scrollIntoView({ behavior: "smooth" });
@@ -35,37 +35,31 @@ export default function Home() {
   }, []);
 
   return (
-    <>
-    <Hero />
-    <BlockComponent />
-    <Technology />
-    <BlockComponent />
-    <Eclipes />
-    <System />
-    <Attachments />
-    <Capabilities />
-    <Customization />
-    <BlockComponent />
-    <Video />
-    <BlockComponent />
-    <Features />
-    <BlockComponent />
-    {/* <Partners />
+    <main>
+      <Hero />
+      <BlockComponent />
+      <Technology />
+      <BlockComponent />
+      <Video />
+      <BlockComponent />
+      <Features />
+      <BlockComponent />
+      {/* <Partners />
     <BlockComponent /> */}
-    {/* <Functionalities />
+      {/* <Functionalities />
     <BlockComponent /> */}
-    <FAQs />
-    <BlockComponent />
-    <Partnerships />
-    <BlockComponent />
-    <Contact />
-    <BlockComponent />
-    <Blogs />
-    <BlockComponent />
-    <TwitterPosts />
-    <BlockComponent />
-    {/* <WhatsappCTA /> */}
-    <SectionIndicator />
-  </>
+      <FAQs />
+      <BlockComponent />
+      <Partnerships />
+      <BlockComponent />
+      <Contact />
+      <BlockComponent />
+      <Blogs />
+      <BlockComponent />
+      <TwitterPosts />
+      <BlockComponent />
+      {/* <WhatsappCTA /> */}
+      <SectionIndicator />
+    </main>
   );
 }

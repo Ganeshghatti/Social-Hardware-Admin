@@ -4,8 +4,7 @@ import TitleComponent from "@/components/client-side/ui/TitleComponent";
 const systemData = [
   {
     label: "Security",
-    value:
-      "AES-256 encryption of all sensor data and robot control commands.",
+    value: "AES-256 encryption of all sensor data and robot control commands.",
   },
   {
     label: "Data Streaming",
@@ -36,10 +35,10 @@ const systemData = [
 
 const TechSpecs = () => {
   return (
-    <section id="system" className="relative flex py-20 px-2 wrapper">
+    <section id="technical-specs" className="relative flex py-12 px-[4%]">
       <TitleComponent title="Tech Specs" styles={"absolute h-fit"} />
-      <div className="w-full z-10 mt-40 px-20">
-        <div className="flex flex-col gap-8">
+      <div className="w-full z-1 mt-10 md:mt-32">
+        <div className="flex flex-col gap-8 text-[16px] md:text-[20px]">
           {systemData.map((item, index) => (
             <div key={index} className="flex flex-row items-center gap-2 ">
               <span className="w-1 h-1 aspect-auto rounded-full bg-[#4E4E4E]"></span>

@@ -25,7 +25,7 @@ export default function Hero() {
           className="w-full h-auto object-cover md:pt-28"
         />
       </div>
-      <div className="w-full text-center md:text-left md:w-[60%] relative md:top-[120px] md:left-[4%] px-4 md:px-0 content flex flex-col gap-3 md:gap-6 z-10">
+      <div className="w-full text-center md:text-left md:w-[65%] relative md:top-[120px] md:left-[4%] px-4 md:px-0 content flex flex-col gap-3 md:gap-6 z-10">
         <h1 className="text-white title">
           <span className="text-oranges"> Next-Generation</span>
           <br />

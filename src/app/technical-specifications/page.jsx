@@ -1,30 +1,30 @@
 import React from "react";
 import BlockComponent from "@/components/client-side/Home/components/BlockComponent";
-import EclipseControl from "@/components/client-side/Home/components/new1/EclipseControl";
+import BlockComponentNoVline from "@/components/client-side/Home/components/BlockComponentNoVline";
+import EclipseControl from "@/components/client-side/Home/components/technical-specifications/EclipseControl";
 import "../../components/client-side/Home/Home.scss";
+import "./TechnicalSpecification.scss";
 import Navbar from "@/components/client-side/ui/Navbar/Navbar";
 import Footer from "@/components/client-side/ui/Footer/Footer";
-import TechSpecs from "@/components/client-side/Home/components/new1/TechSpecs";
-import Teleoperation from "@/components/client-side/Home/components/new1/Teleoperation";
-import Head from "@/components/client-side/Home/components/new1/Head";
-import HeadDis from "@/components/client-side/Home/components/new1/HeadDis";
+import TechSpecs from "@/components/client-side/Home/components/technical-specifications/TechSpecs";
+import Teleoperation from "@/components/client-side/Home/components/technical-specifications/Teleoperation";
+import HeadMountedDisplay from "@/components/client-side/Home/components/technical-specifications/HeadMountedDisplay";
+import RangeNetwork from "@/components/client-side/Home/components/technical-specifications/RangeNetwork";
 
 const page = () => {
   return (
-    <main className="">
+    <main>
       <Navbar />
-      <div className="mt-12">
-        <BlockComponent />
-      </div>
       <EclipseControl />
-      <BlockComponent />
+      <BlockComponentNoVline />
       <TechSpecs />
+      <BlockComponentNoVline />
       <Teleoperation />
-      <BlockComponent />
-      <Head />
-      <BlockComponent />
-      <HeadDis />
-      <section
+      <BlockComponentNoVline />
+      <HeadMountedDisplay />
+      <BlockComponentNoVline />
+      <RangeNetwork />
+      {/* <section
         className="h-16 md:h-full w-full relative py-10"
         id="BlockComponent"
       >
@@ -41,10 +41,8 @@ const page = () => {
             disruptions to ensure smoooth operations.
           </p>
         </div>
-      </section>
-      <div className="mt-12">
+      </section> */}
       <Footer />
-      </div>
     </main>
   );
 };
