@@ -100,3 +100,7 @@ body {
     font-size: 14px !important;
   }
 }
+
+.wrapper {
+  @apply max-w-[1500px] mx-auto;
+}
