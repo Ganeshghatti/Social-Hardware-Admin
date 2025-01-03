@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import heroImg from "../../../../../public/client/assets/images/heroImage.webp"
+import heroImg from "../../../../../public/client/assets/images/heroImage.webp";
 import Image from "next/image";
 
 export default function Hero() {
@@ -25,14 +25,18 @@ export default function Hero() {
           className="w-full h-auto object-cover md:pt-28"
         />
       </div>
-      <div className="w-full text-center md:text-left md:w-[55%] relative self-center md:left-[4%] px-4 md:px-0 content flex flex-col gap-3 md:gap-6 z-10">
+      <div className="w-full text-center md:text-left md:w-[65%] relative md:top-[120px] md:left-[4%] px-4 md:px-0 content flex flex-col gap-3 md:gap-6 z-10">
         <h1 className="text-white title">
-          <span className="text-oranges"> Next-Generation 
-          </span>
-          <br />All-Terrain Robots
+          <span className="text-oranges"> Next-Generation</span>
+          <br />
+          All-Terrain Robots
         </h1>
         <p className="desc md:block w-full md:w-3/4">
-        Designed and manufactured in India, Eclipse Remote Systems are cutting-edge, remotely operated, and semi-autonomous all-terrain robots. Engineered to perform critical tasks in hazardous environments, these robots are designed to enhance safety, improve efficiency, and elevate operational performance.
+          Designed and manufactured in India, Eclipse Remote Systems are
+          cutting-edge, remotely operated, and semi-autonomous all-terrain
+          robots. Engineered to perform critical tasks in hazardous
+          environments, these robots are designed to enhance safety, improve
+          efficiency, and elevate operational performance.
           <br /> <br />
           <span className="text-oranges">
             Contact us today to discover how we can help your business save

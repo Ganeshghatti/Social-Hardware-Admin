@@ -10,6 +10,11 @@
     "create-admin": "node -r dotenv/config scripts/create-admin.js"
   },
   "dependencies": {
+    "@copilotkit/react-core": "^1.4.7",
+    "@copilotkit/react-textarea": "^1.4.7",
+    "@copilotkit/react-ui": "^1.4.7",
+    "@copilotkit/runtime": "^1.4.7",
+    "@copilotkit/shared": "^1.4.7",
     "@react-three/drei": "^9.119.0",
     "@react-three/fiber": "^8.17.10",
     "axios": "^1.7.8",
@@ -22,6 +27,7 @@
     "mongoose": "^8.0.3",
     "next": "^14.0.4",
     "next-auth": "^4.24.5",
+    "nodemailer": "^6.9.16",
     "react": "^18.2.0",
     "react-csv": "^2.2.2",
     "react-dom": "^18.2.0",

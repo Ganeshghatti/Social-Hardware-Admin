@@ -25,11 +25,13 @@ export default function Navbar() {
   };
 
   const navItems = [
-    { name: "Technology", id: "technology", link: "/#technology" },
-    { name: "Tech Demo", id: "video", link: "/#video" },
-    { name: "Features", id: "features", link: "/#features" },
-    { name: "FAQ", id: "faq", link: "/#faq" },
-    { name: "Partnerships", id: "partnerships", link: "/#partnerships" },
+    { name: "About Us", id: "about", link: "/about" },
+    { name: "Product", id: "product", link: "/product" },
+    {
+      name: "Technical specifications",
+      id: "technical-specifications",
+      link: "/technical-specifications",
+    },
     { name: "Our Blogs", id: "blogs", link: "/our-blogs" },
   ];
 

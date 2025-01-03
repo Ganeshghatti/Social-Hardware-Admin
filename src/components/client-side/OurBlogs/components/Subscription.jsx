@@ -15,7 +15,7 @@ export default function Subscription() {
 
     if (validator.isEmail(email)) { 
       try {
-        const response = await fetch('https://social-hardware-admin.vercel.app/api/public/subscribe', {
+        const response = await fetch('/api/subscribe', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

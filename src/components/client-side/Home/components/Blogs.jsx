@@ -9,7 +9,7 @@ export default function Blogs() {
   const [blogs, setBlogs] = useState([]);
 
   const fetchBlogs = async () => {
-    const res = await axios.get(`/api/public/blogs`);
+    const res = await axios.get(`/api/blogs`);
     setBlogs(res.data);
   };
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function Blogs() {
             </Link>
           ))}
         </div>
-        <Link href="/our-blogs" className="flex justify-center mb-5 md:mb-10">
+        <Link href="/our-blogs" className="flex justify-center pt-8 pb-4 md:pt-16">
           <button className="relative transition-colors duration-300 w-fit px-4 self-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
