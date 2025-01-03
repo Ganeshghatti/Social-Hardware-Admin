@@ -9,6 +9,7 @@ import {
   FaTags,
   FaEnvelope,
   FaUser,
+  FaMoneyBill,
 } from "react-icons/fa";
 import { TfiEmail } from "react-icons/tfi";
 
@@ -148,6 +149,16 @@ export default function Sidebar() {
           >
             <TfiEmail className="inline-block mr-2" />
             Email Management
+          </Link>
+          <Link
+            href="/admin/dashboard/sales"
+            className={`flex items-center p-4 ${isActive(
+              "/admin/dashboard/sales"
+            )}`}
+            onClick={() => isMobile && setIsMobileMenuOpen(false)}
+          >
+            <FaMoneyBill className="inline-block mr-2" />
+            Sales
           </Link>
         </nav>
       </div>
