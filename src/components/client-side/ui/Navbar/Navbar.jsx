@@ -32,7 +32,7 @@ export default function Navbar() {
       id: "technical-specifications",
       link: "/technical-specifications",
     },
-    { name: "Our Blogs", id: "blogs", link: "/our-blogs" },
+    { name: "Blogs", id: "blogs", link: "/our-blogs" },
   ];
 
   return (

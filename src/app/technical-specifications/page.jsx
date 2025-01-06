@@ -24,11 +24,12 @@ const page = () => {
       <HeadMountedDisplay />
       <BlockComponentNoVline />
       <RangeNetwork />
+  
       {/* <section
         className="h-16 md:h-full w-full relative py-10"
         id="BlockComponent"
       >
-        <div className="max-w-[1100px] gap-20 md:flex-nowrap flex-wrap w-full relative flex justify-between items-center mx-auto">
+        <div className="gap-20 md:flex-nowrap flex-wrap w-full relative flex justify-between items-center mx-auto">
           <p>
             State-of-the-art{" "}
             <span className="text-oranges">mesh networking technology</span>{" "}
@@ -42,6 +43,7 @@ const page = () => {
           </p>
         </div>
       </section> */}
+
       <Footer />
     </main>
   );

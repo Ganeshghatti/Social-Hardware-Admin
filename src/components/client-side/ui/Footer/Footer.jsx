@@ -22,7 +22,7 @@ export default function Footer() {
       id: "technical-specifications",
       link: "/technical-specifications",
     },
-    { name: "Our Blogs", id: "blogs", link: "/our-blogs" },
+    { name: "Blogs", id: "blogs", link: "/our-blogs" },
   ];
   return (
     <footer className="flex flex-col">
@@ -83,12 +83,12 @@ export default function Footer() {
           <FaPhone
             size={24}
             className="text-white cursor-pointer hover:text-oranges"
-            onClick={() => window.open("tel:+919353586240")}
+            onClick={() => window.open("tel:+919731436520")}
           />
           <FaEnvelope
             size={24}
             className="text-white cursor-pointer hover:text-oranges"
-            onClick={() => window.open("mailto:info@socialhardware.in")}
+            onClick={() => window.open("mailto:sh.lab@socialhardware.co.in")}
           />
         </span>
         <p>
