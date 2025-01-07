@@ -37,11 +37,13 @@ const RangeNetwork = () => {
           </p>
         </div>
       </div>
-      <div className="w-full flex flex-col md:flex-row justify-center gap-4 z-10 mt-4 border-t border-[#353539] py-6">
+      <div className="border-y border-[#353539] h-10 w-full mt-10"/>
+      <div className="w-full relative flex flex-col md:flex-row justify-center gap-4 z-10 py-10">
+      <div className="line-v-2" />
         <div className="standard-description w-full md:w-[50%] px-[5%] items-center ">
           State-of-the-art{" "}
-          <span className="text-oranges">mesh networking technology</span>
-          enables seamless and reliable data transfer between devices, even in
+          <span className="text-oranges">mesh networking technology </span>
+         enables seamless and reliable data transfer between devices, even in
           challenging environments without a direct line of sight.
         </div>
         <div className="standard-description w-full md:w-[50%] px-[5%] items-center ">
@@ -50,7 +52,7 @@ const RangeNetwork = () => {
           disruptions to ensure smoooth operations.
         </div>
       </div>
-      <div className="line-v-2" />
+      <div className="border-y border-[#353539] h-10 w-full"/>
     </section>
   );
 };

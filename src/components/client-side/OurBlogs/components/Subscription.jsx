@@ -46,11 +46,11 @@ export default function Subscription() {
       <div className="left-container" />
       <div className="center-container mb-5 md:mb-10 px-4">
         <h1 className="text-center title">
-          Connect to the Loop
+        Stay Connected
         </h1>
         <form
           onSubmit={handleSubmit}
-          className="mt-8 flex gap-1 w-full md:w-2/3 mx-auto overflow-hidden h-fit flex flex-col md:flex-row"
+          className="mt-8 gap-1 w-full md:w-2/3 mx-auto overflow-hidden h-fit flex flex-col md:flex-row"
         >
           <input
             type="email"
@@ -63,7 +63,7 @@ export default function Subscription() {
           />
           <button
             type="submit"
-            className="text-oranges w-fit md:w-1/5 bg-[#1A1A1A] rounded-r text-center flex justify-center px-4 md:px-8 py-3"
+            className="text-oranges w-fit md:w-1/5 bg-[#1A1A1A] rounded-r text-center flex justify-center px-4 md:px-8 py-2"
           >
             Subscribe
           </button>
