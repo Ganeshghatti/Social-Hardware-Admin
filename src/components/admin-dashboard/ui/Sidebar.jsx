@@ -12,6 +12,7 @@ import {
   FaMoneyBill,
 } from "react-icons/fa";
 import { TfiEmail } from "react-icons/tfi";
+import { IoBusinessOutline } from "react-icons/io5";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -159,6 +160,16 @@ export default function Sidebar() {
           >
             <FaMoneyBill className="inline-block mr-2" />
             Sales
+          </Link>
+          <Link
+            href="/admin/dashboard/leads"
+            className={`flex items-center p-4 ${isActive(
+              "/admin/dashboard/leads"
+            )}`}
+            onClick={() => isMobile && setIsMobileMenuOpen(false)}
+          >
+            <IoBusinessOutline className="inline-block mr-2" />
+            Leads
           </Link>
         </nav>
       </div>
