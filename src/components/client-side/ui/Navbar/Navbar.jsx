@@ -25,13 +25,10 @@ export default function Navbar() {
   };
 
   const navItems = [
-    { name: "About Us", id: "about", link: "/about" },
+    // { name: "About Us", id: "about", link: "/about" },
+    { name: "Home", id: "home", link: "/" },
+    { name: "Tech Demo", id: "video", link: "/#video" },
     { name: "Product", id: "product", link: "/product" },
-    {
-      name: "Technical specifications",
-      id: "technical-specifications",
-      link: "/technical-specifications",
-    },
     { name: "Blogs", id: "blogs", link: "/our-blogs" },
   ];
 
