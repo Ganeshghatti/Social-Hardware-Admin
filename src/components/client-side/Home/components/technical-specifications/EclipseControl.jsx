@@ -6,7 +6,7 @@ const EclipseControl = () => {
   return (
     <section
       id="eclipse-control"
-      className="flex w-full flex-col md:flex-row-reverse relative pt-24 py-8 md:py-0 items-center md:justify-center gap-6 md:gap-0 mt-[18vh] md:h-[75vh] h-auto"
+      className="flex w-full flex-col md:flex-row-reverse relative pt-24 py-8 md:py-0 items-center md:justify-center gap-6 md:gap-0 mt-[12vh] md:h-[75vh] h-auto"
     >
       <div className="w-full text-center md:text-left md:w-[50%] content flex flex-col gap-3 md:gap-6 z-10 pl-[4%]">
         <h1 className="title">

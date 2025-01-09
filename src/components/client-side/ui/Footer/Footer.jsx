@@ -15,17 +15,13 @@ export default function Footer() {
   };
 
   const navItems = [
-    { name: "About Us", id: "about", link: "/about" },
+    { name: "Home", id: "home", link: "/" },
+    { name: "Tech Demo", id: "video", link: "/#video" },
     { name: "Product", id: "product", link: "/product" },
-    {
-      name: "Technical specifications",
-      id: "technical-specifications",
-      link: "/technical-specifications",
-    },
-    { name: "Blogs", id: "blogs", link: "/our-blogs" },
+    { name: "Blog", id: "blogs", link: "/our-blogs" },
   ];
   return (
-    <footer className="flex flex-col">
+    <footer className="flex flex-col text-white">
       <div className="flex px-[4%] justify-between flex-col gap-6 relative md:gap-0 md:flex-row items-center py-5">
         <Image
           src={logo}
@@ -76,20 +72,21 @@ export default function Footer() {
       <div className="flex px-[4%] justify-between flex-col gap-6 md:gap-6 md:flex-row items-center py-8 md:text-start text-center flex-wrap">
         <p>
           ISO 9001:2015 & ISO 10218-1:2011 Certified{" "}
-          <br className="md:block hidden" /> DPIIT Startup Registration (No.
-          10996)
+          <br className="md:block hidden" /> DPIIT Recognized Startup (No.10996)
         </p>
         <span className="flex items-center justify-center gap-4">
-          <FaPhone
-            size={24}
-            className="text-white cursor-pointer hover:text-oranges"
-            onClick={() => window.open("tel:+919731436520")}
-          />
-          <FaEnvelope
-            size={24}
-            className="text-white cursor-pointer hover:text-oranges"
-            onClick={() => window.open("mailto:sh.lab@socialhardware.co.in")}
-          />
+          <a href="tel:+919731436520">
+            <FaPhone
+              size={24}
+              className="text-white cursor-pointer hover:text-oranges"
+            />
+          </a>
+          <a href="mailto:sh.lab@socialhardware.co.in">
+            <FaEnvelope
+              size={24}
+              className="text-white cursor-pointer hover:text-oranges"
+            />
+          </a>
         </span>
         <p>
           8, 34/4, 3rd Cross Rd, Pragathi Layout, Veerannapalya,{" "}

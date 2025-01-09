@@ -3,6 +3,7 @@ import Image from "next/image";
 import TitleComponent from "@/components/client-side/ui/TitleComponent";
 import Capabilities1 from "../../../../../../public/client/assets/images/product/capabilities1.png";
 import Capabilities2 from "../../../../../../public/client/assets/images/product/capabilities2.png";
+import Carousel from "../ui/Carousel";
 
 const capabilitiesData = [
   {
@@ -17,12 +18,15 @@ const capabilitiesData = [
     image: Capabilities2,
     alt: "Stow Dimensions",
   },
+  
 ];
 
 const Capabilities = () => {
   return (
-    <section id="capabilities" className="relative flex py-12 px-[4%]">
+    <section id="capabilities" className="relative py-12 px-[4%]">
       <TitleComponent title="Capabilities" styles={"absolute h-fit"} />
+      <section className="max-w-lg w-full h-52">
+    </section>
       <div className="w-full mt-10 md:mt-32 flex gap-6 overflow-hidden">
         {capabilitiesData.map(({ id, title, image, alt }) => (
           <div className="flex flex-col gap-12 w-full md:w-1/2 text-[16px] md:text-[20px]" key={id}>
@@ -44,6 +48,9 @@ const Capabilities = () => {
           </div>
         ))}
       </div>
+      {/* <div className="max-w-[1000px] w-full mx-auto mt-10 md:mt-32 h-full">
+      <Carousel carouselData={capabilitiesData} perView={1} />
+      </div> */}
     </section>
   );
 };

@@ -63,8 +63,12 @@
 .standard-description {
   color: #d6d6d6;
   font-family: "Space Grotesk";
-  font-size: clamp(11px, calc(11px + (18 - 11) * ((100vw - 320px) / (1200 - 320))), 18px);
+  font-size: clamp(20px, calc(11px + (18 - 11) * ((100vw - 320px) / (1200 - 320))), 18px);
   font-style: normal;
   font-weight: 400;
   line-height: 108.18%;
 }
+.font-spaceGrotesk {
+  font-family: "Space Grotesk";
+}
+

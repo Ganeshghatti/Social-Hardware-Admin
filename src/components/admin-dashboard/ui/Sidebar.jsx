@@ -10,6 +10,7 @@ import {
   FaEnvelope,
   FaUser,
   FaMoneyBill,
+  FaUserPlus,
 } from "react-icons/fa";
 import { TfiEmail } from "react-icons/tfi";
 import { IoBusinessOutline } from "react-icons/io5";
@@ -168,7 +169,7 @@ export default function Sidebar() {
             )}`}
             onClick={() => isMobile && setIsMobileMenuOpen(false)}
           >
-            <IoBusinessOutline className="inline-block mr-2" />
+            <FaUserPlus className="inline-block mr-2" />
             Leads
           </Link>
         </nav>

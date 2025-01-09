@@ -109,9 +109,9 @@ export default function Dashboard() {
                 <th className="px-4 md:px-6 py-3 text-left text-xs font-medium uppercase">
                   Title
                 </th>
-                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium uppercase">
+                {/* <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium uppercase">
                   Description
-                </th>
+                </th> */}
                 <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium uppercase">
                   Created
                 </th>
@@ -153,11 +153,11 @@ export default function Dashboard() {
                     </span>
                   </td>
                   <td className="px-4 md:px-6 py-4">
-                    <div className="max-w-xs truncate">{blog.title}</div>
+                    <div onClick={() => handleEdit(blog._id)} className="max-w-xs truncate hover:opacity-90 cursor-pointer">{blog.title}</div>
                   </td>
-                  <td className="hidden md:table-cell px-6 py-4">
+                  {/* <td className="hidden md:table-cell px-6 py-4">
                     <div className="max-w-xs truncate">{blog.description}</div>
-                  </td>
+                  </td> */}
                   <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
                     {new Date(blog.createdAt).toLocaleDateString()}
                   </td>
