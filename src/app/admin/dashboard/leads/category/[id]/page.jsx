@@ -1,8 +1,11 @@
 import React from 'react'
+import LeadsTable from '@/components/admin-dashboard/leads/LeadsTable'
 
-const page = () => {
+const page = ({params}) => {
   return (
-    <div>page</div>
+    <div>
+      <LeadsTable isView id={params.id} />
+    </div>
   )
 }
 

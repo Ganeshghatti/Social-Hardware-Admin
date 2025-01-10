@@ -1,8 +1,9 @@
 import React from 'react'
+import SavedLeads from '@/components/admin-dashboard/leads/SavedLeads'
 
 const page = () => {
   return (
-    <div>page</div>
+    <SavedLeads/>
   )
 }
 

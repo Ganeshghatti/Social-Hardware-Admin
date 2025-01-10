@@ -38,3 +38,38 @@ export async function DELETE(request, { params }) {
     );
   }
 }
+
+export async function GET(request, { params }) {
+  const session = await getServerSession(authOptions);
+
+  if (!session || session.user.role !== "admin") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    await dbConnect();
+
+    const { id } = params;
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Lead ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const leadsData = await Leads.findOne({ _id: id });
+
+    if (!leadsData) {
+      return NextResponse.json({ error: "Lead not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ data: leadsData });
+  } catch (error) {
+    console.error("Error fetching lead:", error);
+    return NextResponse.json(
+      { error: error.message || "Failed to fetch lead" },
+      { status: 500 }
+    );
+  }
+}

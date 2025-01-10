@@ -15,6 +15,9 @@ const LeadsSchema = new mongoose.Schema({
       phone: {
         type: String,
       },
+      category: {
+        type: String
+      },
       address: {
         type: String,
       },
@@ -22,7 +25,7 @@ const LeadsSchema = new mongoose.Schema({
         type: String,
       },
       numberOfRatings: {
-        type: Number,
+        type: String,
       },
       website: {
         type: String,

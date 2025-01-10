@@ -41,3 +41,23 @@ export async function POST(request) {
     );
   }
 }
+
+export async function GET() {
+  const session = await getServerSession(authOptions);
+
+  if (!session || session.user.role !== "admin") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    await dbConnect();
+    const leads = await Leads.find({}).sort({ createdAt: -1 });
+    return NextResponse.json(leads, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching leads:", error);
+    return NextResponse.json(
+      { error: error.message || "Failed to fetch leads" },
+      { status: 500 }
+    );
+  }
+}

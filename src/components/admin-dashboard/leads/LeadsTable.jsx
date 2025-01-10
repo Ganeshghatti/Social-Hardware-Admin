@@ -1,20 +1,23 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CSVLink } from "react-csv";
 import axios from "axios";
-import { FaPhone, FaExternalLinkAlt } from "react-icons/fa";
+import { FaPhone, FaExternalLinkAlt, FaSave } from "react-icons/fa";
 import Loader from "../Loader";
 
-const LeadsTable = () => {
+const LeadsTable = ({ isView = false, id = null }) => {
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [industry, setIndustry] = useState("Chemical industry");
-  const [location, setLocation] = useState("Bengaluru, Karnataka");
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [leadsInfo, setLeadsInfo] = useState(null);
+  const [industry, setIndustry] = useState("");
+  const [location, setLocation] = useState("");
 
   const fetchLeads = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setSaveSuccess(false);
     try {
       const response = await axios.post(
         "https://scrape.googlemap.thesquirrel.site/scrape",
@@ -33,6 +36,26 @@ const LeadsTable = () => {
     }
   };
 
+  const saveLeads = async () => {
+    if (leads.length === 0) return;
+
+    setLoading(true);
+    setSaveSuccess(false);
+    try {
+      await axios.post("/api/lead", {
+        searchLeads: location,
+        searchedCategory: industry,
+        leads: leads,
+      });
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+    } catch (err) {
+      setError(err.response?.data?.error || "Failed to save leads");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const csvHeaders = [
     { label: "Name", key: "name" },
     { label: "Category", key: "category" },
@@ -43,55 +66,110 @@ const LeadsTable = () => {
     { label: "Website", key: "website" },
   ];
 
+  const fetchLeadsById = async (id) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`/api/lead/${id}`);
+      console.log("the response data", response);
+      if (response.data) {
+        setLeadsInfo({
+          searchedCategory: response.data.data.searchedCategory,
+          searchLeads: response.data.data.searchLeads,
+        });
+        setLeads(response.data.data.leads);
+        setLoading(false);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchLeadsById(id);
+    }
+  }, [id]);
+
   return (
     <div className="md:w-[85%] md:ml-[15%]">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <h1 className="text-2xl font-bold">Business Leads</h1>
-        {leads.length > 0 && (
-          <CSVLink
-            data={leads}
-            headers={csvHeaders}
-            filename="business_leads.csv"
-            className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded w-full sm:w-auto text-center"
-          >
-            Download CSV
-          </CSVLink>
-        )}
+        <div>
+          <h1 className="text-2xl font-bold">
+            {isView
+              ? `${leadsInfo?.searchedCategory || "Business Leads"}`
+              : "Search Leads"}
+          </h1>
+          <p className="mt-2 opacity-85">{isView && leadsInfo?.searchLeads}</p>
+        </div>
+        <div className="flex gap-4 w-full sm:w-auto">
+          {leads.length > 0 && (
+            <>
+              {!isView && (
+                <button
+                  onClick={saveLeads}
+                  className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 w-full sm:w-auto justify-center"
+                  disabled={loading}
+                >
+                  <FaSave />
+                  Save Leads
+                </button>
+              )}
+              <CSVLink
+                data={leads}
+                headers={csvHeaders}
+                filename="business_leads.csv"
+                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded w-full sm:w-auto text-center"
+              >
+                Download CSV
+              </CSVLink>
+            </>
+          )}
+        </div>
       </div>
 
-      <form onSubmit={fetchLeads} className="mb-6 mt-2 space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
-          <div className="w-full flex justify-between gap-4 items-center col-span-4">
-            <input
-              type="text"
-              value={industry}
-              onChange={(e) => setIndustry(e.target.value)}
-              placeholder="Enter industry (e.g., Chemical industry)"
-              className="flex-1 w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-              style={{ backgroundColor: "var(--background-secondary)" }}
-            />
-            <input
-              type="text"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              placeholder="Enter location (e.g., Bengaluru, Karnataka)"
-              className="flex-1 w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-              style={{ backgroundColor: "var(--background-secondary)" }}
-            />
+      {!isView && (
+        <form onSubmit={fetchLeads} className="mb-6 mt-2 space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
+            <div className="w-full flex justify-between gap-4 items-center col-span-4">
+              <input
+                type="text"
+                value={industry}
+                onChange={(e) => setIndustry(e.target.value)}
+                placeholder="Enter industry (e.g., Chemical industry)"
+                className="flex-1 w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                style={{ backgroundColor: "var(--background-secondary)" }}
+              />
+              <input
+                type="text"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="Enter location (e.g., Bengaluru, Karnataka)"
+                className="flex-1 w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                style={{ backgroundColor: "var(--background-secondary)" }}
+              />
+            </div>
+            <button
+              type="submit"
+              className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded"
+              disabled={loading}
+            >
+              Search Leads
+            </button>
           </div>
-          <button
-            type="submit"
-            className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded"
-          >
-            Search Leads
-          </button>
-        </div>
-      </form>
+        </form>
+      )}
 
       {loading && <Loader />}
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
           {error}
+        </div>
+      )}
+      {saveSuccess && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          Leads saved successfully!
         </div>
       )}
 
@@ -103,22 +181,22 @@ const LeadsTable = () => {
           <table className="min-w-full table-auto">
             <thead>
               <tr style={{ backgroundColor: "var(--background-secondary)" }}>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase ">
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase">
                   Business Name
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase">
                   Category
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase ">
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase">
                   Contact
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase ">
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase">
                   Address
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase ">
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase">
                   Rating
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase ">
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase">
                   Website
                 </th>
               </tr>
@@ -131,7 +209,7 @@ const LeadsTable = () => {
                   style={{ borderColor: "var(--border-color)" }}
                 >
                   <td className="px-4 py-4">{lead.name}</td>
-                  <td className="px-4 py-4 ">{lead.category}</td>
+                  <td className="px-4 py-4">{lead.category}</td>
                   <td className="px-4 py-4">
                     <div className="flex items-center whitespace-nowrap">
                       <a
@@ -143,7 +221,7 @@ const LeadsTable = () => {
                       {lead.phone}
                     </div>
                   </td>
-                  <td className="px-4 py-4 ">{lead.address}</td>
+                  <td className="px-4 py-4">{lead.address}</td>
                   <td className="px-4 py-4">
                     <div className="whitespace-nowrap">
                       {lead.ratingStars} {lead.numberOfRatings}
