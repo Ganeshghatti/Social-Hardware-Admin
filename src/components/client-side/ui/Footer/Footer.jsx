@@ -16,7 +16,7 @@ export default function Footer() {
 
   const navItems = [
     { name: "Home", id: "home", link: "/" },
-    { name: "Tech Demo", id: "video", link: "/#video" },
+    // { name: "Tech Demo", id: "video", link: "/#video" },
     { name: "Product", id: "product", link: "/product" },
     { name: "Blog", id: "blogs", link: "/our-blogs" },
   ];
