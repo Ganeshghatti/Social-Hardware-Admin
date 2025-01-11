@@ -9,6 +9,7 @@ const page = () => {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [fetchLoading, setFetchLoading] = useState(false);
 
   const handleCreateCategory = async (e) => {
     e.preventDefault();
@@ -46,6 +47,7 @@ const page = () => {
   };
 
   const fetchCategories = async () => {
+    setFetchLoading(true);
     try {
       const response = await fetch("/api/category");
       if (!response.ok) {
@@ -53,8 +55,11 @@ const page = () => {
       }
       const data = await response.json();
       setCategories(data);
+      setFetchLoading(false);
     } catch (error) {
       alert("Error fetching categories");
+    } finally {
+      setFetchLoading(false);
     }
   };
 
@@ -115,7 +120,7 @@ const page = () => {
           </form>
         </Modal>
       </div>
-        <CategoryTable data={categories || []} fetchCategories={fetchCategories} />
+        <CategoryTable fetchLoading={fetchLoading} data={categories || []} fetchCategories={fetchCategories} />
     </div>
   );
 };

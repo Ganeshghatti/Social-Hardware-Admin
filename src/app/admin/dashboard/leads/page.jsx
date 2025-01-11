@@ -1,9 +1,9 @@
 import React from 'react'
-import LeadsTable from '@/components/admin-dashboard/leads/LeadsTable'
+import SavedLeads from '@/components/admin-dashboard/leads/SavedLeads'
 
 const page = () => {
   return (
-    <LeadsTable/>
+    <SavedLeads/>
   )
 }
 

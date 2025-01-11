@@ -27,9 +27,9 @@ export default function Navbar() {
   const navItems = [
     // { name: "About Us", id: "about", link: "/about" },
     { name: "Home", id: "home", link: "/" },
-    { name: "Tech Demo", id: "video", link: "/#video" },
+    // { name: "Tech Demo", id: "video", link: "/#video" },
     { name: "Product", id: "product", link: "/product" },
-    { name: "Blogs", id: "blogs", link: "/our-blogs" },
+    { name: "Blog", id: "blogs", link: "/our-blogs" },
   ];
 
   return (

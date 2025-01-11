@@ -13,6 +13,7 @@ import {
   FaUserPlus,
 } from "react-icons/fa";
 import { TfiEmail } from "react-icons/tfi";
+import { IoBusinessOutline } from "react-icons/io5";
 
 export default function Sidebar() {
   const pathname = usePathname();

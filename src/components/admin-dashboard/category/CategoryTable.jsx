@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Modal from "../ui/Modal";
+import Loader from "../Loader";
 
-const CategoryTable = ({ data, fetchCategories }) => {
+const CategoryTable = ({ data, fetchCategories,fetchLoading }) => {
   // for delete
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -82,15 +83,16 @@ const CategoryTable = ({ data, fetchCategories }) => {
       className="rounded-lg shadow overflow-x-auto mt-4"
       style={{ backgroundColor: "var(--background-primary)" }}
     >
+      {fetchLoading && <Loader />}
       <table className="min-w-full">
         <thead>
           <tr style={{ backgroundColor: "var(--background-secondary)" }}>
             <th className="px-4 md:px-6 py-3 text-left text-xs font-medium uppercase">
               Name
             </th>
-            <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium uppercase">
+            {/* <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium uppercase">
               Slug
-            </th>
+            </th> */}
             <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium uppercase">
               Created
             </th>
@@ -103,7 +105,7 @@ const CategoryTable = ({ data, fetchCategories }) => {
           </tr>
         </thead>
         <tbody>
-          {data.length > 0 ? (
+          {data.length > 0 && (
             data.map((category) => (
               <tr
                 key={category._id}
@@ -113,9 +115,9 @@ const CategoryTable = ({ data, fetchCategories }) => {
                 <td className="px-4 md:px-6 py-4">
                   <div className="max-w-xs truncate">{category.name}</div>
                 </td>
-                <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
+                {/* <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
                   {category.slug}
-                </td>
+                </td> */}
                 <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
                   {new Date(category.createdAt).toLocaleDateString()}
                 </td>
@@ -142,16 +144,7 @@ const CategoryTable = ({ data, fetchCategories }) => {
                 </td>
               </tr>
             ))
-          ) : (
-            <tr
-              className="border-t text-center !w-full"
-              style={{ borderColor: "var(--border-color)" }}
-            >
-              <td className="px-4 flex-1 md:px-6 py-4 text-center">
-                No Category Found{" "}
-              </td>
-            </tr>
-          )}
+          ) }
         </tbody>
       </table>
 

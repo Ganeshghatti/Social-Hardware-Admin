@@ -16,12 +16,12 @@ export default function Footer() {
 
   const navItems = [
     { name: "Home", id: "home", link: "/" },
-    { name: "Tech Demo", id: "video", link: "/#video" },
+    // { name: "Tech Demo", id: "video", link: "/#video" },
     { name: "Product", id: "product", link: "/product" },
-    { name: "Blogs", id: "blogs", link: "/our-blogs" },
+    { name: "Blog", id: "blogs", link: "/our-blogs" },
   ];
   return (
-    <footer className="flex flex-col">
+    <footer className="flex flex-col text-white">
       <div className="flex px-[4%] justify-between flex-col gap-6 relative md:gap-0 md:flex-row items-center py-5">
         <Image
           src={logo}
@@ -72,8 +72,7 @@ export default function Footer() {
       <div className="flex px-[4%] justify-between flex-col gap-6 md:gap-6 md:flex-row items-center py-8 md:text-start text-center flex-wrap">
         <p>
           ISO 9001:2015 & ISO 10218-1:2011 Certified{" "}
-          <br className="md:block hidden" /> DPIIT Startup Registration (No.
-          10996)
+          <br className="md:block hidden" /> DPIIT Recognized Startup (No.10996)
         </p>
         <span className="flex items-center justify-center gap-4">
           <a href="tel:+919731436520">
