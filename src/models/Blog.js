@@ -1,11 +1,17 @@
-import mongoose from 'mongoose';
-import Categories from './Categories';
+import mongoose from "mongoose";
+import Categories from "./Categories";
 
 const BlogSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
   },
+  category: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Categories",
+    },
+  ],
   slug: {
     type: String,
     required: true,
@@ -17,7 +23,7 @@ const BlogSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    default: ''
+    default: "",
   },
   coverImage: {
     type: String,
@@ -29,23 +35,18 @@ const BlogSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['public', 'private'],
-    default: 'private'
+    enum: ["public", "private"],
+    default: "private",
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
-  category: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Categories',
-    }
-  ],
+
   updatedAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-export default mongoose.models.Blog || mongoose.model('Blog', BlogSchema);
+export default mongoose.models.Blog || mongoose.model("Blog", BlogSchema);

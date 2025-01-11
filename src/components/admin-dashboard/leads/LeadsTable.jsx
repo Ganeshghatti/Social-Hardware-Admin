@@ -1,18 +1,42 @@
-"use client";
+'use client'
 import { useState, useEffect } from "react";
 import { CSVLink } from "react-csv";
 import axios from "axios";
-import { FaPhone, FaExternalLinkAlt, FaSave } from "react-icons/fa";
+import { FaPhone, FaExternalLinkAlt, FaSave, FaMapMarkerAlt } from "react-icons/fa";
 import Loader from "../Loader";
 
 const LeadsTable = ({ isView = false, id = null }) => {
   const [leads, setLeads] = useState([]);
+  const [filteredLeads, setFilteredLeads] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [leadsInfo, setLeadsInfo] = useState(null);
   const [industry, setIndustry] = useState("");
   const [location, setLocation] = useState("");
+  const [filter, setFilter] = useState("all");
+
+  useEffect(() => {
+    filterLeads();
+  }, [leads, filter]);
+
+  const filterLeads = () => {
+    switch(filter) {
+      case "phone":
+        setFilteredLeads(leads.filter(lead => lead.phone && lead.phone !== "N/A"));
+        break;
+      case "website":
+        setFilteredLeads(leads.filter(lead => lead.website && lead.website !== "N/A"));
+        break;
+      default:
+        setFilteredLeads(leads);
+    }
+  };
+
+  const openInGoogleMaps = (address) => {
+    const encodedAddress = encodeURIComponent(address);
+    window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
+  };
 
   const fetchLeads = async (e) => {
     e.preventDefault();
@@ -28,6 +52,7 @@ const LeadsTable = ({ isView = false, id = null }) => {
       );
       if (response.data && response.data.results) {
         setLeads(response.data.results);
+        setFilteredLeads(response.data.results);
       }
     } catch (err) {
       setError(err.message);
@@ -70,14 +95,13 @@ const LeadsTable = ({ isView = false, id = null }) => {
     setLoading(true);
     try {
       const response = await axios.get(`/api/lead/${id}`);
-      console.log("the response data", response);
       if (response.data) {
         setLeadsInfo({
           searchedCategory: response.data.data.searchedCategory,
           searchLeads: response.data.data.searchLeads,
         });
         setLeads(response.data.data.leads);
-        setLoading(false);
+        setFilteredLeads(response.data.data.leads);
       }
     } catch (err) {
       setError(err.message);
@@ -120,7 +144,7 @@ const LeadsTable = ({ isView = false, id = null }) => {
                 data={leads}
                 headers={csvHeaders}
                 filename="business_leads.csv"
-                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded w-full sm:w-auto text-center"
+                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded w-full sm:w-auto text-center flex items-center justify-center"
               >
                 Download CSV
               </CSVLink>
@@ -161,6 +185,24 @@ const LeadsTable = ({ isView = false, id = null }) => {
         </form>
       )}
 
+      {leads.length > 0 && (
+        <div className="mb-6">
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="w-full sm:w-64 rounded p-2 text-sm md:text-base"
+            style={{
+              backgroundColor: "var(--background-primary)",
+              border: "1px solid var(--border-color)",
+            }}
+          >
+            <option value="all">Show All Results</option>
+            <option value="phone">With Phone Number</option>
+            <option value="website">With Website</option>
+          </select>
+        </div>
+      )}
+
       {loading && <Loader />}
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
@@ -173,9 +215,9 @@ const LeadsTable = ({ isView = false, id = null }) => {
         </div>
       )}
 
-      {!loading && !error && leads.length > 0 && (
+      {!loading && !error && filteredLeads.length > 0 && (
         <div
-          className="rounded-lg mt-10 shadow overflow-x-auto"
+          className="rounded-lg mt-6 shadow overflow-x-auto"
           style={{ backgroundColor: "var(--background-primary)" }}
         >
           <table className="min-w-full table-auto">
@@ -202,7 +244,7 @@ const LeadsTable = ({ isView = false, id = null }) => {
               </tr>
             </thead>
             <tbody>
-              {leads.map((lead, index) => (
+              {filteredLeads.map((lead, index) => (
                 <tr
                   key={index}
                   className="border-t"
@@ -212,35 +254,55 @@ const LeadsTable = ({ isView = false, id = null }) => {
                   <td className="px-4 py-4">{lead.category}</td>
                   <td className="px-4 py-4">
                     <div className="flex items-center whitespace-nowrap">
-                      <a
-                        href={`tel:${lead.phone}`}
-                        className="flex items-center mr-2"
-                      >
-                        <FaPhone className="text-[#FC8500] opacity-75 hover:opacity-100" />
-                      </a>
-                      {lead.phone}
+                      {lead.phone && lead.phone !== "N/A" ? (
+                        <>
+                          <a
+                            href={`tel:${lead.phone}`}
+                            className="flex items-center mr-2"
+                          >
+                            <FaPhone className="text-[#FC8500] opacity-75 hover:opacity-100" />
+                          </a>
+                          {lead.phone}
+                        </>
+                      ) : (
+                        "N/A"
+                      )}
                     </div>
                   </td>
-                  <td className="px-4 py-4">{lead.address}</td>
+                  <td className="px-4 py-4">
+                    {lead?.address ? (
+                        <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => openInGoogleMaps(lead.address)}
+                          className="text-[#FC8500] hover:text-[#DC7500] flex items-center gap-1"
+                          title="Open in Google Maps"
+                        >
+                          <FaMapMarkerAlt />
+                        </button>
+                        {lead?.address}
+                      </div>
+                      ) : (
+                        <div className="flex items-center">N/A</div>
+                      )}
+                  </td>
                   <td className="px-4 py-4">
                     <div className="whitespace-nowrap">
-                      {lead.ratingStars} {lead.numberOfRatings}
+                      {lead.ratingStars} ({lead.numberOfRatings})
                     </div>
                   </td>
                   <td className="px-4 py-4">
-                    {lead.website !== "N/A" ? (
+                    {lead.website && lead.website !== "N/A" ? (
                       <a
                         href={lead.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center"
+                        className="flex items-center hover:text-[#FC8500]"
                       >
                         <FaExternalLinkAlt className="text-[#FC8500] opacity-75 hover:opacity-100 mr-2" />
                         Visit
                       </a>
                     ) : (
                       <div className="flex items-center">
-                        <FaExternalLinkAlt className="text-[#FC8500] opacity-75 hover:opacity-100 mr-2" />
                         N/A
                       </div>
                     )}

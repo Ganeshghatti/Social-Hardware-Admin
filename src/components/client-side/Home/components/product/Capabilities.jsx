@@ -3,7 +3,6 @@ import Image from "next/image";
 import TitleComponent from "@/components/client-side/ui/TitleComponent";
 import Capabilities1 from "../../../../../../public/client/assets/images/product/capabilities1.png";
 import Capabilities2 from "../../../../../../public/client/assets/images/product/capabilities2.png";
-import Carousel from "../ui/Carousel";
 
 const capabilitiesData = [
   {
@@ -48,9 +47,6 @@ const Capabilities = () => {
           </div>
         ))}
       </div>
-      {/* <div className="max-w-[1000px] w-full mx-auto mt-10 md:mt-32 h-full">
-      <Carousel carouselData={capabilitiesData} perView={1} />
-      </div> */}
     </section>
   );
 };
