@@ -44,7 +44,7 @@ const LeadsTable = ({ isView = false, id = null }) => {
     setSaveSuccess(false);
     try {
       const response = await axios.post(
-        "https://scrape.googlemap.thesquirrel.site/scrape",
+        "https://socialhardware.scrape.googlemap.thesquirrel.site/scrape",
         {
           industry,
           location,
