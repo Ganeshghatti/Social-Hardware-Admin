@@ -15,7 +15,7 @@ const SavedLeads = () => {
 
   const fetchLeads = async () => {
     try {
-      const response = await axios.get("/api/lead");
+      const response = await axios.get("/api/leadcollection");
       setLeads(response.data);
     } catch (err) {
       setError(err.response?.data?.error || "Failed to fetch leads");
@@ -58,7 +58,7 @@ const SavedLeads = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-xl font-semibold truncate">
-                  {lead.searchedCategory}
+                  {lead.searchIndustry}
                 </h3>
                 <span className="text-sm text-gray-300">
                   {new Date(lead.createdAt).toLocaleDateString()}
@@ -68,12 +68,12 @@ const SavedLeads = () => {
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
                   <span className="text-gray-400">Location:</span>
-                  <span className="truncate">{lead.searchLeads}</span>
+                  <span className="truncate">{lead.searchLocation}</span>
                 </div>
-                <div className="flex items-center space-x-2">
+                {/* <div className="flex items-center space-x-2">
                   <span className="text-gray-400">Total Leads:</span>
-                  <span>{lead.leads.length}</span>
-                </div>
+                  <span>{lead?.leads?.length}</span>
+                </div> */}
               </div>
 
               <div className="text-orange-500 text-sm mt-4">
