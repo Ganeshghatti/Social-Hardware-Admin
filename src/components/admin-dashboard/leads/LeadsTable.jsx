@@ -7,10 +7,12 @@ import {
   FaExternalLinkAlt,
   FaSave,
   FaMapMarkerAlt,
+  FaInfoCircle
 } from "react-icons/fa";
 import Loader from "../Loader";
 import { MdOutlineMail } from "react-icons/md";
 import Link from "next/link";
+import Modal from "../ui/Modal";
 
 const LeadsTable = ({ isView = false, id = null }) => {
   const [leads, setLeads] = useState([]);
@@ -22,6 +24,8 @@ const LeadsTable = ({ isView = false, id = null }) => {
   const [industry, setIndustry] = useState("");
   const [location, setLocation] = useState("");
   const [filter, setFilter] = useState("all");
+  const [selectedLead, setSelectedLead] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     filterLeads();
@@ -134,6 +138,11 @@ const LeadsTable = ({ isView = false, id = null }) => {
     { label: "Website", key: "website" },
   ];
 
+  const handleViewDetails = (lead) => {
+    setSelectedLead(lead);
+    setOpenModal(true);
+  };
+
   const fetchLeadsById = async (id) => {
     setLoading(true);
     try {
@@ -167,7 +176,7 @@ const LeadsTable = ({ isView = false, id = null }) => {
       _id: lead._id,
       domain: lead.website,
     }));
-    await axios.post("http://localhost:5001/bulk-email-finder", {
+    await axios.post(`${process.env.SCRAPER_URI}/1/bulk-email-finder`, {
       domains: leadWithIdAndDomain,
     });
   };
@@ -204,17 +213,15 @@ const LeadsTable = ({ isView = false, id = null }) => {
                   Save Leads
                 </button>
               )}
-              {
-                isView && (
-                  <button
+              {isView && (
+                <button
                   onClick={fetchEmails}
                   className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 w-full sm:w-auto justify-center"
                 >
                   <FaSave />
                   Find Emails
                 </button>
-                )
-              }
+              )}
               <CSVLink
                 data={leads}
                 headers={csvHeaders}
@@ -302,22 +309,16 @@ const LeadsTable = ({ isView = false, id = null }) => {
                   Business Name
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase">
-                  Category
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase">
                   Contact
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase">
-                  Email
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase">
                   Address
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase">
-                  Rating
+                  Website
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase">
-                  Website
+                  Actions
                 </th>
               </tr>
             </thead>
@@ -329,7 +330,6 @@ const LeadsTable = ({ isView = false, id = null }) => {
                   style={{ borderColor: "var(--border-color)" }}
                 >
                   <td className="px-4 py-4">{lead.name}</td>
-                  <td className="px-4 py-4">{lead.category}</td>
                   <td className="px-4 py-4">
                     <div className="flex items-center whitespace-nowrap">
                       {lead.phone && lead.phone !== "N/A" ? (
@@ -347,21 +347,6 @@ const LeadsTable = ({ isView = false, id = null }) => {
                       )}
                     </div>
                   </td>
-                  <td className="px-4 py-4">{lead.email.length > 0 ? (
-                    lead.email.map((email) => (
-                      <div className="flex items-center gap-2">
-                        <Link
-                          href={`mailto:${email}`}
-                          target="_blank"
-                          className="text-[#FC8500] hover:text-[#DC7500] flex items-center gap-1"
-                          title="Open in Google Maps"
-                        >
-                          <MdOutlineMail />
-                        </Link>
-                        {email}
-                      </div>
-                    ))
-                  ) : "pending"}</td>
                   <td className="px-4 py-4">
                     {lead?.address ? (
                       <div className="flex items-center gap-2">
@@ -379,11 +364,6 @@ const LeadsTable = ({ isView = false, id = null }) => {
                     )}
                   </td>
                   <td className="px-4 py-4">
-                    <div className="whitespace-nowrap">
-                      {lead.ratingStars} ({lead.numberOfRatings})
-                    </div>
-                  </td>
-                  <td className="px-4 py-4">
                     {lead.website && lead.website !== "N/A" ? (
                       <a
                         href={lead.website}
@@ -398,12 +378,68 @@ const LeadsTable = ({ isView = false, id = null }) => {
                       <div className="flex items-center">N/A</div>
                     )}
                   </td>
+                  <td className="px-4 py-4">
+                    <button
+                      onClick={() => handleViewDetails(lead)}
+                      className=" text-[#FC8500] text-nowrap hover:text-[#DC7500]"
+                    >
+                      {/* <FaInfoCircle /> */}
+                      View Details
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       )}
+      <Modal
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        modalTitle="Lead Details"
+        openBtn={null}
+      >
+        {selectedLead && (
+          <div className="p-6 w-full text-white ">
+            <div className="space-y-4 overflow-y-auto h-[250px]">
+              <div>
+                <h4 className="text-[#FC8500] font-medium mb-1">Category</h4>
+                <p>{selectedLead.category || "N/A"}</p>
+              </div>
+
+              <div>
+                <h4 className="text-[#FC8500] font-medium mb-1">Rating</h4>
+                <p>
+                  {selectedLead.ratingStars} {selectedLead.numberOfRatings}{" "}
+                  reviews
+                </p>
+              </div>
+
+              <div>
+                <h4 className="text-[#FC8500] font-medium mb-1">
+                  Email Addresses
+                </h4>
+                {selectedLead.email && selectedLead.email.length > 0 ? (
+                  <div className="space-y-2">
+                    {selectedLead.email.map((email, index) => (
+                      <p key={index}>
+                        <a
+                          href={`mailto:${email}`}
+                          className="text-white hover:text-[#FC8500]"
+                        >
+                          {email}
+                        </a>
+                      </p>
+                    ))}
+                  </div>
+                ) : (
+                  <p>No email addresses available</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
