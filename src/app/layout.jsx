@@ -3,6 +3,7 @@ import "./index.scss";
 import "./App.scss";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import ChatBot from '@/components/client-side/ui/ChatBot';
 
 export const metadata = {
   title: "Social Hardware",
@@ -61,6 +62,7 @@ export default function RootLayout({ children }) {
       <body>
         <AuthProvider>{children}</AuthProvider>
         <Toaster position="top-right" />
+        <ChatBot />
       </body>
     </html>
   );
