@@ -1,9 +1,18 @@
-'use client'
+"use client";
 import { useState, useEffect } from "react";
 import { CSVLink } from "react-csv";
 import axios from "axios";
-import { FaPhone, FaExternalLinkAlt, FaSave, FaMapMarkerAlt } from "react-icons/fa";
+import {
+  FaPhone,
+  FaExternalLinkAlt,
+  FaSave,
+  FaMapMarkerAlt,
+  FaInfoCircle
+} from "react-icons/fa";
 import Loader from "../Loader";
+import { MdOutlineMail } from "react-icons/md";
+import Link from "next/link";
+import Modal from "../ui/Modal";
 
 const LeadsTable = ({ isView = false, id = null }) => {
   const [leads, setLeads] = useState([]);
@@ -15,18 +24,24 @@ const LeadsTable = ({ isView = false, id = null }) => {
   const [industry, setIndustry] = useState("");
   const [location, setLocation] = useState("");
   const [filter, setFilter] = useState("all");
+  const [selectedLead, setSelectedLead] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     filterLeads();
   }, [leads, filter]);
 
   const filterLeads = () => {
-    switch(filter) {
+    switch (filter) {
       case "phone":
-        setFilteredLeads(leads.filter(lead => lead.phone && lead.phone !== "N/A"));
+        setFilteredLeads(
+          leads.filter((lead) => lead.phone && lead.phone !== "N/A")
+        );
         break;
       case "website":
-        setFilteredLeads(leads.filter(lead => lead.website && lead.website !== "N/A"));
+        setFilteredLeads(
+          leads.filter((lead) => lead.website && lead.website !== "N/A")
+        );
         break;
       default:
         setFilteredLeads(leads);
@@ -35,7 +50,10 @@ const LeadsTable = ({ isView = false, id = null }) => {
 
   const openInGoogleMaps = (address) => {
     const encodedAddress = encodeURIComponent(address);
-    window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
+    window.open(
+      `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`,
+      "_blank"
+    );
   };
 
   const fetchLeads = async (e) => {
@@ -50,7 +68,11 @@ const LeadsTable = ({ isView = false, id = null }) => {
           location,
         }
       );
+
+      console.log("response of fetch data map", response);
       if (response.data && response.data.results) {
+        console.log("response of fetch data map", response.data.results);
+        setError("");
         setLeads(response.data.results);
         setFilteredLeads(response.data.results);
       }
@@ -60,21 +82,46 @@ const LeadsTable = ({ isView = false, id = null }) => {
       setLoading(false);
     }
   };
-
   const saveLeads = async () => {
     if (leads.length === 0) return;
 
     setLoading(true);
     setSaveSuccess(false);
+
     try {
-      await axios.post("/api/lead", {
-        searchLeads: location,
-        searchedCategory: industry,
-        leads: leads,
+      // First, create a new lead collection
+      const collectionResponse = await axios.post("/api/leadcollection", {
+        searchLocation: location,
+        searchIndustry: industry,
       });
+
+      if (!collectionResponse.data._id) {
+        throw new Error("Failed to create lead collection");
+      }
+
+      const leadCollectionId = collectionResponse.data._id;
+
+      // Then, save all leads with the collection ID
+      await axios.post("/api/lead", {
+        leadCollectionId,
+        leads: leads.map((lead) => ({
+          name: lead.name || "N/A",
+          phone: lead.phone || "N/A",
+          category: lead.category || "N/A",
+          address: lead.address || "N/A",
+          ratingStars: lead.ratingStars || "0",
+          numberOfRatings: lead.numberOfRatings || "0",
+          website: lead.website || "N/A",
+          industry: industry || "N/A",
+          location: location || "N/A",
+          email: lead.email || [],
+        })),
+      });
+
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (err) {
+      console.error("Error in save operation:", err);
       setError(err.response?.data?.error || "Failed to save leads");
     } finally {
       setLoading(false);
@@ -91,23 +138,47 @@ const LeadsTable = ({ isView = false, id = null }) => {
     { label: "Website", key: "website" },
   ];
 
+  const handleViewDetails = (lead) => {
+    setSelectedLead(lead);
+    setOpenModal(true);
+  };
+
   const fetchLeadsById = async (id) => {
     setLoading(true);
     try {
-      const response = await axios.get(`/api/lead/${id}`);
+      const response = await axios.get(`/api/leadcollection/${id}`);
       if (response.data) {
-        setLeadsInfo({
-          searchedCategory: response.data.data.searchedCategory,
-          searchLeads: response.data.data.searchLeads,
-        });
-        setLeads(response.data.data.leads);
-        setFilteredLeads(response.data.data.leads);
+        // Update to match the new backend response structure
+        const leadsData = response.data;
+
+        // If we have leadCollection data from the populated field
+        const leadCollectionInfo = leadsData[0]?.leadCollection;
+
+        if (leadCollectionInfo) {
+          setLeadsInfo({
+            searchedIndustry: leadCollectionInfo.searchIndustry,
+            searchLocation: leadCollectionInfo.searchLocation,
+          });
+        }
+
+        setLeads(leadsData);
+        setFilteredLeads(leadsData);
       }
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchEmails = async () => {
+    const leadWithIdAndDomain = leads.map((lead) => ({
+      _id: lead._id,
+      domain: lead.website,
+    }));
+    await axios.post(`${process.env.SCRAPER_URI}/1/bulk-email-finder`, {
+      domains: leadWithIdAndDomain,
+    });
   };
 
   useEffect(() => {
@@ -122,10 +193,12 @@ const LeadsTable = ({ isView = false, id = null }) => {
         <div>
           <h1 className="text-2xl font-bold">
             {isView
-              ? `${leadsInfo?.searchedCategory || "Business Leads"}`
+              ? `${leadsInfo?.searchIndustry || "Business Leads"}`
               : "Search Leads"}
           </h1>
-          <p className="mt-2 opacity-85">{isView && leadsInfo?.searchLeads}</p>
+          <p className="mt-2 opacity-85">
+            {isView && leadsInfo?.searchLocation}
+          </p>
         </div>
         <div className="flex gap-4 w-full sm:w-auto">
           {leads.length > 0 && (
@@ -138,6 +211,15 @@ const LeadsTable = ({ isView = false, id = null }) => {
                 >
                   <FaSave />
                   Save Leads
+                </button>
+              )}
+              {isView && (
+                <button
+                  onClick={fetchEmails}
+                  className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 w-full sm:w-auto justify-center"
+                >
+                  <FaSave />
+                  Find Emails
                 </button>
               )}
               <CSVLink
@@ -186,7 +268,7 @@ const LeadsTable = ({ isView = false, id = null }) => {
       )}
 
       {leads.length > 0 && (
-        <div className="mb-6">
+        <div className="mb-6 flex justify-end">
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
@@ -215,7 +297,7 @@ const LeadsTable = ({ isView = false, id = null }) => {
         </div>
       )}
 
-      {!loading && !error && filteredLeads.length > 0 && (
+      {!loading && filteredLeads.length > 0 && (
         <div
           className="rounded-lg mt-6 shadow overflow-x-auto"
           style={{ backgroundColor: "var(--background-primary)" }}
@@ -227,19 +309,16 @@ const LeadsTable = ({ isView = false, id = null }) => {
                   Business Name
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase">
-                  Category
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase">
                   Contact
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase">
                   Address
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase">
-                  Rating
+                  Website
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase">
-                  Website
+                  Actions
                 </th>
               </tr>
             </thead>
@@ -251,7 +330,6 @@ const LeadsTable = ({ isView = false, id = null }) => {
                   style={{ borderColor: "var(--border-color)" }}
                 >
                   <td className="px-4 py-4">{lead.name}</td>
-                  <td className="px-4 py-4">{lead.category}</td>
                   <td className="px-4 py-4">
                     <div className="flex items-center whitespace-nowrap">
                       {lead.phone && lead.phone !== "N/A" ? (
@@ -271,7 +349,7 @@ const LeadsTable = ({ isView = false, id = null }) => {
                   </td>
                   <td className="px-4 py-4">
                     {lead?.address ? (
-                        <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2">
                         <button
                           onClick={() => openInGoogleMaps(lead.address)}
                           className="text-[#FC8500] hover:text-[#DC7500] flex items-center gap-1"
@@ -281,14 +359,9 @@ const LeadsTable = ({ isView = false, id = null }) => {
                         </button>
                         {lead?.address}
                       </div>
-                      ) : (
-                        <div className="flex items-center">N/A</div>
-                      )}
-                  </td>
-                  <td className="px-4 py-4">
-                    <div className="whitespace-nowrap">
-                      {lead.ratingStars} ({lead.numberOfRatings})
-                    </div>
+                    ) : (
+                      <div className="flex items-center">N/A</div>
+                    )}
                   </td>
                   <td className="px-4 py-4">
                     {lead.website && lead.website !== "N/A" ? (
@@ -302,10 +375,17 @@ const LeadsTable = ({ isView = false, id = null }) => {
                         Visit
                       </a>
                     ) : (
-                      <div className="flex items-center">
-                        N/A
-                      </div>
+                      <div className="flex items-center">N/A</div>
                     )}
+                  </td>
+                  <td className="px-4 py-4">
+                    <button
+                      onClick={() => handleViewDetails(lead)}
+                      className=" text-[#FC8500] text-nowrap hover:text-[#DC7500]"
+                    >
+                      {/* <FaInfoCircle /> */}
+                      View Details
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -313,6 +393,53 @@ const LeadsTable = ({ isView = false, id = null }) => {
           </table>
         </div>
       )}
+      <Modal
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        modalTitle="Lead Details"
+        openBtn={null}
+      >
+        {selectedLead && (
+          <div className="p-6 w-full text-white ">
+            <div className="space-y-4 overflow-y-auto h-[250px]">
+              <div>
+                <h4 className="text-[#FC8500] font-medium mb-1">Category</h4>
+                <p>{selectedLead.category || "N/A"}</p>
+              </div>
+
+              <div>
+                <h4 className="text-[#FC8500] font-medium mb-1">Rating</h4>
+                <p>
+                  {selectedLead.ratingStars} {selectedLead.numberOfRatings}{" "}
+                  reviews
+                </p>
+              </div>
+
+              <div>
+                <h4 className="text-[#FC8500] font-medium mb-1">
+                  Email Addresses
+                </h4>
+                {selectedLead.email && selectedLead.email.length > 0 ? (
+                  <div className="space-y-2">
+                    {selectedLead.email.map((email, index) => (
+                      <p key={index}>
+                        <a
+                          href={`mailto:${email}`}
+                          className="text-white hover:text-[#FC8500]"
+                        >
+                          {email}
+                        </a>
+                      </p>
+                    ))}
+                  </div>
+                ) : (
+                  <p>No email addresses available</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
