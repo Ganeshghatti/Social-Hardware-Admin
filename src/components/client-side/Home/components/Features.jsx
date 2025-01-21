@@ -14,9 +14,9 @@ export default function Features() {
   const cardData = [
     {
       index: "01",
-      title: "Immersive Control & Semi-Autonomous Operation",
+      title: "Immersive Control & Real-Time Data",
       description:
-        "Eclipse can be operated remotely through an immersive XR-based control system or a semi-autonomous mode, both offering a real-time video feed from the robot's perspective with critical data seamlessly integrated into the display.",
+        "Our systems can be operated remotely through an immersive XR-based control system or a semi-autonomous mode, both offering a real-time video feed from the robot's perspective with critical data seamlessly integrated into the display.",
       params: ["5MS LATENCY", "REAL-TIME DATA OVERLAY"],
       img: Card1,
       model: {
@@ -30,7 +30,7 @@ export default function Features() {
       index: "02",
       title: "Modular Tool Attachments",
       description:
-        "Allows for quick adaptation to mission-specific requirements with minimal downtime and easy maintenance, ensuring long-term adaptability as your mission demands evolve.<br/><br/> Shipped with cutting disc, precision gripper, bionic hands, and metal detector, as standard, making Eclipse a cost-effective and efficient solution for diverse operational needs.",
+        "Allows quick adaptation to mission-specific needs with minimal downtime and easy maintenance, ensuring long-term adaptability. Shipped with a cutting disc, precision gripper, bionic hands, and metal detector for diverse operational needs.",
       params: [" DUAL 10-DOF ARMS", "NO REBOOT NEEDED"],
       img: Card2,
       model: {
@@ -44,7 +44,7 @@ export default function Features() {
       index: "03",
       title: "Mesh Network Communication",
       description:
-        "The Eclipse uses advanced mesh networking technology, which enables operators to control the robots without needing a direct line of sight. <br/><br/> This ensures reliable communication in obstructed or confined environments, such as collapsed buildings or underground tunnels, where traditional methods might fail. ",
+        "Advanced mesh networking technology allows operators to control robots without a direct line of sight. This ensures reliable communication in obstructed environments, such as collapsed buildings or underground tunnels, where traditional methods fail.",
       params: ["UP TO 1.5 KM RANGE", "ROBUST  DATA TRANSMISSION"],
       img: Card3,
       model: {

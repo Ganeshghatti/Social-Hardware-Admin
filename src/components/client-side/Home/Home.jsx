@@ -38,11 +38,11 @@ export default function Home() {
     <main>
       <Hero />
       <BlockComponent />
-      <Technology />
+      {/* <Technology />
+      <BlockComponent /> */}
+      <Features />
       <BlockComponent />
       <Video />
-      <BlockComponent />
-      <Features />
       <BlockComponent />
       {/* <Partners />
     <BlockComponent /> */}
