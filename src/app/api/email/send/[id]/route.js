@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { transporter } from "@/lib/emailTransporter";
 import dbConnect from "@/lib/mongodb";
 import Subscribe from "@/models/Subscription";
 import EmailContent from "@/models/Email";
@@ -23,22 +23,15 @@ export async function POST(request, { params }) {
       );
     }
 
-    // Create transporter
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
     // Fetch subscribers
     const subscribers = await Subscribe.find({});
+
+    console.log("the email content",emailContent)
 
     // Send emails
     const emailPromises = subscribers.map(async (subscriber) => {
       const mailOptions = {
-        from: `"Social Hardware"`,
+        from: '"Social Hardware" <no-reply@socialhardware.in>',
         to: subscriber.email,
         subject: emailContent.title,
         html: `
