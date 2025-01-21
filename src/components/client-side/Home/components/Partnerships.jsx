@@ -1,3 +1,4 @@
+
 import React from "react";
 import TitleComponent from "../../ui/TitleComponent";
 
@@ -12,7 +13,7 @@ export default function Partnerships() {
       </div>
       <div className="center-container">
         <h2 className="flex items-center justify-center standard-title pb-[25px] md:pb-[75px] py-[75px]">
-          Why Partner With Us?
+        Why Collaborate With Us?
         </h2>
         <table>
           <tr>
@@ -43,9 +44,7 @@ export default function Partnerships() {
         </table>
         <div className="cta flex flex-col gap-4">
           <p className="cta-text">
-            Organisations interested in discovering how Eclipse Remote Systems
-            can enhance their safety and efficiency are invited to contact us
-            for a demo or to explore collaboration opportunities.
+          Get in touch below to explore collaboration opportunities and our tailored system development solutions.
           </p>
           {/* <ButtonComponentv2 text="Contact Us" link="/#contact" styles="w-fit" /> */}
         </div>

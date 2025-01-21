@@ -121,8 +121,8 @@ const EmailTable = () => {
                       </button>
                     </div>
                   ) : (
-                    <button className="text-blue-600 hover:underline cursor-pointer transition-all text-center">
-                      View
+                    <button className="text-green-600">
+                      Uploaded 
                     </button>
                   )}
                 </td>

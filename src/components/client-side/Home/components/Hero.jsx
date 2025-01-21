@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import heroImg from "../../../../../public/client/assets/images/heroImage.webp";
+import heroImg from "../../../../../public/client/assets/images/EclipseRobot.webp";
 import Image from "next/image";
 
 export default function Hero() {
@@ -25,25 +25,21 @@ export default function Hero() {
           className="w-full h-auto object-cover md:pt-28"
         />
       </div>
-      <div className="w-full text-center md:text-left md:w-[65%] relative md:top-[120px] md:left-[4%] px-4 md:px-0 content flex flex-col gap-3 md:gap-6 z-10">
-        <h1 className="text-white title">
-          <span className="text-oranges"> Next-Generation</span>
+      <div className="w-full text-center md:text-left md:w-[65%] relative  md:left-[4%] px-4 md:px-0 content flex flex-col gap-3 md:gap-6 z-10 flex flex=-col justify-center">
+        <h1 className="title !text-[#E7A349]">
+          <span className="">Remotely Operated Robots</span>
           <br />
-          All-Terrain Robots
+          for Hazardous Operations
         </h1>
         <p className="desc md:block w-full md:w-3/4">
-          Designed and manufactured in India, Eclipse Remote Systems are
-          cutting-edge, remotely operated, and semi-autonomous all-terrain
-          robots. Engineered to perform critical tasks in hazardous
-          environments, these robots are designed to enhance safety, improve
-          efficiency, and elevate operational performance.
-          <br /> <br />
+        Established in Bengaluru in 2017, Social Hardware designs all-terrain, multi-purpose robots for critical tasks. Our systems prioritize safety, boost efficiency, and deliver superior performance—empowering your teams to excel.
+          {/* <br /> <br />
           <span className="text-oranges">
             Contact us today to discover how we can help your business save
             lives and achieve higher performance.
-          </span>
+          </span> */}
         </p>
-        <button
+        {/* <button
           className="bg-[#46C756] text-white flex gap-1 md:gap-2 items-center font-['VioletSans'] px-2 md:px-4 py-1 md:py-2 rounded-md text-sm self-center md:self-start w-fit md:text-2xl mt-4"
           onClick={handleWhatsAppClick}
         >
@@ -115,7 +111,7 @@ export default function Hero() {
             </defs>
           </svg>
           Message us on WhatsApp
-        </button>
+        </button> */}
       </div>
       {/* <p className="standard-description md:hidden absolute bottom-[2%] left-0 w-[95%] z-10 pl-[4%]">
         Social Hardware offers cutting-edge telerobotic solutions for high-risk
