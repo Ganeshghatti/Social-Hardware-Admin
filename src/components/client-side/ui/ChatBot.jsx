@@ -4,6 +4,8 @@ import { usePathname } from "next/navigation";
 import { IoMdClose } from "react-icons/io";
 import { FaRobot } from "react-icons/fa";
 import axios from "axios";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,7 +13,7 @@ export default function ChatBot() {
     {
       role: "assistant",
       message:
-        "Hello! Thanks for reaching out to Social Hardware support.What can I help you with today?",
+        "Hello! Thanks for reaching out to Social Hardware support. What can I help you today?",
     },
   ]);
   const [inputMessage, setInputMessage] = useState("");
@@ -41,12 +43,10 @@ export default function ChatBot() {
     setIsLoading(true);
 
     try {
-      console.log([...messages, newUserMessage]);
       const response = await axios.post(
         "https://chatbot.squirrel.thesquirrel.site/chat/socialhardware",
         [...messages, newUserMessage]
       );
-      console.log(response);
       if (response.data.response) {
         const assistantMessage = {
           role: "assistant",
@@ -60,6 +60,33 @@ export default function ChatBot() {
       setIsLoading(false);
     }
   };
+
+  const MessageContent = ({ content, isUser }) => (
+    <div className={`prose prose-invert max-w-none ${isUser ? 'text-black' : 'text-white'}`}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          a: ({ node, ...props }) => (
+            <a {...props} className="text-blue-300 hover:text-blue-400 underline" target="_blank" rel="noopener noreferrer" />
+          ),
+          ul: ({ node, ...props }) => (
+            <ul {...props} className="list-disc list-inside my-2" />
+          ),
+          li: ({ node, ...props }) => (
+            <li {...props} className="my-1 ml-1" />
+          ),
+          strong: ({ node, ...props }) => (
+            <strong {...props} className="font-semibold" />
+          ),
+          p: ({ node, ...props }) => (
+            <p {...props} className="my-2" />
+          ),
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    </div>
+  );
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
@@ -83,17 +110,18 @@ export default function ChatBot() {
               <div
                 key={index}
                 className={`flex ${
-                  msg.role === "user" ? "justify-end" : "justify-start"
+                  msg.role === "user" ? "justify-end h-fit" : "justify-start"
                 }`}
               >
                 <div
-                  className={`max-w-[80%] rounded-lg p-3 ${
+                  className={`max-w-[80%] rounded-lg ${
                     msg.role === "user"
-                      ? "bg-[#FC8500] text-black"
-                      : "bg-[#353232] text-white"
+                      ? "bg-[#FC8500] !h-fit px-2 !text-white"
+                      : "bg-[#353232] p-3"
                   }`}
-                  dangerouslySetInnerHTML={{ __html: msg.message }}
-                />
+                >
+                  <MessageContent content={msg.message} isUser={msg.role === "user"} />
+                </div>
               </div>
             ))}
             {isLoading && (
