@@ -9,6 +9,7 @@ import "./Product.scss";
 import Navbar from "@/components/client-side/ui/Navbar/Navbar";
 import Footer from "@/components/client-side/ui/Footer/Footer";
 import BlockComponentNoVline from "@/components/client-side/Home/components/BlockComponentNoVline";
+import TechnicalBrochure from "@/components/client-side/Home/components/product/TechnicalBrochure";
 
 const page = () => {
   return (
@@ -23,6 +24,8 @@ const page = () => {
       <Capabilities />
       <BlockComponentNoVline />
       <Customization />
+      <BlockComponentNoVline />
+      <TechnicalBrochure />
       <BlockComponentNoVline />
       <Footer />
     </main>
