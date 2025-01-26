@@ -7,7 +7,7 @@ import {
   FaExternalLinkAlt,
   FaSave,
   FaMapMarkerAlt,
-  FaInfoCircle
+  FaInfoCircle,
 } from "react-icons/fa";
 import Loader from "../Loader";
 import { MdOutlineMail } from "react-icons/md";
@@ -176,9 +176,12 @@ const LeadsTable = ({ isView = false, id = null }) => {
       _id: lead._id,
       domain: lead.website,
     }));
-    await axios.post(`${process.env.SCRAPER_URI}/1/bulk-email-finder`, {
-      domains: leadWithIdAndDomain,
-    });
+    await axios.post(
+      `https://socialhardware.scrape.googlemap.thesquirrel.site/bulk-email-finder`,
+      {
+        domains: leadWithIdAndDomain,
+      }
+    );
   };
 
   useEffect(() => {
@@ -357,7 +360,8 @@ const LeadsTable = ({ isView = false, id = null }) => {
                   <td className="px-4 py-4">
                     {lead.email && lead.email.length > 0 ? (
                       <div className="flex flex-col justify-start items-start gap-2">
-                        <Link target="_blank"
+                        <Link
+                          target="_blank"
                           href={`mailto:${lead.email[0]}`}
                           className=" hover:opacity-75"
                         >
