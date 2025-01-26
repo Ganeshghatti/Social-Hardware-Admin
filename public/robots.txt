@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Allow: /product
+Allow: /technical-specifications
+Allow: /blogs
+Allow: /sitemap.xml
+
+# Protect admin areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /*?*
+
+# Sitemap location
+Sitemap: https://www.socialhardware.in/sitemap.xml
