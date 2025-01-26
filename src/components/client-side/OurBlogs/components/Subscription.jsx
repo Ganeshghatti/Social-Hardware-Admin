@@ -50,7 +50,7 @@ export default function Subscription() {
         </h1>
         <form
           onSubmit={handleSubmit}
-          className="mt-8 gap-1 w-full md:w-2/3 mx-auto overflow-hidden h-fit flex flex-col md:flex-row"
+          className="mt-8 gap-1 w-full md:w-2/3 mx-auto overflow-hidden h-fit flex flex-row"
         >
           <input
             type="email"
