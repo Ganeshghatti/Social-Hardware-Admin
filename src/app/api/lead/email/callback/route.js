@@ -2,6 +2,19 @@ import dbConnect from "@/lib/mongodb";
 import Leads from "@/models/Leads";
 import { NextResponse } from "next/server";
 
+// Helper function to handle CORS
+function cors(response) {
+  response.headers.set('Access-Control-Allow-Origin', '*') // Be more specific in production
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  return response
+}
+
+// Handle OPTIONS request (preflight)
+export async function OPTIONS() {
+  return cors(NextResponse.json({}, { status: 200 }))
+}
+
 export async function POST(request) {
   try {
     // Connect to MongoDB
